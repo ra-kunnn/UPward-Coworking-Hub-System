@@ -25,8 +25,8 @@
     <div class="flex justify-between mx-20 items-center text-tertiary-300">
         <span class="font-semibold max-sm:font-bold text-xl max-md:text-base max-[480px]:text-xs">UPward</span>
         <div class="flex items-center gap-3">
-            <button on:click={logIn} class="bg-surface-50 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Log In</button>
-            <button on:click={signUp} class="bg-tertiary-500 text-surface-50 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Sign Up</button>
+            <a href="account/login" class="btn bg-surface-50 hover:text-secondary-800 hover:bg-surface-300 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Log In</a>
+            <a href="account/signup" class="bg-tertiary-500 text-surface-50 hover:text-secondary-800 hover:bg-tertiary-600 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Sign Up</a>
         </div>
     </div>
 </div>
