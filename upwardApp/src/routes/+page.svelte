@@ -77,14 +77,4 @@
     <!-- header -->
     <Header />
 
-    <!-- first div -->
-    <div class="h-[calc(100vh-80px)] w-dvw bg-surface-50">
-        
-    </div>
-
-    <!-- the rest -->
-    <div class="h-dvh w-dvw bg-red-500">
-
-    </div>
-
 </div>
