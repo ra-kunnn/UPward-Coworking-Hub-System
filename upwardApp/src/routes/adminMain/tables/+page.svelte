@@ -222,7 +222,7 @@
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
         
-        <div class="grid grid-cols-2 gap-12 py-10">
+        <div class="grid grid-cols-2 gap-12 py-10 mb-5">
 
             <!-- user alerts -->
             <div class="col-span-1">
@@ -384,6 +384,7 @@
                         <p>Date Reserved</p>
                     </div>
                 </div>
+
             </div>
 
         </div>

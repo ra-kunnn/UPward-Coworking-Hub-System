@@ -218,75 +218,100 @@
 
     <!-- header -->
     <Header />
-    
+
+    <!-- aside -->
     <Aside />
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Welcome back, Admin Name!</h1>
-            <div>
-                <p>Number of User Accounts: ###</p>
-                <p>Users Online Now: ###</p>
+        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pt-10 pb-4 gap-5">
+            <p>Data from:</p>
+            <input name="dateFrom" type="date" class="input rounded-full w-60">
+            <p>to</p>
+            <input name="dateTo" type="date" class="input rounded-full w-60">
+        </div>
+
+        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pb-6 gap-5">
+            <p>Filters:</p>
+
+            <div class="flex items-center">
+                <input type="radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-secondary-800">
+                <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
+            </div>
+
+            <div class="flex items-center">
+                <input type="radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-secondary-800">
+                <label for="default-radio-1" class="ms-2 font-medium">Order</label>
             </div>
         </div>
 
+        <div class="flex items-center justify-center pb-14">
+            <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
+        </div>
+
         
-        <div class="grid grid-cols-5 gap-5">
+        <div class="mx-80 mb-20">
+            <div class="card items-center shadow-lg pb-6">
 
-            <!-- user alerts -->
-            <div class="col-span-3 border-4 shadow-lg border-primary-600 rounded-3xl mb-20 pb-10">
-
-                <!-- for padding -->
                 <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">User Alerts</h1>
+                    <h1 class="h3 font-bold">Logs</h1>
                 </div>
-                
+
                 <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
                     <div>
-                        <p>Customer Name</p>
+                        <p>Receipt No.</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Drink No.</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
-                    </div>
-                </div>
-
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
-                    <div>
-                        <p>Customer Name</p>
+                        <p>Customer</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Total</p>
                     </div>
-                    <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                    <div class="flex flex-auto mx-auto">
+                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                     </div>
                 </div>
 
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <!-- one entry -->
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
                     <div>
-                        <p>Customer Name</p>
+                        <p>Receipt No.</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Drink No.</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                        <p>Customer</p>
+                    </div>
+                    <div>
+                        <p>Total</p>
+                    </div>
+                    <div class="flex flex-auto mx-auto">
+                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                     </div>
                 </div>
 
-            </div>
-
-            <!-- date reservations -->
-            <div class="col-span-2 border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
-
-                <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Date Reservations</h1>
+                <!-- one entry -->
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
+                    <div>
+                        <p>Receipt No.</p>
+                    </div>
+                    <div>
+                        <p>Drink No.</p>
+                    </div>
+                    <div>
+                        <p>Customer</p>
+                    </div>
+                    <div>
+                        <p>Total</p>
+                    </div>
+                    <div class="flex flex-auto mx-auto">
+                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
+                    </div>
                 </div>
 
             </div>

@@ -146,7 +146,7 @@
         </div>
 
 
-        <!-- reserve -->
+        <!-- orders -->
         <div class="mx-80 mb-20">
             <div class="card p-4 grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
 
@@ -155,7 +155,7 @@
                     <i class="fa-solid fa-arrow-left" />
                 </button>
 
-                <!-- mages -->
+                <!-- images -->
                 <div bind:this={elemCarousel} class="m-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
                     {#each unsplashIds as unsplashId}
                         <img

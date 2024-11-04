@@ -13,6 +13,29 @@
     import type { PageData } from './$types';
     import { supabase } from '$lib/supabaseClient';
 
+    let elemCarousel: HTMLDivElement;
+    const unsplashIds = ['1620562303747-ba21ca6f1530', '1572826246393-e42b63b4ac82',
+                        '1620074506951-33a51f7f454a', '1601325979086-d54da2c7419c',
+                        '1597077962467-be16edcc6a43', '1510111652602-195fc654aa83'
+    ];
+
+
+    function carouselLeft(): void {
+        const x =
+            elemCarousel.scrollLeft === 0
+                ? elemCarousel.clientWidth * elemCarousel.childElementCount // loop
+                : elemCarousel.scrollLeft - elemCarousel.clientWidth; // step left
+        elemCarousel.scroll(x, 0);
+    }
+    
+    function carouselRight(): void {
+        const x =
+            elemCarousel.scrollLeft === elemCarousel.scrollWidth - elemCarousel.clientWidth
+                ? 0 // loop
+                : elemCarousel.scrollLeft + elemCarousel.clientWidth; // step right
+        elemCarousel.scroll(x, 0);
+    }
+
     /**
 
     const modalStore = getModalStore();
@@ -223,70 +246,97 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Welcome back, Admin Name!</h1>
-            <div>
-                <p>Number of User Accounts: ###</p>
-                <p>Users Online Now: ###</p>
+
+        <!-- orders -->
+        <div class="mx-80 mb-20">
+            <div class="card p-4 grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
+
+                <!-- button: left -->
+                <button type="button" class="btn-icon variant-filled" on:click={carouselLeft}>
+                    <i class="fa-solid fa-arrow-left" />
+                </button>
+
+                <!-- images -->
+                <div bind:this={elemCarousel} class="m-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
+                    {#each unsplashIds as unsplashId}
+                        <img
+                            class="snap-center w-[1024px] rounded-container-token"
+                            src="https://images.unsplash.com/photo-{unsplashId}"
+                            alt={unsplashId}
+                            loading="lazy"
+                        />
+                    {/each}
+                </div>
+
+                <!-- button: right -->
+                <button type="button" class="btn-icon variant-filled" on:click={carouselRight}>
+                    <i class="fa-solid fa-arrow-right" />
+                </button>
             </div>
         </div>
 
-        
-        <div class="grid grid-cols-5 gap-5">
+        <div class="mx-80 mb-20">
+            <div class="card items-center shadow-lg pb-6">
 
-            <!-- user alerts -->
-            <div class="col-span-3 border-4 shadow-lg border-primary-600 rounded-3xl mb-20 pb-10">
-
-                <!-- for padding -->
                 <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">User Alerts</h1>
+                    <h1 class="h3 font-bold">Orders</h1>
                 </div>
-                
+
                 <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
                     <div>
-                        <p>Customer Name</p>
+                        <p>Receipt No.</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Drink No.</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
-                    </div>
-                </div>
-
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
-                    <div>
-                        <p>Customer Name</p>
+                        <p>Customer</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Total</p>
                     </div>
-                    <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                    <div class="flex flex-auto mx-auto">
+                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                     </div>
                 </div>
 
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <!-- one entry -->
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
                     <div>
-                        <p>Customer Name</p>
+                        <p>Receipt No.</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Drink No.</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                        <p>Customer</p>
+                    </div>
+                    <div>
+                        <p>Total</p>
+                    </div>
+                    <div class="flex flex-auto mx-auto">
+                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                     </div>
                 </div>
 
-            </div>
-
-            <!-- date reservations -->
-            <div class="col-span-2 border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
-
-                <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Date Reservations</h1>
+                <!-- one entry -->
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
+                    <div>
+                        <p>Receipt No.</p>
+                    </div>
+                    <div>
+                        <p>Drink No.</p>
+                    </div>
+                    <div>
+                        <p>Customer</p>
+                    </div>
+                    <div>
+                        <p>Total</p>
+                    </div>
+                    <div class="flex flex-auto mx-auto">
+                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
+                    </div>
                 </div>
 
             </div>
