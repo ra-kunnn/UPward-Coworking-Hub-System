@@ -95,6 +95,8 @@ const authGuard: Handle = async ({ event, resolve }) => {
     }
 
     // Prevent role access to incorrect pages
+
+    
     if (role === 'customer' && !event.url.pathname.startsWith('/userMain')) {
       return redirect(303, '/userMain');
     } else if (role === 'manager' && !event.url.pathname.startsWith('/adminMain')) {

@@ -87,7 +87,8 @@
 
     <!-- the rest -->
     <div class="h-dvh w-dvw bg-red-500">
-
+        <a href="/adminMain">to customer</a>
+        <a href="/adminMain">to admin</a>
     </div>
 
 </div>

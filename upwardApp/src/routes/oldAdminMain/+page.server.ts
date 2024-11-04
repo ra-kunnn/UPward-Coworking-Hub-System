@@ -1,3 +1,5 @@
+/**
+
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase } }) => {
@@ -65,3 +67,5 @@ depends('supabase:db:Manager'); //find out what this does
   return { rooms: roomData ?? [], user: manager ?? [], bill: billData ?? [], allTenants: allTenantData ?? [], visitor: visitorData ?? [], maintenance: maintenanceData ?? [] };
 
 };
+
+*/
