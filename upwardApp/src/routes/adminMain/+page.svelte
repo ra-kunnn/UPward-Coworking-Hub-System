@@ -255,6 +255,7 @@
                     </div>
                 </div>
 
+                <!-- one entry -->
                 <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
                     <div>
                         <p>Customer Name</p>
@@ -267,6 +268,7 @@
                     </div>
                 </div>
 
+                <!-- one entry -->
                 <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
                     <div>
                         <p>Customer Name</p>
