@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/user/headerUser.svelte';
+    import Aside from '$lib/user/asideCustomer.svelte';
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
@@ -79,6 +80,9 @@
 
     <!-- header -->
     <Header />
+
+    <!-- aside -->
+    <Aside />
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
