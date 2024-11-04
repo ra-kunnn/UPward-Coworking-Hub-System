@@ -1,4 +1,6 @@
 <script lang="ts">
+
+    
     import "../app.css";
     import { initializeStores, Modal } from '@skeletonlabs/skeleton';
     import type { ModalComponent } from '@skeletonlabs/skeleton';
@@ -34,13 +36,10 @@
     export let data;
     let { session, supabase } = data;
 
+    /**
     onMount(() => {
         const { data: subscription } = supabase.auth.onAuthStateChange((_, newSession) => {
             if (!newSession) {
-                /**
-                 * Queue this as a task so the navigation won't prevent the
-                 * triggering function from completing
-                 */
                 setTimeout(() => {
                     goto('/', { invalidateAll: true });
                 });
@@ -51,6 +50,10 @@
 
         return () => subscription?.unsubscribe();
     });
+
+    */
+
+    
 </script>
 
 <svelte:head>

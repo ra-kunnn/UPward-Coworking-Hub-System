@@ -10,6 +10,7 @@
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
     
 
+    /**
     const modalStore = getModalStore();
 
     function makeAnAccount(): void {
@@ -66,6 +67,8 @@
     function createArray(length: number): number[] {
         return Array.from({ length }, (_, i) => i);
     } 
+
+    */
 
 </script>
 

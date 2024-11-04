@@ -1,5 +1,7 @@
 <script>
 
+    /**
+
     export let logout; // Receive the logout function through props
 
     // Use the logout function when the logout button is clicked
@@ -9,14 +11,15 @@
         }
     };
 
+    */
+
 </script>
 
-<div class="sticky top-0 z-40 w-full px-5 py-5 mx-auto sm:px-8 xl:px-12 bg-white shadow-xl">
-    <div class="flex justify-between mx-auto items-center">
-        <span class="font-semibold max-sm:font-bold text-xl max-sm:text-base max-[480px]:text-xs">UPAD Management System</span>
-        <div class="flex items-center gap-1">
-            <p class="text-surface-300 text-sm text-right pr-4 max-sm:pr-1 max-sm:text-[10px]">logged in as user</p>
-            <button class="btn bg-inherit hover:variant-soft-primary rounded-none border-none px-5 max-md:px-2 py-2 max-sm:text-sm max-[480px]:text-xs font-semibold" on:click={handleLogout}>Log Out</button> 
+<div class="sticky top-0 z-40 h-20 w-full p-5 mx-auto bg-secondary-800 shadow-xl">
+    <div class="flex justify-between mx-20 items-center text-tertiary-300">
+        <span class="font-semibold max-sm:font-bold text-xl max-md:text-base max-[480px]:text-xs">UPward</span>
+        <div class="flex items-center gap-3">
+            <a href="/" class="btn bg-surface-50 hover:text-secondary-800 hover:bg-surface-300 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Log Out</a>
         </div>
     </div>
 </div>
