@@ -2,6 +2,7 @@
 
     
     import "../app.css";
+     import { initializeStores } from '@skeletonlabs/skeleton';
     initializeStores();
 
     import { goto, invalidate } from '$app/navigation';

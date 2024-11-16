@@ -4,9 +4,26 @@
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
 
-    import { Modal, getModalStore } from '@skeletonlabs/skeleton';
-    import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
     // import type { PageData } from '../login copy/$types';
+
+    const handleSubmit = (event: Event) => {
+
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const password = formData.get('password') as string;
+    const conpassword = formData.get('conpassword') as string;
+
+        if (password !== conpassword) {
+            event.preventDefault();
+            alert('Password and Confirm Password are not the same.');
+        }
+
+
+        if (password.length < 6) {
+            event.preventDefault();
+            alert('Password too short. Atleast 6 characters.');
+        }
+    };
 
 </script>
 

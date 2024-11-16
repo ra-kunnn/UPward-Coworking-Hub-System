@@ -8,6 +8,30 @@
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
     // import type { PageData } from '../../login/$types';
 
+    import { supabase } from '$lib/supabaseClient'
+
+      const handleLogin = async (event: Event) => {
+
+       event.preventDefault();
+       console.log("MIGHT WORK NOW!");
+
+        const form = event.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const email = formData.get('email') as string;
+        const password = formData.get('password') as string;
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password: password,
+        });
+
+        if (signInError) {
+            console.error('Sign-in error:', signInError);
+            alert('Incorrect Credentials.');
+            return;
+        }
+
+    };
 </script>
 
 <HideOverflow />
@@ -37,18 +61,18 @@
                     <div class="w-3/4 mx-auto py-40">
 
                         <!-- login form -->
-                        <form class="">
+                        <form class="form-widget" method="POST" action="?/login" on:submit={handleLogin} >
                             <div class="relative z-0 w-full mb-5 group">
-                                <input type="email" name="floating_email" id="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                                <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
+                                <input type="email" name="email" id="email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
                             </div>
                             
                             <div class="relative z-0 w-full mb-5 group">
-                                <input type="password" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                                <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                                <input type="password" name="password" id="password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                                <label for="password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
                             </div>
 
-                            <button class="btn bg-surface-50 text-tertiary-300 hover:text-primary-50 hover:bg-secondary-800 rounded-xl border-none px-8 py-2 my-1 mt-9 text-sm font-semibold shadow-lg">Login</button>
+                            <button type="submit" class="btn bg-surface-50 text-tertiary-300 hover:text-primary-50 hover:bg-secondary-800 rounded-xl border-none px-8 py-2 my-1 mt-9 text-sm font-semibold shadow-lg">Login</button>
                         </form>
 
                         <!-- border -->
