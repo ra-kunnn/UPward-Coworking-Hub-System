@@ -1,1 +1,0 @@
-<p style="text-align:center">There was a unique error with sign up, please try again or contact your website administrator</p>
