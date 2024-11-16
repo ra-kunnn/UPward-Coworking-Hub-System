@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Header from '$lib/landing/headerLanding.svelte';
+	import Header from '$lib/user/headerUser.svelte';
+    import Aside from '$lib/user/asideCustomer.svelte';
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
@@ -8,9 +9,9 @@
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
     import type { PageData } from './$types';
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
-    
-
+                        
     /**
+    
     const modalStore = getModalStore();
 
     function makeAnAccount(): void {
@@ -79,5 +80,30 @@
 
     <!-- header -->
     <Header />
+
+    <!-- aside -->
+    <Aside />
+
+    <!-- main div -->
+    <div class="w-dvw px-40 py-10 bg-surface-50">
+        <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
+
+        <!-- table details -->
+        <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
+
+            <!-- for padding -->
+            <div class="px-12 py-6">
+                <h1 class="h3 font-bold">Table Details</h1>
+            </div>
+            
+            <div class="px-12 pt-2 pb-6">
+                <p class="mb-3">Table No.:</p>
+                <p class="mb-3">Time Remaining:</p>
+                <p class="mb-3">Date Reserved:</p>
+            </div>
+
+        </div>
+       
+    </div>
 
 </div>

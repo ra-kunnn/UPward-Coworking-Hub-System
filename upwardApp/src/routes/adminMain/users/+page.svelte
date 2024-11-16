@@ -223,72 +223,87 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Welcome back, Admin Name!</h1>
-            <div>
-                <p>Number of User Accounts: ###</p>
-                <p>Users Online Now: ###</p>
+        <div class="grid grid-flow-col mx-96 justify-center items-center px-8 pt-10 pb-4 gap-5">
+            <p>Search customer:</p>
+            <input name="dateFrom" type="text" class="input rounded-full w-60">
+        </div>
+
+        <div class="grid grid-flow-col mx-96 justify-center items-center px-8 pb-6 gap-10">
+
+            <div class="flex items-center">
+                <input type="radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-secondary-800">
+                <label for="default-radio-1" class="ms-2 font-medium">ID</label>
+            </div>
+
+            <div class="flex items-center">
+                <input type="radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-secondary-800">
+                <label for="default-radio-1" class="ms-2 font-medium">Name</label>
             </div>
         </div>
 
         
-        <div class="grid grid-cols-5 gap-5">
+        <div class="mx-80 mb-20">
+            <div class="card items-center shadow-lg pb-6">
 
-            <!-- user alerts -->
-            <div class="col-span-3 border-4 shadow-lg border-primary-600 rounded-3xl mb-20 pb-10">
-
-                <!-- for padding -->
                 <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">User Alerts</h1>
+                    <h1 class="h3 font-bold">Customers</h1>
                 </div>
-                
+
                 <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
+                    <div>
+                        <p>Customer ID</p>
+                    </div>
                     <div>
                         <p>Customer Name</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Credits and Reservations</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                        <p>E-mail</p>
+                    </div>
+                    <div>
+                        <p>Phone Number</p>
                     </div>
                 </div>
 
                 <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
+                    <div>
+                        <p>Customer ID</p>
+                    </div>
                     <div>
                         <p>Customer Name</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Credits and Reservations</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                        <p>E-mail</p>
+                    </div>
+                    <div>
+                        <p>Phone Number</p>
                     </div>
                 </div>
 
                 <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
+                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
+                    <div>
+                        <p>Customer ID</p>
+                    </div>
                     <div>
                         <p>Customer Name</p>
                     </div>
                     <div>
-                        <p>Time/Credit Status</p>
+                        <p>Credits and Reservations</p>
                     </div>
                     <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
+                        <p>E-mail</p>
                     </div>
-                </div>
-
-            </div>
-
-            <!-- date reservations -->
-            <div class="col-span-2 border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
-
-                <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Date Reservations</h1>
+                    <div>
+                        <p>Phone Number</p>
+                    </div>
                 </div>
 
             </div>
