@@ -4,42 +4,12 @@
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
 
-    import { Modal, getModalStore } from '@skeletonlabs/skeleton';
-    import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
     import type { PageData } from './$types';
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
     
 
     /**
-    const modalStore = getModalStore();
-
-    function makeAnAccount(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'CreateAccount',
-        };
-        modalStore.trigger(modal);
-    }
-
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-
-    interface Availability {
-        dormNo: number;
-        availability: boolean;
-        availableSlots: number;
-        preexistingTenants: number;
-        // Add other columns as needed
-    }
+ 
 
     export let data:PageData;
     const { rooms, availability }: { rooms: Room[], availability: Availability[] } = data;
