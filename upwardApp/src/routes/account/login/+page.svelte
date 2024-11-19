@@ -10,28 +10,6 @@
 
     import { supabase } from '$lib/supabaseClient'
 
-      const handleLogin = async (event: Event) => {
-
-       event.preventDefault();
-       console.log("MIGHT WORK NOW!");
-
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
-
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-            email,
-            password: password,
-        });
-
-        if (signInError) {
-            console.error('Sign-in error:', signInError);
-            alert('Incorrect Credentials.');
-            return;
-        }
-
-    };
 </script>
 
 <HideOverflow />
