@@ -249,11 +249,11 @@
 
         <!-- orders -->
         <div class="mx-80 mb-20">
-            <div class="card p-4 grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
+            <div class="card p-4 bg-white border-4 border-primary-600 rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
 
                 <!-- button: left -->
-                <button type="button" class="btn-icon variant-filled" on:click={carouselLeft}>
-                    <i class="fa-solid fa-arrow-left" />
+                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
+                ⮜
                 </button>
 
                 <!-- images -->
@@ -269,14 +269,21 @@
                 </div>
 
                 <!-- button: right -->
-                <button type="button" class="btn-icon variant-filled" on:click={carouselRight}>
-                    <i class="fa-solid fa-arrow-right" />
+                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
+                ⮞
                 </button>
+                <!-- information -->
+                <div class="col-span-3 text-center mb-4">
+                    <p class="text-surface-800">Food No.</p>
+                    <p class="text-surface-800">Description</p>
+                    <p class="text-surface-800">Price</p>
+                    <p class="text-surface-800">Food Type</p>
+                </div>
             </div>
         </div>
 
         <div class="mx-80 mb-20">
-            <div class="card items-center shadow-lg pb-6">
+            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
 
                 <div class="px-12 py-6">
                     <h1 class="h3 font-bold">Orders</h1>
