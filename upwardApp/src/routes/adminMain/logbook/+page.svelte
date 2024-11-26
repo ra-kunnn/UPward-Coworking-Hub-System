@@ -211,6 +211,27 @@
     */
 </script>
 
+<style>
+
+    /* Custom input style */
+    .date-input {
+        background-color: white; /* Match the white background of the card */
+        border: 2px solid #38728A; /* Match the border color of the card */
+        border-radius: 20px; /* Rounded corners to match .rounded-3xl */
+        padding: 0.5rem 1rem; /* Add padding for a nice look */
+        width: 100%; /* Make it fill the width of the container */
+        transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
+    }
+
+    /* Focus effect */
+    .date-input:focus {
+        outline: none; /* Remove default focus outline */
+        border-color: #38728A; /* Keep the border color as primary when focused */
+        background-color: #f1fdfd; /* Lighter background when focused */
+    }
+
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -224,23 +245,23 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pt-10 pb-4 gap-5">
+        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pt-10 pb-8 gap-5">
             <p>Data from:</p>
-            <input name="dateFrom" type="date" class="input rounded-full w-60">
+            <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
             <p>to</p>
-            <input name="dateTo" type="date" class="input rounded-full w-60">
+            <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
         </div>
 
         <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pb-6 gap-5">
             <p>Filters:</p>
 
             <div class="flex items-center">
-                <input type="radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-secondary-800">
+                <input type="radio" id="reservationRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
                 <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
             </div>
 
             <div class="flex items-center">
-                <input type="radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-secondary-800">
+                <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
                 <label for="default-radio-1" class="ms-2 font-medium">Order</label>
             </div>
         </div>
@@ -251,8 +272,7 @@
 
         
         <div class="mx-80 mb-20">
-            <div class="card items-center shadow-lg pb-6">
-
+            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
                 <div class="px-12 py-6">
                     <h1 class="h3 font-bold">Logs</h1>
                 </div>
@@ -271,9 +291,6 @@
                     <div>
                         <p>Total</p>
                     </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
                 </div>
 
                 <!-- one entry -->
@@ -290,9 +307,6 @@
                     <div>
                         <p>Total</p>
                     </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
                 </div>
 
                 <!-- one entry -->
@@ -308,9 +322,6 @@
                     </div>
                     <div>
                         <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                     </div>
                 </div>
 

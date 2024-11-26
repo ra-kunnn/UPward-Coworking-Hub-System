@@ -96,6 +96,61 @@
 
 </script>
 
+<style>
+
+    /* Custom input style */
+    .date-input {
+        background-color: white; /* Match the white background of the card */
+        border: 2px solid #38728A; /* Match the border color of the card */
+        border-radius: 20px; /* Rounded corners to match .rounded-3xl */
+        padding: 0.5rem 1rem; /* Add padding for a nice look */
+        width: 50%; /* Make it fill the width of the container */
+        transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
+    }
+
+    /* Focus effect */
+    .date-input:focus {
+        outline: none; /* Remove default focus outline */
+        border-color: #38728A; /* Keep the border color as primary when focused */
+        background-color: #f1fdfd; /* Lighter background when focused */
+    }
+
+
+    /* Custom select dropdown styling */
+    .select-style {
+        background-color: white; /* Matches the white background */
+        border: 1px solid #38728A; /* Matches the border color */
+        border-radius: 20px; /* Rounded corners */
+        padding: 0.5rem 1rem; /* Padding for spacing */
+        width: 100%; /* Ensure it takes up the full width of the container */
+        transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
+    }
+
+        /* Custom select dropdown styling */
+        .select {
+        background-color: white; /* Matches the white background */
+        border: 1px solid #38728A; /* Matches the border color */
+        border-radius: 20px; /* Rounded corners */
+        padding: 0.5rem 1rem; /* Padding for spacing */
+        width: 100%; /* Ensure it takes up the full width of the container */
+        transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
+    }
+
+    /* Focus effect to change border and background */
+    .select-style:focus {
+        outline: none; /* Remove default outline */
+        border-color: #38728A; /* Keep the border color on focus */
+        background-color: #fafafa; /* Lighter background on focus */
+    }
+
+    /* Styling for the options inside the select (optional) */
+    .select-style option {
+        padding: 0.5rem; /* Adds spacing to the option text */
+    }
+
+
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -120,7 +175,7 @@
             
             <form class="px-12 w-1/2 pb-20">
                 <label for="tableNum">Table Number</label>
-                <select name="tableNum" class="select rounded-full mt-1 mb-3">
+                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
                     <option value="1">Option 1</option>
                     <option value="2">Option 2</option>
                     <option value="3">Option 3</option>
@@ -129,7 +184,7 @@
                 </select>
 
                 <label for="tableRate">Table Rate</label>
-                <select name="tableRate" class="select rounded-full mt-1 mb-3">
+                <select name="tableRate" class="select-style rounded-full mt-1 mb-3">
                     <option value="1">Option 1</option>
                     <option value="2">Option 2</option>
                     <option value="3">Option 3</option>
@@ -137,10 +192,10 @@
                     <option value="5">Option 5</option>
                 </select>
 
-                <label for="tableDate">Appointment Date</label>
-                <input name="tableDate" type="date" class="rounded-full mt-1 mb-3">
+                <label for="tableDate" class="mb-2">Appointment Date</label>
+                <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
 
-                <p>Total:</p>
+                <p class="mt-2">Total:</p>
             </form>
 
         </div>
@@ -148,11 +203,11 @@
 
         <!-- orders -->
         <div class="mx-80 mb-20">
-            <div class="card p-4 grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
+            <div class="card p-4 bg-white border-4 border-primary-600 rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
 
                 <!-- button: left -->
-                <button type="button" class="btn-icon variant-filled" on:click={carouselLeft}>
-                    <i class="fa-solid fa-arrow-left" />
+                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
+                ⮜
                 </button>
 
                 <!-- images -->
@@ -168,9 +223,16 @@
                 </div>
 
                 <!-- button: right -->
-                <button type="button" class="btn-icon variant-filled" on:click={carouselRight}>
-                    <i class="fa-solid fa-arrow-right" />
+                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
+                ⮞
                 </button>
+                <!-- information -->
+                <div class="col-span-3 text-center mb-4">
+                    <p class="text-surface-800">Food No.</p>
+                    <p class="text-surface-800">Description</p>
+                    <p class="text-surface-800">Price</p>
+                    <p class="text-surface-800">Food Type</p>
+                </div>
             </div>
         </div>
 
