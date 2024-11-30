@@ -3,7 +3,7 @@ import { Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
-// Create Supabase client
+// Supabase Client Setup
 const supabaseHandle: Handle = async ({ event, resolve }) => {
   const supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
@@ -19,90 +19,72 @@ const supabaseHandle: Handle = async ({ event, resolve }) => {
 
   event.locals.supabase = supabase;
 
+  // Safe session retrieval
   event.locals.safeGetSession = async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return { session: null, user: null };
-    }
+    if (!session) return { session: null, user: null };
 
     const { data: { user }, error } = await supabase.auth.getUser();
-    if (error) {
-      // JWT validation has failed
-      return { session: null, user: null };
-    }
+    if (error) return { session: null, user: null };
 
     return { session, user };
   };
 
   return resolve(event, {
     filterSerializedResponseHeaders(name) {
-      return name === 'content-range' || name === 'x-supabase-api-version';
+      return ['content-range', 'x-supabase-api-version'].includes(name);
     },
   });
 };
 
+// Role-Based Access Control
 const authGuard: Handle = async ({ event, resolve }) => {
   const { session, user } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
 
-  if (!session) {
-    if (['/tenantMain', '/userMain', '/adminMain'].some(path => event.url.pathname.startsWith(path))) {
-      return redirect(303, '/');
-    }
-  } else {
+  // Redirect unauthenticated users trying to access restricted pages
+  if (!session && ['/customerMain', '/adminMain'].some(path => event.url.pathname.startsWith(path))) {
+    throw redirect(303, '/');
+  }
+
+  // Set role if user is authenticated
+  if (session) {
     const userId = user?.id;
     let role = null;
 
     if (userId) {
-      // Check user role
-      const { data: potCust } = await event.locals.supabase
-        .from('Potential Customer')
+      const { data: customer } = await event.locals.supabase
+        .from('Customer')
         .select('userID')
         .eq('userID', userId)
         .single();
 
-      if (potCust) {
-        role = 'customer';
-      }
+      if (customer) role = 'customer';
 
-      const { data: manager } = await event.locals.supabase
-        .from('Manager')
+      const { data: admin } = await event.locals.supabase
+        .from('Admin')
         .select('userID')
         .eq('userID', userId)
         .single();
 
-      if (manager) {
-        role = 'manager';
-      }
-
-      if (!role) {
-        role = 'tenant';
-      }
+      if (admin) role = 'admin';
     }
 
     event.locals.role = role;
 
-    // Redirect based on role
+    // Redirect users to their respective dashboards
     if (event.url.pathname === '/') {
-      if (role === 'customer') {
-        return redirect(303, '/userMain');
-      } else if (role === 'manager') {
-        return redirect(303, '/adminMain');
-      } else {
-        return redirect(303, '/tenantMain');
-      }
+      if (role === 'customer') throw redirect(303, '/customerMain');
+      if (role === 'admin') throw redirect(303, '/adminMain');
     }
 
-    // Prevent role access to incorrect pages
-
-    
-    if (role === 'customer' && !event.url.pathname.startsWith('/userMain')) {
-      return redirect(303, '/userMain');
-    } else if (role === 'manager' && !event.url.pathname.startsWith('/adminMain')) {
-      return redirect(303, '/adminMain');
-    } else if (role === 'tenant' && !event.url.pathname.startsWith('/tenantMain')) {
-      return redirect(303, '/tenantMain');
+    // Prevent access to unauthorized pages
+    if (role === 'customer' && !event.url.pathname.startsWith('/customerMain')) {
+      throw redirect(303, '/customerMain');
+    }
+    if (role === 'admin' && !event.url.pathname.startsWith('/adminMain')) {
+      throw redirect(303, '/adminMain');
     }
   }
 
