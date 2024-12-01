@@ -29,7 +29,7 @@ export const actions: Actions = {
       .eq('admin_email', email)
       .single();
 
-    if (manager) {
+    if (admin) {
       return redirect(303, '/adminMain');
     }
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Header from '$lib/account/headerAccount.svelte';
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
