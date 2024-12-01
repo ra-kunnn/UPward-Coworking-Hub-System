@@ -33,7 +33,7 @@
 </script>
 
 <svelte:head>
-    <title>UPAD Management System</title>
+    <title>UPward Coworking Hub System</title>
 </svelte:head>
 
 

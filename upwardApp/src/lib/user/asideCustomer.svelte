@@ -13,17 +13,66 @@
     }
 </script>
 
-<aside class="fixed top-20 left-0 z-20 w-60 h-screen">
-    <div class="h-full px-3 py-4 overflow-y-auto bg-white shadow">
+<style>
+    /* Sidebar Styling */
+    .hover-sidebar {
+        width: 125px; /* Initial width */
+        height: 100vh;
+        background-color: #ffffff;
+        box-shadow: inset -4px 0 10px rgba(0, 0, 0, 0.1);
+        border-top-right-radius: 70px;
+        border-bottom-right-radius: 70px;
+        overflow-x: hidden;
+        transition: width 0.3s ease;
+        position: fixed;
+        z-index: 100;
+    }
+
+    .hover-sidebar:hover {
+        width: 200px; /* Expanded width */
+    }
+
+    /* Sidebar Item Styling */
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        cursor: pointer;
+        color: #333333;
+        margin-top: 50px;
+        position: relative;
+        font-family: "Inter", sans-serif;
+        white-space: nowrap;
+    }
+
+    .icon {
+        font-size: 1.5em;
+        margin-right: 10px;
+    }
+
+    .text {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .hover-sidebar:hover .text {
+        opacity: 1;
+    }
+</style>
+
+<aside class="hover-sidebar">
+    <div class="h-full px-3 py-4 overflow-y-auto">
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="/customerMain" class="flex items-center p-2 text-surface-900 rounded-lg hover:bg-primary-600 hover:text-surface-50 group">
-                    <span class="ms-3">Reserve</span>
+                <a href="/customerMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                    <span class="icon">💻</span>
+                    <span class="text">Reserve</span>
                 </a>
             </li>
             <li>
-                <a href="/customerMain/timeCredits" class="flex items-center p-2 text-surface-900 rounded-lg hover:bg-primary-600 hover:text-surface-50 group">
-                    <span class="ms-3">Time Credits</span>
+                <a href="/customerMain/timeCredits" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                    <span class="icon">⌛</span>
+                    <span class="text">Time Credits</span>
                 </a>
             </li>
         </ul>

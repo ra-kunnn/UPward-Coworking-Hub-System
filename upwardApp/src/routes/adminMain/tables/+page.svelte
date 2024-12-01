@@ -218,6 +218,8 @@
 
     <!-- header -->
     <Header />
+   
+    <Aside />
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">

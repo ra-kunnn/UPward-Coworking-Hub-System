@@ -292,6 +292,10 @@
                 </div>
 
             </div>
+            <!-- Edit Password -->
+            <div class="col-start-4 col-span-2 text-right mt-[-3rem]">
+                <a href="/adminMain" class="text-tertiary-300 font-semibold">Edit password?</a>
+            </div>
         </div>
 
     </div>
