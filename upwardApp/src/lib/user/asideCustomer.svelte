@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Modal, getModalStore } from '@skeletonlabs/skeleton';
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+    import { onMount } from 'svelte';
 
     const modalStore = getModalStore();
 
@@ -11,6 +12,13 @@
         };
         modalStore.trigger(modal);
     }
+
+    let currentPath = '';
+
+    // Get the current path on component mount
+    onMount(() => {
+        currentPath = window.location.pathname;
+    });
 </script>
 
 <style>
@@ -58,21 +66,38 @@
     .hover-sidebar:hover .text {
         opacity: 1;
     }
+
+    .active {
+        background-color: #38728A; /* Active background color (matches border style) */
+        color: #ffffff; /* Text color when active */
+    }
 </style>
 
 <aside class="hover-sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto">
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="/customerMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/customerMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain' ? 'active' : ''}">
                     <span class="icon">💻</span>
-                    <span class="text">Reserve</span>
+                    <span class="text">Reservation</span>
                 </a>
             </li>
             <li>
-                <a href="/customerMain/timeCredits" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/customerMain/profile" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/profile' ? 'active' : ''}">
                     <span class="icon">⌛</span>
-                    <span class="text">Time Credits</span>
+                    <span class="text">Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="/customerMain/foodAnddrink" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/foodAnddrink' ? 'active' : ''}">
+                    <span class="icon">🧋</span>
+                    <span class="text">Food & Drinks</span>
+                </a>
+            </li>
+            <li>
+                <a href="/customerMain/orderHistory" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/orderHistory' ? 'active' : ''}">
+                    <span class="icon">📂</span>
+                    <span class="text">Order History</span>
                 </a>
             </li>
         </ul>
