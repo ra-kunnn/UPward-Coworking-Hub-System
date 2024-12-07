@@ -151,23 +151,29 @@
                 <form class="px-12 w-1/2 pb-20">
                     <label for="tableNum">Table Number</label>
                     <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                        <option value="4">Option 4</option>
-                        <option value="5">Option 5</option>
+                        <option value="1">Sharing Table</option>
+                        <option value="2">Individual Focus Table</option>
+                        <option value="3">Drafting Table</option>
                     </select>
 
-                    <label for="tableRate">Table Rate</label>
+                    <!-- Reservation Rates should change according to the kind of table reserved -->
+
+                    <label for="tableRate">Reservation Rates</label>
                     <select name="tableRate" class="select-style rounded-full mt-1 mb-3">
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
-                        <option value="4">Option 4</option>
-                        <option value="5">Option 5</option>
+                        <option value="1">Hourly Rate -- RATE HERE</option>
+                        <option value="1">Daily Rate -- RATE HERE</option>
+                        <option value="2">Weekly Rate -- RATE HERE</option>
                     </select>
+
+                     <label for="tableDate" class="mb-2">Appointment Hours</label>
+                    <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
 
                     <label for="tableDate" class="mb-2">Appointment Date</label>
+                    <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
+
+                    <!-- OR, FOR APPOINTMENT WEEK OR APPOINTMENT HOURS. IT SHOULD CHANGE ACCORDING TO WHAT RATE IS CHOSEN-->
+
+                    <label for="tableDate" class="mb-2">Appointment Week</label>
                     <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
 
                     <p class="mt-2">Total:</p>
@@ -175,20 +181,6 @@
 
             </div>
 
-            <!-- new box -->
-            <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20 flex-1">
-                <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Top up Credits</h1>
-                </div>
-
-                <div class="px-12 pt-2 pb-6">
-                    <p class="mb-3">:</p>
-                    <p class="mb-3"></p>
-                    <p class="mb-3"></p>
-                </div>
-
-            </div>
         </div>
 
         <button on:click={() => showModal = true} class="btn border-4 shadow-lg border-primary-600 rounded-3xl mb-20 px-14">
