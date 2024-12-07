@@ -4,6 +4,7 @@
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
+    import { SlideToggle } from '@skeletonlabs/skeleton';
 
     import { Modal, getModalStore } from '@skeletonlabs/skeleton';
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
@@ -15,7 +16,24 @@
     const handleClose = () => {
         showModal = false;
     };
+
+    let toggleReserve: boolean = true;
+    let toggleOrder: boolean = true;
                         
+    /** values for reserve selection */
+    let reservePlaceholder = 'Select a reservation rate...';
+	let reserveOptions = [{
+		label: "Hourly Rate (100Php)",
+		value: "1"
+	}, {
+		label: "Daily Rate (100Php)",
+		value: "2"
+	}, {
+		label: "Weekly Rate (100Php)",
+		value: "3"
+	}];
+	let reserveSelected = "";
+
     /**
     
     const modalStore = getModalStore();
@@ -87,7 +105,7 @@
         border: 2px solid #38728A; /* Match the border color of the card */
         border-radius: 20px; /* Rounded corners to match .rounded-3xl */
         padding: 0.5rem 1rem; /* Add padding for a nice look */
-        width: 50%; /* Make it fill the width of the container */
+        width: 100%; /* Make it fill the width of the container */
         transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
     }
 
@@ -135,65 +153,113 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-40 py-10">
         <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
 
         <!-- container for the two boxes -->
         <div class="flex gap-8">
-            <!-- original box -->
-            <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20 flex-1">
+            <!-- reserve box -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
                 <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Reservation Details</h1>
+                <div class="px-12 py-6 flex flex-row justify-between items-center">
+                    <h1 class="h2 font-bold">Would you like to reserve?</h1>
+                    <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
                 </div>
                 
-                <form class="px-12 w-1/2 pb-20">
-                    <label for="tableNum">Table Number</label>
-                    <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
-                        <option value="1">Sharing Table</option>
-                        <option value="2">Individual Focus Table</option>
-                        <option value="3">Drafting Table</option>
-                    </select>
+                {#if toggleReserve}
+                    <div class="flex pt-4 gap-6 px-12">
+                        <div class="flex-1">
+                            <form>
+                                <label for="tableNum">Table Number</label>
+                                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                                    <option value="1">Sharing Table</option>
+                                    <option value="2">Individual Focus Table</option>
+                                    <option value="3">Drafting Table</option>
+                                </select>
+            
+                                <!-- Reservation Rates should change according to the kind of table reserved -->
+            
+                                <label for="tableRate">Reservation Rates</label>
 
-                    <!-- Reservation Rates should change according to the kind of table reserved -->
+                                <!-- change values in line 23 -->
+                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}>    
+                                    {#if reservePlaceholder}
+                                        <option value="" disabled selected>{reservePlaceholder}</option>
+                                    {/if}
+                                    {#each reserveOptions as option}
+                                        <option value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    {/each}
+                                </select>
 
-                    <label for="tableRate">Reservation Rates</label>
-                    <select name="tableRate" class="select-style rounded-full mt-1 mb-3">
-                        <option value="1">Hourly Rate -- RATE HERE</option>
-                        <option value="1">Daily Rate -- RATE HERE</option>
-                        <option value="2">Weekly Rate -- RATE HERE</option>
-                    </select>
+                                <!-- change depending on selected rate -->
+                                {#if reserveSelected == '1'}
+                                    <div class="mt-5">
+                                        <label for="tableDate" class="mb-2">Appointment Hours</label>
+                                        <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                    </div>
+                                {:else if reserveSelected == '2'}
+                                    <div class="mt-5">
+                                        <label for="tableDate" class="mb-2">Appointment Date</label>
+                                        <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                    </div>
+                                {:else if reserveSelected == '3'}
+                                    <div class="mt-5">
+                                        <label for="tableDate" class="mb-2">Appointment Week</label>
+                                        <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                    </div>
+                                {:else}
+                                    <div class="mt-5"></div>
+                                {/if}
 
-                     <label for="tableDate" class="mb-2">Appointment Hours</label>
-                    <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
+                                <div class="py-6">
+                                    <p class="mt-2">Total:</p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {:else}
+                    <div class="min-h-full"></div>
+                {/if}
+                
+                
 
-                    <label for="tableDate" class="mb-2">Appointment Date</label>
-                    <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
+            </div>
 
-                    <!-- OR, FOR APPOINTMENT WEEK OR APPOINTMENT HOURS. IT SHOULD CHANGE ACCORDING TO WHAT RATE IS CHOSEN-->
+            <!-- order box -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
-                    <label for="tableDate" class="mb-2">Appointment Week</label>
-                    <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
+                <!-- for padding -->
+                <div class="px-12 py-6 pb-10 flex flex-row justify-between items-center">
+                    <h1 class="h2 font-bold">Would you like to order?</h1>
+                    <SlideToggle name="slide" bind:checked={toggleOrder} active="bg-primary-500" />
+                </div>
+                
+                {#if toggleOrder}
+                    <form class="px-12 pb-20">
+                        <label for="tableNum">Drink Selection</label>
+                        <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                            <option value="1">Sharing Table</option>
+                            <option value="2">Individual Focus Table</option>
+                            <option value="3">Drafting Table</option>
+                        </select>
 
-                    <p class="mt-2">Total:</p>
-                </form>
-
+                        <p class="mt-2">Total:</p>
+                    </form>
+                {:else}
+                    <div class="min-h-full"></div>
+                {/if}
+                    
             </div>
 
         </div>
 
-        <button on:click={() => showModal = true} class="btn border-4 shadow-lg border-primary-600 rounded-3xl mb-20 px-14">
-            <!-- for padding -->
-            <div class="px-12 py-6">
-                <h1 class="h3 font-bold">👉 Add some flavor to your day! Choose a snack or drink to complete your experience &emsp;</h1>
-            </div>
-        </button>
-
-        <SelectorModal show={showModal} on:close={handleClose} />
+        <!-- <SelectorModal show={showModal} on:close={handleClose} /> -->
 
 
-        <div class="flex flex-row justify-center items-center mb-10">
+        <div class="flex flex-row justify-end items-center">
             <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold">Add Booking/Order</button>
         </div>
     </div>
