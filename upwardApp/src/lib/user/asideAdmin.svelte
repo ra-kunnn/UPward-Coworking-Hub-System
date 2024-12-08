@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Modal, getModalStore } from '@skeletonlabs/skeleton';
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+    import { onMount } from 'svelte';
 
     const modalStore = getModalStore();
 
@@ -11,6 +12,13 @@
         };
         modalStore.trigger(modal);
     }
+
+    let currentPath = '';
+
+    // Get the current path on component mount
+    onMount(() => {
+        currentPath = window.location.pathname;
+    });
 </script>
 
 <style>
@@ -58,37 +66,42 @@
     .hover-sidebar:hover .text {
         opacity: 1;
     }
+    
+    .active {
+        background-color: #38728A; /* Active background color (matches border style) */
+        color: #ffffff; /* Text color when active */
+    }
 </style>
 
 <aside class="hover-sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto">
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="/adminMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/adminMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain' ? 'active' : ''}">
                     <span class="icon">⚙️</span>
                     <span class="text">Admin</span>
                 </a>
             </li>
             <li>
-                <a href="/adminMain/tables" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/adminMain/tables" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/tables' ? 'active' : ''}">
                     <span class="icon">📋</span>
                     <span class="text">Tables</span>
                 </a>
             </li>
             <li>
-                <a href="/adminMain/orders" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/adminMain/orders" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/orders' ? 'active' : ''}">
                     <span class="icon">🛒</span>
                     <span class="text">Orders</span>
                 </a>
             </li>
             <li>
-                <a href="/adminMain/logbook" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/adminMain/logbook" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/logbook' ? 'active' : ''}">
                     <span class="icon">📘</span>
                     <span class="text">Logbook</span>
                 </a>
             </li>
             <li>
-                <a href="/adminMain/users" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg">
+                <a href="/adminMain/users" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/users' ? 'active' : ''}">
                     <span class="icon">🙍‍♂️</span>
                     <span class="text">Users</span>
                 </a>

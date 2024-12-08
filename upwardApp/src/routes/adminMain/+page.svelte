@@ -225,79 +225,122 @@
     <div class="w-dvw px-40 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold">Welcome back, Admin Name!</h1>
-            <div>
+            <div class="text-right">
                 <p>Number of User Accounts: ###</p>
                 <p>Users Online Now: ###</p>
             </div>
         </div>
 
-        
-        <div class="grid grid-cols-5 gap-5">
+        <!-- container for the two boxes -->
+        <div class="flex gap-8">
 
             <!-- user alerts -->
-            <div class="col-span-3 border-4 shadow-lg border-primary-600 rounded-3xl mb-20 pb-10">
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
                 <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">User Alerts</h1>
-                </div>
-                
-                <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
-                    <div>
-                        <p>Customer Name</p>
+                <div class="px-12 min-h-full flex flex-col">
+                    <div class="pt-6 flex flex-row justify-between items-center">
+                        <h1 class="h1 font-bold">Table Details</h1>
                     </div>
-                    <div>
-                        <p>Time/Credit Status</p>
-                    </div>
-                    <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
-                    </div>
-                </div>
 
-                <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
-                    <div>
-                        <p>Customer Name</p>
-                    </div>
-                    <div>
-                        <p>Time/Credit Status</p>
-                    </div>
-                    <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
-                    </div>
-                </div>
+                    <div class="pt-10 py-6 flex-grow">
+                        <!-- one entry -->
+                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                            <div>
+                                <p>Customer Name</p>
+                            </div>
+                            <div>
+                                <p>Time/Credit Status</p>
+                            </div>
+                            <div>
+                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
+                            </div>
+                        </div>
 
-                <!-- one entry -->
-                <div class="grid grid-flow-col justify-stretch items-center gap-3 px-12 pb-4">
-                    <div>
-                        <p>Customer Name</p>
-                    </div>
-                    <div>
-                        <p>Time/Credit Status</p>
-                    </div>
-                    <div>
-                        <a href="/adminMain" class="text-tertiary-300 font-semibold">Notify</a>
-                    </div>
-                </div>
+                        <!-- one entry -->
+                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                            <div>
+                                <p>Customer Name</p>
+                            </div>
+                            <div>
+                                <p>Time/Credit Status</p>
+                            </div>
+                            <div>
+                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
+                            </div>
+                        </div>
 
+                        <!-- one entry -->
+                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                            <div>
+                                <p>Customer Name</p>
+                            </div>
+                            <div>
+                                <p>Time/Credit Status</p>
+                            </div>
+                            <div>
+                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             <!-- date reservations -->
-            <div class="col-span-2 border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
                 <!-- for padding -->
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Date Reservations</h1>
+                <div class="px-12 min-h-full flex flex-col">
+                    <div class="pt-6 flex flex-row justify-between items-center">
+                        <h1 class="h1 font-bold">Upcoming Reservations</h1>
+                    </div>
+
+                    <div class="pt-10 py-6 flex-grow">
+                        <!-- one entry -->
+                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                            <div>
+                                <p>Reservation ID</p>
+                            </div>
+                            <div>
+                                <p>Customer ID</p>
+                            </div>
+                            <div>
+                                <p>Table No.</p>
+                            </div>
+                            <div>
+                                <p>Per hour</p>
+                            </div>
+                            <div class="flex flex-auto mx-auto">
+                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
+                            </div>
+                        </div>
+
+                        <!-- one entry -->
+                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                            <div>
+                                <p>Reservation ID</p>
+                            </div>
+                            <div>
+                                <p>Customer ID</p>
+                            </div>
+                            <div>
+                                <p>Table No.</p>
+                            </div>
+                            <div>
+                                <p>Per hour</p>
+                            </div>
+                            <div class="flex flex-auto mx-auto">
+                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
+            </div>
 
-            </div>
-            <!-- Edit Password -->
-            <div class="col-start-4 col-span-2 text-right mt-[-3rem]">
-                <a href="/adminMain" class="text-tertiary-300 font-semibold">Edit password?</a>
-            </div>
         </div>
-
     </div>
 
 </div>
