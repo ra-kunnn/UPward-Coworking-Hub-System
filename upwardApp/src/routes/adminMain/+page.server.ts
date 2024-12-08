@@ -41,8 +41,10 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
+  depends('supabase:db:Table');
+  depends('supabase:db:Table Availability');
+  depends('supabase:db:Drink');
+  depends('supabase:db:Drink Availability');
 
   const { data: tableData, error: tableError } = await supabase
     .from('Table')
@@ -77,7 +79,7 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
   }
 
   if (drinkAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
+    console.error('Error fetching availability data:', drinkAvailabilityError);
     return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
   }
 

@@ -36,7 +36,6 @@ export const actions: Actions = {
   },
 };
 
-//this part is for data getting when the page loads
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
@@ -55,15 +54,10 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Table Availability')
     .select('*');
 
-  if (tableError) {
-    console.error('Error fetching table data:', tableError);
-    return { tables: [], tableAvailability: tableAvailabilityData ?? [], error: tableError.message };
-  }
 
-  if (tableAvailabilityError) {
-    console.error('Error fetching table availability data:', tableAvailabilityError);
-    return { tables: tableData ?? [], tableAvailability: [], error: tableAvailabilityError.message };
-  }
+    console.log(tableData);
+    console.log(tableAvailabilityData);
+      
 
   const { data: drinkData, error: drinkError } = await supabase
     .from('Drink')
@@ -73,21 +67,31 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Drink Availability')
     .select('*');
 
+  console.log(drinkData);
+  console.log(drinkAvailabilityData);
+
   if (drinkError) {
-    console.error('Error fetching drink data:', tableError);
+    console.error('Error fetching drink data:', drinkError);
     return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
   }
 
   if (drinkAvailabilityError) {
-    console.error('Error fetching drink availability data:', tableAvailabilityError);
+    console.error('Error fetching drink availability data:', drinkAvailabilityError);
     return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
   }
 
-  console.log(tableData);
-  console.log(tableAvailabilityData);
-  console.log(drinkData);
-  console.log(drinkAvailabilityData);
+  if (tableError) {
+    console.error('Error fetching table data:', tableError);
+    return { drinks: drinkData ?? [],drinkAvailability: drinkAvailabilityData ?? [], tables: [], tableAvailability: tableAvailabilityData ?? [], error: tableError.message };
+  }
+  
+  
+  if (tableAvailabilityError) {
+    console.error('Error fetching table availability data:', tableAvailabilityError);
+    return { drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], tables: tableData ?? [], tableAvailability: [], error: tableAvailabilityError.message };
+  }
   return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData};
 
 };
+
 
