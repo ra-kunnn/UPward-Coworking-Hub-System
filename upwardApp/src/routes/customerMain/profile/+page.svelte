@@ -19,7 +19,7 @@
         console.log("LOGGING OUT");
         document.cookie = 'sb-access-token=; Max-Age=0; path=/';
             document.cookie = 'sb-refresh-token=; Max-Age=0; path=/';
-        window.location.href = "/";
+        window.location.replace('/redirectToHome');
         if (error) {
             console.error(error);
             }
