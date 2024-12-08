@@ -87,23 +87,49 @@
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
         <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
+         
+        <!-- container for the two boxes -->
+        <div class="flex gap-8">
+            <!-- table details -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
-        <!-- table details -->
-        <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
+                <!-- for padding -->
+                <div class="px-12 min-h-full flex flex-col">
+                    <div class="pt-6 flex flex-row justify-between items-center">
+                        <h1 class="h1 font-bold">Table Details</h1>
+                    </div>
+                    
+                    <div class="pt-10 py-6 flex-grow">
+                        <p class="mb-1">Table Number: 1</p>
+                        <p class="mb-1">Time Remaining: you have not started</p>
+                        <p class="mb-1">Date Reserved: idk</p>
+                    </div>
 
-            <!-- for padding -->
-            <div class="px-12 py-6">
-                <h1 class="h3 font-bold">Table Details</h1>
+                    <div class="py-7 flex flex-row justify-end items-end">
+                        <span>Want to reserve a table? <a href="/customerMain" class="text-secondary-800 hover:underline hover:text-primary-600">Click here!</a></span>
+                    </div>
+                </div>
             </div>
-            
-            <div class="px-12 pt-2 pb-6">
-                <p class="mb-3">Table No.:</p>
-                <p class="mb-3">Time Remaining:</p>
-                <p class="mb-3">Date Reserved:</p>
-            </div>
 
+            <!-- order details -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
+                
+                <!-- for padding -->
+                <div class="px-12 min-h-full flex flex-col">
+                    <div class="pt-6 flex justify-between items-center">
+                        <h1 class="h1 font-bold">Order Details</h1>
+                    </div>
+
+                    <div class="pt-10 py-6 grow min-h-0">
+                        <p class="mb-1">You have not placed an order yet.</p>
+                    </div>
+
+                    <div class="py-7 flex flex-row justify-end items-end">
+                        <span>Want to order a drink? <a href="/customerMain" class="text-secondary-800 hover:underline hover:text-primary-600">Click here!</a></span>
+                    </div>
+                </div>
+            </div>
         </div>
-       
     </div>
 
 </div>
