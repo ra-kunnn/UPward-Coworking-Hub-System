@@ -34,6 +34,17 @@
 	}];
 	let reserveSelected = "";
 
+    /** values for order selection */
+    let orderPlaceholder = 'Select a drink...';
+	let drinkOptions = [
+        { label: "Spanish Latte", value: "1",price: 40 }, 
+        { label: "Cappuccino", value: "2", price: 40 },
+        { label: "Nescafe", value: "3", price: 40 },
+        { label: "Strawberry Fizz", value: "4", price: 40 },
+        { label: "Blueberry Fizz", value: "5", price: 40 },
+    ];
+	let drinkSelected = "";
+
     /**
     
     const modalStore = getModalStore();
@@ -182,7 +193,7 @@
             
                                 <label for="tableRate">Reservation Rates</label>
 
-                                <!-- change values in line 23 -->
+                                <!-- change values in typescript -->
                                 <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}>    
                                     {#if reservePlaceholder}
                                         <option value="" disabled selected>{reservePlaceholder}</option>
@@ -195,28 +206,26 @@
                                 </select>
 
                                 <!-- change depending on selected rate -->
+                                <div class="mt-5">
                                 {#if reserveSelected == '1'}
-                                    <div class="mt-5">
-                                        <label for="tableDate" class="mb-2">Appointment Hours</label>
-                                        <input name="dateFrom" type="date" class="input date-input rounded-3xl">
-                                    </div>
+                                    <label for="tableDate" class="mb-2">Appointment Hours</label>
+                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
                                 {:else if reserveSelected == '2'}
-                                    <div class="mt-5">
-                                        <label for="tableDate" class="mb-2">Appointment Date</label>
-                                        <input name="dateFrom" type="date" class="input date-input rounded-3xl">
-                                    </div>
+                                    <label for="tableDate" class="mb-2">Appointment Date</label>
+                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
                                 {:else if reserveSelected == '3'}
-                                    <div class="mt-5">
-                                        <label for="tableDate" class="mb-2">Appointment Week</label>
-                                        <input name="dateFrom" type="date" class="input date-input rounded-3xl">
-                                    </div>
+                                    <label for="tableDate" class="mb-2">Appointment Week</label>
+                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
                                 {:else}
-                                    <div class="mt-5"></div>
+                                    <div></div>
                                 {/if}
-
-                                <div class="py-6">
-                                    <p class="mt-2">Total:</p>
                                 </div>
+
+                                {#if reserveSelected}
+                                    <div class="py-6">
+                                        <p class="mt-2 font-semibold">Total:</p>
+                                    </div>
+                                {/if}
                             </form>
                         </div>
                     </div>
@@ -239,14 +248,33 @@
                 
                 {#if toggleOrder}
                     <form class="px-12 pb-20">
-                        <label for="tableNum">Drink Selection</label>
-                        <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
-                            <option value="1">Sharing Table</option>
-                            <option value="2">Individual Focus Table</option>
-                            <option value="3">Drafting Table</option>
+                        <label for="drinkOrder">Drink Selection</label>
+                        
+                        <!-- change values in typescript -->
+                        <select name="customerOrder" multiple size="4" class="select-style rounded-full mt-1 mb-3" bind:value={drinkSelected}>    
+                            {#if orderPlaceholder}
+                                <option value="" disabled selected>{orderPlaceholder}</option>
+                            {/if}
+                            {#each drinkOptions as drink}
+                                <option value={drink.value}>
+                                    {drink.label}
+                                </option>
+                            {/each}
                         </select>
 
-                        <p class="mt-2">Total:</p>
+                        {#if drinkSelected.length > 0}
+                            <p class="mt-2 font-semibold">Order:</p>
+                            <ul>
+                                {#each drinkSelected as selectedValue}
+                                    {#each drinkOptions as drink (drink.value)}
+                                        {#if drink.value === selectedValue}
+                                            <li>{drink.label} ({drink.price})</li>
+                                        {/if}
+                                    {/each}
+                                {/each}
+                            </ul>
+                        {/if}
+                        
                     </form>
                 {:else}
                     <div class="min-h-full"></div>
@@ -260,7 +288,7 @@
 
 
         <div class="flex flex-row justify-end items-center">
-            <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold">Add Booking/Order</button>
+            <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold">Confirm</button>
         </div>
     </div>
 </div>
