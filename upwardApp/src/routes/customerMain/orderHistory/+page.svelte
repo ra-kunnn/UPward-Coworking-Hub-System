@@ -7,7 +7,7 @@
 
     import { Modal, getModalStore } from '@skeletonlabs/skeleton';
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
-    import type { PageData } from './$types';
+    import type { PageData } from '../orderHistory/$types';
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
                         
     /**
@@ -93,13 +93,13 @@
 
             <!-- for padding -->
             <div class="px-12 py-6">
-                <h1 class="h3 font-bold">Table Details</h1>
+                <h1 class="h3 font-bold">Order Details</h1>
             </div>
             
             <div class="px-12 pt-2 pb-6">
-                <p class="mb-3">Table No.:</p>
-                <p class="mb-3">Time Remaining:</p>
-                <p class="mb-3">Date Reserved:</p>
+                <p class="mb-3">Pending</p>
+                <p class="mb-3"></p>
+                <p class="mb-3"></p>
             </div>
 
         </div>

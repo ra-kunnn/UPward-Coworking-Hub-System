@@ -4,35 +4,47 @@
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
+    import { SlideToggle } from '@skeletonlabs/skeleton';
 
     import { Modal, getModalStore } from '@skeletonlabs/skeleton';
     import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
     import type { PageData } from './$types';
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
 
-    let elemCarousel: HTMLDivElement;
-    const unsplashIds = ['1620562303747-ba21ca6f1530', '1572826246393-e42b63b4ac82',
-                        '1620074506951-33a51f7f454a', '1601325979086-d54da2c7419c',
-                        '1597077962467-be16edcc6a43', '1510111652602-195fc654aa83'
-    ];
+    import SelectorModal from '$lib/user/selectorModal.svelte';
+    let showModal = false;
+    const handleClose = () => {
+        showModal = false;
+    };
 
-
-    function carouselLeft(): void {
-        const x =
-            elemCarousel.scrollLeft === 0
-                ? elemCarousel.clientWidth * elemCarousel.childElementCount // loop
-                : elemCarousel.scrollLeft - elemCarousel.clientWidth; // step left
-        elemCarousel.scroll(x, 0);
-    }
-    
-    function carouselRight(): void {
-        const x =
-            elemCarousel.scrollLeft === elemCarousel.scrollWidth - elemCarousel.clientWidth
-                ? 0 // loop
-                : elemCarousel.scrollLeft + elemCarousel.clientWidth; // step right
-        elemCarousel.scroll(x, 0);
-    }
+    let toggleReserve: boolean = true;
+    let toggleOrder: boolean = true;
                         
+    /** values for reserve selection */
+    let reservePlaceholder = 'Select a reservation rate...';
+	let reserveOptions = [{
+		label: "Hourly Rate (100Php)",
+		value: "1"
+	}, {
+		label: "Daily Rate (100Php)",
+		value: "2"
+	}, {
+		label: "Weekly Rate (100Php)",
+		value: "3"
+	}];
+	let reserveSelected = "";
+
+    /** values for order selection */
+    let orderPlaceholder = 'Select a drink...';
+	let drinkOptions = [
+        { label: "Spanish Latte", value: "1",price: 40 }, 
+        { label: "Cappuccino", value: "2", price: 40 },
+        { label: "Nescafe", value: "3", price: 40 },
+        { label: "Strawberry Fizz", value: "4", price: 40 },
+        { label: "Blueberry Fizz", value: "5", price: 40 },
+    ];
+	let drinkSelected = "";
+
     /**
     
     const modalStore = getModalStore();
@@ -103,7 +115,7 @@
         border: 2px solid #38728A; /* Match the border color of the card */
         border-radius: 20px; /* Rounded corners to match .rounded-3xl */
         padding: 0.5rem 1rem; /* Add padding for a nice look */
-        width: 50%; /* Make it fill the width of the container */
+        width: 100%; /* Make it fill the width of the container */
         transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
     }
 
@@ -117,16 +129,6 @@
 
     /* Custom select dropdown styling */
     .select-style {
-        background-color: white; /* Matches the white background */
-        border: 1px solid #38728A; /* Matches the border color */
-        border-radius: 20px; /* Rounded corners */
-        padding: 0.5rem 1rem; /* Padding for spacing */
-        width: 100%; /* Ensure it takes up the full width of the container */
-        transition: border-color 0.3s ease, background-color 0.3s ease; /* Smooth transition on focus */
-    }
-
-        /* Custom select dropdown styling */
-        .select {
         background-color: white; /* Matches the white background */
         border: 1px solid #38728A; /* Matches the border color */
         border-radius: 20px; /* Rounded corners */
@@ -161,110 +163,131 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-40 py-10">
         <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
 
-        <!-- reservation details -->
-        <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
+        <!-- container for the two boxes -->
+        <div class="flex gap-8">
+            <!-- reserve box -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
-            <!-- for padding -->
-            <div class="px-12 py-6">
-                <h1 class="h3 font-bold">Reservation Details</h1>
-            </div>
-            
-            <form class="px-12 w-1/2 pb-20">
-                <label for="tableNum">Table Number</label>
-                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-
-                <label for="tableRate">Table Rate</label>
-                <select name="tableRate" class="select-style rounded-full mt-1 mb-3">
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
-
-                <label for="tableDate" class="mb-2">Appointment Date</label>
-                <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
-
-                <p class="mt-2">Total:</p>
-            </form>
-
-        </div>
-
-
-        <!-- orders -->
-        <div class="mx-80 mb-20">
-            <div class="card p-4 bg-white border-4 border-primary-600 rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
-
-                <!-- button: left -->
-                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
-                ⮜
-                </button>
-
-                <!-- images -->
-                <div bind:this={elemCarousel} class="m-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
-                    {#each unsplashIds as unsplashId}
-                        <img
-                            class="snap-center w-[1024px] rounded-container-token"
-                            src="https://images.unsplash.com/photo-{unsplashId}"
-                            alt={unsplashId}
-                            loading="lazy"
-                        />
-                    {/each}
+                <!-- for padding -->
+                <div class="px-12 py-6 flex flex-row justify-between items-center">
+                    <h1 class="h2 font-bold">Would you like to reserve?</h1>
+                    <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
                 </div>
-
-                <!-- button: right -->
-                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
-                ⮞
-                </button>
-                <!-- information -->
-                <div class="col-span-3 text-center mb-4">
-                    <p class="text-surface-800">Food No.</p>
-                    <p class="text-surface-800">Description</p>
-                    <p class="text-surface-800">Price</p>
-                    <p class="text-surface-800">Food Type</p>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- order details -->
-        <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-10">
-
-            <!-- for padding -->
-            <div class="px-12 py-6">
-                <h1 class="h3 font-bold">Order Details</h1>
-            </div>
+                
+                {#if toggleReserve}
+                    <div class="flex pt-4 gap-6 px-12">
+                        <div class="flex-1">
+                            <form>
+                                <label for="tableNum">Table Number</label>
+                                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                                    <option value="1">Sharing Table</option>
+                                    <option value="2">Individual Focus Table</option>
+                                    <option value="3">Drafting Table</option>
+                                </select>
             
-            <form class="px-12 w-1/2 pb-20">
-                <label for="tableNum">Food Number</label>
-                <select name="tableNum" class="select rounded-full mt-1 mb-3">
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                    <option value="4">Option 4</option>
-                    <option value="5">Option 5</option>
-                </select>
+                                <!-- Reservation Rates should change according to the kind of table reserved -->
+            
+                                <label for="tableRate">Reservation Rates</label>
 
-                <p class="mb-3">Availability:</p>
-                <p class="mb-3">Stock Remaining:</p>
-                <p class="mb-3">Total:</p>
-            </form>
+                                <!-- change values in typescript -->
+                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}>    
+                                    {#if reservePlaceholder}
+                                        <option value="" disabled selected>{reservePlaceholder}</option>
+                                    {/if}
+                                    {#each reserveOptions as option}
+                                        <option value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    {/each}
+                                </select>
+
+                                <!-- change depending on selected rate -->
+                                <div class="mt-5">
+                                {#if reserveSelected == '1'}
+                                    <label for="tableDate" class="mb-2">Appointment Hours</label>
+                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                {:else if reserveSelected == '2'}
+                                    <label for="tableDate" class="mb-2">Appointment Date</label>
+                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                {:else if reserveSelected == '3'}
+                                    <label for="tableDate" class="mb-2">Appointment Week</label>
+                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                {:else}
+                                    <div></div>
+                                {/if}
+                                </div>
+
+                                {#if reserveSelected}
+                                    <div class="py-6">
+                                        <p class="mt-2 font-semibold">Total:</p>
+                                    </div>
+                                {/if}
+                            </form>
+                        </div>
+                    </div>
+                {:else}
+                    <div class="min-h-full"></div>
+                {/if}
+                
+                
+
+            </div>
+
+            <!-- order box -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
+
+                <!-- for padding -->
+                <div class="px-12 py-6 pb-10 flex flex-row justify-between items-center">
+                    <h1 class="h2 font-bold">Would you like to order?</h1>
+                    <SlideToggle name="slide" bind:checked={toggleOrder} active="bg-primary-500" />
+                </div>
+                
+                {#if toggleOrder}
+                    <form class="px-12 pb-20">
+                        <label for="drinkOrder">Drink Selection</label>
+                        
+                        <!-- change values in typescript -->
+                        <select name="customerOrder" multiple size="4" class="select-style rounded-full mt-1 mb-3" bind:value={drinkSelected}>    
+                            {#if orderPlaceholder}
+                                <option value="" disabled selected>{orderPlaceholder}</option>
+                            {/if}
+                            {#each drinkOptions as drink}
+                                <option value={drink.value}>
+                                    {drink.label}
+                                </option>
+                            {/each}
+                        </select>
+
+                        {#if drinkSelected.length > 0}
+                            <p class="mt-2 font-semibold">Order:</p>
+                            <ul>
+                                {#each drinkSelected as selectedValue}
+                                    {#each drinkOptions as drink (drink.value)}
+                                        {#if drink.value === selectedValue}
+                                            <li>{drink.label} ({drink.price})</li>
+                                        {/if}
+                                    {/each}
+                                {/each}
+                            </ul>
+                        {/if}
+                        
+                    </form>
+                {:else}
+                    <div class="min-h-full"></div>
+                {/if}
+                    
+            </div>
 
         </div>
 
-        <div class="flex flex-row justify-center items-center mb-10">
-            <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold">Add Booking/Order</button>
-        </div>
+        <!-- <SelectorModal show={showModal} on:close={handleClose} /> -->
 
+
+        <div class="flex flex-row justify-end items-center">
+            <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold">Confirm</button>
+        </div>
     </div>
-
 </div>
