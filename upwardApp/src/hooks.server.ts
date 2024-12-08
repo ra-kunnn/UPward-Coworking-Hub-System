@@ -38,15 +38,23 @@ const supabaseHandle: Handle = async ({ event, resolve }) => {
 };
 
 // Role-Based Access Control
+
+
+const protectedPaths = ['/customerMain', '/adminMain'];
+
 const authGuard: Handle = async ({ event, resolve }) => {
   const { session, user } = await event.locals.safeGetSession();
   event.locals.session = session;
   event.locals.user = user;
 
-  // Redirect unauthenticated users trying to access restricted pages
-  if (!session && ['/customerMain', '/adminMain'].some(path => event.url.pathname.startsWith(path))) {
-    throw redirect(303, '/');
-  }
+   const isProtected = protectedPaths.some(({ path }) =>
+    event.url.pathname === path || event.url.pathname.startsWith(`${path}/`)
+);
+
+
+  if (!session && isProtected) {
+        throw redirect(303, '/');
+    }
 
   // Set role if user is authenticated
   if (session) {
@@ -88,7 +96,11 @@ const authGuard: Handle = async ({ event, resolve }) => {
     }
   }
 
-  return resolve(event);
+  return resolve(event, {
+    headers: {
+        'Cache-Control': 'no-store, max-age=0'
+    }
+});
 };
 
 export const handle: Handle = sequence(supabaseHandle, authGuard);

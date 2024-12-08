@@ -16,12 +16,15 @@
     const logout = async () => {
         const { supabase } = data; // Destructure supabase from data
         const { error } = await supabase.auth.signOut();
+        console.log("LOGGING OUT");
+        document.cookie = 'sb-access-token=; Max-Age=0; path=/';
+            document.cookie = 'sb-refresh-token=; Max-Age=0; path=/';
+        window.location.href = "/";
         if (error) {
             console.error(error);
-        }
-    };
+            }
+        };
 
-    /*NO LOGOUT YET, ITS JUST REDIRECTING RN*/
 
     interface User {
         customer_name: string;
@@ -56,7 +59,7 @@
 <div>
 
     <!-- header -->
-    <Header />
+    <Header {logout}/>
 
     <!-- aside -->
     <Aside />

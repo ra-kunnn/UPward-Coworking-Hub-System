@@ -10,66 +10,19 @@
     import type { PageData } from '../orderHistory/$types';
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
                         
-    /**
-    
-    const modalStore = getModalStore();
-
-    function makeAnAccount(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'CreateAccount',
-        };
-        modalStore.trigger(modal);
-    }
-
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-
-    interface Availability {
-        dormNo: number;
-        availability: boolean;
-        availableSlots: number;
-        preexistingTenants: number;
-        // Add other columns as needed
-    }
-
     export let data:PageData;
-    const { rooms, availability }: { rooms: Room[], availability: Availability[] } = data;
 
-    let roomRows: Room[] = [];
-    let availRows: Availability[] = [];
-    let availableRooms: Room[] = [];
-
-    onMount(() => {
-        try {
-            roomRows = rooms || [];
-            availRows = availability || [];
-            availableRooms = roomRows.filter(room => {
-                const roomAvailability = availRows.find(avail => avail.dormNo === room.dormNo);
-                return roomAvailability && roomAvailability.availability;
-            });
-        } catch (error) {
+    const logout = async () => {
+        const { supabase } = data; // Destructure supabase from data
+        const { error } = await supabase.auth.signOut();
+        console.log("LOGGING OUT");
+        document.cookie = 'sb-access-token=; Max-Age=0; path=/';
+            document.cookie = 'sb-refresh-token=; Max-Age=0; path=/';
+        window.location.href = "/";
+        if (error) {
             console.error(error);
-            roomRows = [];
-            availRows = [];
-            availableRooms = [];
-        }
-    });
-
-    function createArray(length: number): number[] {
-        return Array.from({ length }, (_, i) => i);
-    } 
-
-    */
+            }
+        };
 
 </script>
 
@@ -79,7 +32,7 @@
 <div>
 
     <!-- header -->
-    <Header />
+    <Header {logout}/>
 
     <!-- aside -->
     <Aside />
