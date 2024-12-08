@@ -3,85 +3,36 @@ import { redirect } from '@sveltejs/kit'
 import type { Actions } from './$types'
 
 export const actions: Actions = {
-  signup: async ({ request, locals: { supabase } }) => {
-      const formData = await request.formData();
-
-      const name = formData.get('name') as string;
-      const email = formData.get('email') as string;
-      const phone = formData.get('phone') as string;
-      const password = formData.get('password') as string;
-
-
-      console.log('Form data:', { name, email, phone, password });
-
-      const { data: user, error: signupError} = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name: name,
-            phone,
-          },
-        },
-      });
-
-      if (signupError || !user) {
-        console.error('Sign-up error:', signupError);
-        return redirect(303, '/error'); //go to error, pls make error folder
-      }
-
-      const customerID = user.user?.id;
-
-      // If signup succeeds, add user details to the user table
-      const { error: profileError } = await supabase
-        .from('Customer') 
-        .insert([
-          {
-            customer_name: name,
-            customer_phone: phone,
-            customer_email: email,
-            customer_id: customerID,
-          },
-        ]);
-
-      if (profileError) {
-        console.error('Profile creation error:', profileError);
-        return redirect(303, '/error');
-      }
-
-      console.log('Redirecting to confirm page...');
-      return redirect(303, '/customerMain');
-  },
+  //just 2 email types now no more pot and user
   login: async ({ request, locals: { supabase } }) => {
       const formData = await request.formData();
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      console.log(email, password);
 
-      //error is in login now
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-     const { data: potCust } = await supabase
-      .from('Potential Customer')
-      .select('customerEmail')
-      .eq('customerEmail', email)
+     const { data: customer } = await supabase
+      .from('Customer')
+      .select('customer_email')
+      .eq('customer_email', email)
       .single();
 
-    if (potCust) {
-      return redirect(303, '/userMain');
+    if (customer) {
+      return redirect(303, '/customerMain');
     }
 
-    const { data: manager } = await supabase
-      .from('Manager')
-      .select('managerEmail')
-      .eq('managerEmail', email)
+    const { data: admin } = await supabase
+      .from('Admin')
+      .select('admin_email')
+      .eq('admin_email', email)
       .single();
 
-    if (manager) {
+    if (admin) {
       return redirect(303, '/adminMain');
     }
 
-    return redirect(303, '/tenantMain');
   },
 };
 
@@ -89,29 +40,58 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
+  depends('supabase:db:Table');
+  depends('supabase:db:Table Availability');
+  depends('supabase:db:Drink');
+  depends('supabase:db:Drink Availability');
 
-  const { data: roomData, error: roomError } = await supabase
-    .from('Dorm Room')
+  const { data: tableData, error: tableError } = await supabase
+    .from('Table')
     .select('*');
 
   
-  const { data: availabilityData, error: availabilityError } = await supabase
-    .from('Availability')
+  const { data: tableAvailabilityData, error: tableAvailabilityError } = await supabase
+    .from('Table Availability')
     .select('*');
 
-  if (roomError) {
-    console.error('Error fetching room data:', roomError);
-    return { rooms: [], availability: availabilityData ?? [], error: roomError.message };
+
+    console.log(tableData);
+    console.log(tableAvailabilityData);
+      
+
+  const { data: drinkData, error: drinkError } = await supabase
+    .from('Drink')
+    .select('*');
+  
+  const { data: drinkAvailabilityData, error: drinkAvailabilityError } = await supabase
+    .from('Drink Availability')
+    .select('*');
+
+  console.log(drinkData);
+  console.log(drinkAvailabilityData);
+
+  if (drinkError) {
+    console.error('Error fetching drink data:', drinkError);
+    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
   }
 
-  if (availabilityError) {
-    console.error('Error fetching availability data:', availabilityError);
-    return { rooms: roomData ?? [], availability: [], error: availabilityError.message };
+  if (drinkAvailabilityError) {
+    console.error('Error fetching drink availability data:', drinkAvailabilityError);
+    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
   }
 
-  return { rooms: roomData ?? [], availability: availabilityData ?? [] };
+  if (tableError) {
+    console.error('Error fetching table data:', tableError);
+    return { drinks: drinkData ?? [],drinkAvailability: drinkAvailabilityData ?? [], tables: [], tableAvailability: tableAvailabilityData ?? [], error: tableError.message };
+  }
+  
+  
+  if (tableAvailabilityError) {
+    console.error('Error fetching table availability data:', tableAvailabilityError);
+    return { drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], tables: tableData ?? [], tableAvailability: [], error: tableAvailabilityError.message };
+  }
+  return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData};
 
 };
+
 

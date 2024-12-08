@@ -65,8 +65,7 @@
         // Add other columns as needed
     }
 
-    export let data:PageData;
-    const { rooms, availability }: { rooms: Room[], availability: Availability[] } = data;
+ 
 
     let roomRows: Room[] = [];
     let availRows: Availability[] = [];
