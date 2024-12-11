@@ -60,6 +60,31 @@
             }
         };
 
+        interface User {
+        customer_name: string;
+        customer_id: number;
+        customer_phone: number;
+        customer_email: string;
+    }
+
+    let customer_name: string = '';
+    let customer_email: string = '';
+    let customer_id: number = 0;
+
+    console.log("TESTING CUST DATA" + customer_name);
+
+    onMount(() => {
+    console.log("IS IT MOUNTING??/");
+        try {
+            customer_name = data.user?.customer_name ?? '';
+            customer_email = data.user?.customer_email ?? '';
+            customer_id = data.user?.customer_id ?? 0;
+            console.log("testing cookies"+ customer_id, customer_email);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
 </script>
 
 <style>
@@ -119,7 +144,7 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
+        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
 
         <!-- container for the two boxes -->
         <div class="flex gap-8">
