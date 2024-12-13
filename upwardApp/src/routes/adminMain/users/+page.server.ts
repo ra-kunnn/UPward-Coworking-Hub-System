@@ -41,8 +41,10 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
+  depends('supabase:db:Table');
+  depends('supabase:db:Table Availability');
+  depends('supabase:db:Drink');
+  depends('supabase:db:Drink Availability');
 
   const { data: tableData, error: tableError } = await supabase
     .from('Table')

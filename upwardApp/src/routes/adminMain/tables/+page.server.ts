@@ -66,7 +66,50 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Customer')
     .select('*');
 
+    if (tableReservationData && tableReservationData.length > 0) {
+      // Iterate over each row to calculate and update the `end_date`
+      for (const row of tableReservationData) {
+          // Ensure `reservation_date` and `duration` are valid
+          if (row.date && row.duration) {
+              const { reservation_no, date, duration } = row; // Use reservation_no as the primary identifier
+              console.log(date);
+              console.log(duration);
+              // Calculate the new end_date
+              const { data: calculationData, error: calculationError } = await supabase.rpc(
+                  'add_interval_to_date', // Custom function to add interval to date
+                  {
+                      date,
+                      duration,
+                  }
+              );
   
+              if (calculationError) {
+                  console.error(
+                      `Error calculating end_date for reservation_no ${reservation_no}:`,
+                      calculationError
+                  );
+                  continue; // Skip to the next row if there's an error
+              }
+              console.log(calculationData);
+              const newEndDate = calculationData;
+              
+              // Use Supabase to update `end_date` for this row
+              const { error: updateError } = await supabase
+                  .from('Table Reservation')
+                  .update({
+                      end_date: newEndDate, // The calculated end_date
+                  })
+                  .eq('reservation_no', reservation_no); // Use reservation_no to target the row
+  
+              if (updateError) {
+                  console.error(
+                      `Error updating end_date for reservation_no ${reservation_no}:`,
+                      updateError
+                  );
+              }
+          }
+      }
+  }
   return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], tableReservation : tableReservationData ?? [], tableReservationStatus : tableReservationStatusData ?? [], customer: customerData ?? []};
 
 };
