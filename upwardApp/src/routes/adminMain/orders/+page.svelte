@@ -78,13 +78,19 @@
         createdAt: Date;
     }
 
-    
+    interface Customer {
+        customerID: string;
+        customerName: string;
+        customerEmail: string;
+        customerPhone: string;
+    }
 
     let drinkRows : Drink[] = [];
     let drinkAvailabilityRows: DrinkAvailability[] = [];
     let drinkOrderLineRows: DrinkOrderLine[] = [];
     let drinkOrderStatusRows: DrinkOrderStatus[] = [];
     let drinkReceiptRows: DrinkReceipt[] = [];
+    let customerRows : Customer[] = [];
 console.log("test");
     onMount(() => {
         try {
@@ -93,6 +99,7 @@ console.log("test");
             drinkOrderLineRows = data.drinkOrderLine || [];
             drinkOrderStatusRows = data.drinkOrderStatus || [];
             drinkReceiptRows = data.drinkReceipt || [];
+            customerRows = data.customer || [];
             console.log("drinkRows:", drinkRows);
             console.log("drinkAvailabilityRows:", drinkAvailabilityRows);
             console.log("drinkOrderLineRows:", drinkOrderLineRows);

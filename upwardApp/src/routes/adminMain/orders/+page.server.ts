@@ -68,6 +68,10 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Drink Receipt')
     .select('*');
 
+  const { data: customerData, error: customerError } = await supabase
+    .from('Customer')
+    .select('*');
+
   if (drinkError) {
     console.error('Error fetching room data:', drinkError);
     return { drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
@@ -81,7 +85,7 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
   
 
 
-  return {drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], drinkOrderLine: drinkOrderLineData ?? [], drinkOrderStatus : drinkOrderStatusData ?? [], drinkReceipt: drinkReceiptData ?? []};
+  return {drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], drinkOrderLine: drinkOrderLineData ?? [], drinkOrderStatus : drinkOrderStatusData ?? [], drinkReceipt: drinkReceiptData ?? [], customer: customerData ?? []};
 
 };
 
