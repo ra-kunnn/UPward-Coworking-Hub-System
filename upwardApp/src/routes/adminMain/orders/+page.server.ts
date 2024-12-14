@@ -3,6 +3,7 @@ import { redirect } from '@sveltejs/kit'
 import type { Actions } from './$types'
 
 export const actions: Actions = {
+  
   //just 2 email types now no more pot and user
   login: async ({ request, locals: { supabase } }) => {
       const formData = await request.formData();

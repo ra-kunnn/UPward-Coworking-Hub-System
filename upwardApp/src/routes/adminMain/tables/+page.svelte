@@ -16,41 +16,41 @@
     export let data:PageData;
 
     interface Table{
-        tableID: number;
-        tableName: string;
+        table_id: number;
+        table_name: string;
         description: string;
         pax: number;
-        tableType: string;
+        table_type: string;
     }
 
     interface TableAvailability{
-        tableAvailNo: number;
-        tableID: number;
+        table_avail_id: number;
+        table_id: number;
         availability: boolean;
-        customerID: string;
+        customer_id: string;
     }
 
     interface TableReservation{
-        reservationID: number;
-        dateReserved: Date;
-        customerID: string;
-        tableID: number;
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
         duration: Date;
-        dateEnd: Date;
+        end_date: Date;
     }
 
     interface TableReservationStatus{
-        reservationID: number;
-        isIncoming: boolean;
-        isOngoing: boolean;
-        isDone: boolean;
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
     }
 
     interface Customer {
-        customerID: string;
-        customerName: string;
-        customerEmail: string;
-        customerPhone: string;
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
     }
 
     let tableRows : Table[] = [];

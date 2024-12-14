@@ -40,49 +40,49 @@
    
 
     interface Drink{
-        drinkID: number;
-        drinkName: string;
+        drink_id: number;
+        drink_name: string;
         description: string;
         price: number;
-        drinkType: string;
+        drink_type: string;
     }
 
     interface DrinkAvailability{
-        drinkAvailNo: number;
-        drinkID: number;
+        drink_avail_no: number;
+        drink_id: number;
         availability: boolean;
         stock: number;
     }
 
     interface DrinkOrderLine{
-        orderID: number;
-        createdAt: Date;
-        customerID: string;
-        drinkID: number;
-        receiptID: number;
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
         qty: number;
-        totalPrice: number;
+        total_price: number;
     }
 
     interface DrinkOrderStatus{
-        receiptID: number;
-        isIncoming: boolean;
-        isOngoing: boolean;
-        isDone: boolean;
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
     }
 
     interface DrinkReceipt{
-        receiptID: number;
-        totalPrice: number;
-        customerID: string;
-        createdAt: Date;
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
     }
 
     interface Customer {
-        customerID: string;
-        customerName: string;
-        customerEmail: string;
-        customerPhone: string;
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
     }
 
     let drinkRows : Drink[] = [];
@@ -91,6 +91,7 @@
     let drinkOrderStatusRows: DrinkOrderStatus[] = [];
     let drinkReceiptRows: DrinkReceipt[] = [];
     let customerRows : Customer[] = [];
+
 console.log("test");
     onMount(() => {
         try {
@@ -100,11 +101,6 @@ console.log("test");
             drinkOrderStatusRows = data.drinkOrderStatus || [];
             drinkReceiptRows = data.drinkReceipt || [];
             customerRows = data.customer || [];
-            console.log("drinkRows:", drinkRows);
-            console.log("drinkAvailabilityRows:", drinkAvailabilityRows);
-            console.log("drinkOrderLineRows:", drinkOrderLineRows);
-            console.log("drinkOrderStatusRows:", drinkOrderStatusRows);
-            console.log("drinkReceiptRows:", drinkReceiptRows);
             
         } catch (error) {
             console.error(error);
@@ -115,9 +111,63 @@ console.log("test");
             drinkReceiptRows = [];
         }
     });
+    
+    const cancelOrder = async (receipt_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_done: false
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
 
-    console.log("drinkRows Type Check:", Array.isArray(drinkRows));
-   
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmOrder = async (receipt_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_done: false
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
 </script>
 
 <HideOverflow />
@@ -195,23 +245,43 @@ console.log("test");
                     <div class="py-6 flex-grow">
 
                         <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p>Receipt No.</p>
-                            </div>
-                            <div>
-                                <p>Drink No.</p>
-                            </div>
-                            <div>
-                                <p>Customer</p>
-                            </div>
-                            <div>
-                                <p>Total</p>
-                            </div>
-                            <div class="flex flex-auto mx-auto">
-                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                            </div>
-                        </div>
+                        {#each drinkReceiptRows as drinkReceiptRow}
+                            {#each drinkOrderStatusRows as drinkOrderStatusRow}
+                                {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_incoming}      
+                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                                        <div>
+                                            <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                        </div>
+                                        {#each drinkOrderLineRows as drinkOrderLineRow}
+                                            {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                                <div>
+                                                    {#each drinkRows as drinkRow}
+                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                            <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                        {/if}
+                                                    {/each}
+                                                </div>
+                                                        
+                                            {/if}
+                                        {/each}
+                                        {#each customerRows as customerRow}
+                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                    <div>
+                                                        <p>{customerRow.customer_name}</p>
+                                                    </div>
+                                                {/if}
+                                        {/each}
+                                        <div>
+                                            <p>{drinkReceiptRow.total_price}</p>
+                                        </div>
+                                        <div class="flex flex-auto mx-auto">
+                                            <button on:click={() => {confirmOrder(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {cancelOrder(drinkReceiptRow.receipt_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                        </div>
+                                    </div>
+                                {/if}
+                            {/each}
+                        {/each}
 
                         <!-- one entry -->
                         <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">

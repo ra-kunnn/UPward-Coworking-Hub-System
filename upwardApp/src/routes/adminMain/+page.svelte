@@ -15,82 +15,82 @@
 
     export let data:PageData;
 
-interface Drink{
-    drinkID: number;
-    drinkName: string;
-    description: string;
-    price: number;
-    drinkType: string;
-}
+    interface Drink{
+        drink_id: number;
+        drink_name: string;
+        description: string;
+        price: number;
+        drink_type: string;
+    }
 
-interface DrinkAvailability{
-    drinkAvailNo: number;
-    drinkID: number;
-    availability: boolean;
-    stock: number;
-}
+    interface DrinkAvailability{
+        drink_avail_no: number;
+        drink_id: number;
+        availability: boolean;
+        stock: number;
+    }
 
-interface DrinkOrderLine{
-    orderID: number;
-    createdAt: Date;
-    customerID: string;
-    drinkID: number;
-    receiptID: number;
-    qty: number;
-    totalPrice: number;
-}
+    interface DrinkOrderLine{
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
+        qty: number;
+        total_price: number;
+    }
 
-interface DrinkOrderStatus{
-    receiptID: number;
-    isIncoming: boolean;
-    isOngoing: boolean;
-    isDone: boolean;
-}
+    interface DrinkOrderStatus{
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
+    }
 
-interface DrinkReceipt{
-    receiptID: number;
-    totalPrice: number;
-    customerID: string;
-    createdAt: Date;
-}
+    interface DrinkReceipt{
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
+    }
 
-interface Customer {
-    customerID: string;
-    customerName: string;
-    customerEmail: string;
-    customerPhone: string;
-}
+    interface Customer {
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
+    }
 
-interface Table{
-    tableID: number;
-    tableName: string;
-    description: string;
-    pax: number;
-    tableType: string;
-}
+    interface Table{
+        table_id: number;
+        table_name: string;
+        description: string;
+        pax: number;
+        table_type: string;
+    }
 
-interface TableAvailability{
-    tableAvailNo: number;
-    tableID: number;
-    availability: boolean;
-    customerID: string;
-}
+    interface TableAvailability{
+        table_avail_id: number;
+        table_id: number;
+        availability: boolean;
+        customer_id: string;
+    }
 
-interface TableReservation{
-    reservationID: number;
-    dateReserved: Date;
-    customerID: string;
-    tableID: number;
-    duration: Date;
-    dateEnd: Date;
-}
+    interface TableReservation{
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
+        duration: Date;
+        end_date: Date;
+    }
 
-interface TableReservationStatus{
-    reservationID: number;
-    isIncoming: boolean;
-    isOngoing: boolean;
-    isDone: boolean;
-}
+    interface TableReservationStatus{
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
+    }
 
 let drinkRows : Drink[] = [];
 let drinkAvailabilityRows: DrinkAvailability[] = [];

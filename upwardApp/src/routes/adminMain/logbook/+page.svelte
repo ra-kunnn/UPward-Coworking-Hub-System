@@ -104,6 +104,9 @@
     let tableAvailabilityRows: TableAvailability[] = [];
     let tableReservationRows: TableReservation[] = [];
     let tableReservationStatusRows: TableReservationStatus[] = [];
+    let isOrderView = true;
+    let selectedDateFrom = null;
+    let selectedDateTo = null;
 
     onMount(() => {
         try {
@@ -131,7 +134,38 @@
             tableReservationStatusRows = [];
         }
     });
-    
+    const setLogbookView = (view) => {
+        console.log("Selected View:", view);
+        // Add your logic here to handle the selected view
+        isOrderView = view === "orderRadio";
+    };
+
+    const getSelectedRadioValue = () => {
+        // Get the selected radio button value
+        const selectedRadio = document.querySelector('input[name="radioGroup"]:checked');
+        return selectedRadio ? selectedRadio.id : null; // Return the `id` of the selected radio, or `null` if none selected
+    };
+    const captureDateInputs = () => {
+        // Get the date input values
+        const dateFrom = document.querySelector('input[name="dateFrom"]').value;
+        const dateTo = document.querySelector('input[name="dateTo"]').value;
+
+        // Update the global constants
+        selectedDateFrom = dateFrom;
+        selectedDateTo = dateTo;
+
+        console.log("Date From:", selectedDateFrom);
+        console.log("Date To:", selectedDateTo)
+    };
+
+    const isDateInRange = (date) => {
+        if (!selectedDateFrom || !selectedDateTo) return true; // No filtering if dates are not selected
+        const fromDate = new Date(selectedDateFrom);
+        const toDate = new Date(selectedDateTo);
+        const targetDate = new Date(date);
+
+        return targetDate >= fromDate && targetDate <= toDate;
+    };
 </script>
 
 <style>
@@ -177,51 +211,110 @@
                 <div class="min-h-full flex flex-col">
                     <div class="px-12 py-6 flex flex-row justify-between items-center">
                         <h1 class="h1 font-bold">Logbook</h1>
-                        <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
+                        <button 
+                            on:click={() => { 
+                                const selectedView = getSelectedRadioValue(); 
+                                captureDateInputs(); // Capture the date inputs
+                                setLogbookView(selectedView);
+                            }} 
+                            class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">
+                            Load
+                        </button>
                     </div>
-
-                    <div class="py-6 grow bg-surface-100">
-                        <div class="px-12">
-                            {#each drinkReceiptRows as drinkReceiptRow}
-                            <!-- one entry -->
-                                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                            <div>
-                                                <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
-                                            </div>
-                                            {#each drinkOrderLineRows as drinkOrderLineRow}
-                                                {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
-                                                    <div>
-                                                        {#each drinkRows as drinkRow}
-                                                            {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
-                                                                <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                    {#if isOrderView}
+                        <div class="py-6 grow bg-surface-100">
+                            <div class="px-12">
+                                {#each drinkReceiptRows as drinkReceiptRow}
+                                <!-- one entry -->
+                                    {#if isDateInRange(drinkReceiptRow.created_at)}
+                                        {#each drinkOrderStatusRows as drinkOrderStatusRow}
+                                            {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_done}
+                                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                                        <div>
+                                                            <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                                        </div>
+                                                        {#each drinkOrderLineRows as drinkOrderLineRow}
+                                                            {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                                                <div>
+                                                                    {#each drinkRows as drinkRow}
+                                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                                            <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                                        {/if}
+                                                                    {/each}
+                                                                </div>
+                                                                        
                                                             {/if}
                                                         {/each}
+                                                        {#each customerRows as customerRow}
+                                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                                <div>
+                                                                    <p>{customerRow.customer_name}</p>
+                                                                </div>
+                                                                {/if}
+                                                        {/each}
+                                                        <div>
+                                                            <p>{drinkReceiptRow.created_at}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p>{drinkReceiptRow.total_price}</p>
+                                                        </div>
                                                     </div>
-                                                            
-                                                {/if}
-                                            {/each}
-                                            {#each customerRows as customerRow}
-                                                    {#if customerRow.customer_id === drinkReceiptRow.customer_id}
-                                                    <div>
-                                                        <p>{customerRow.customer_name}</p>
-                                                    </div>
-                                                    {/if}
-                                            {/each}
-                                            <div>
-                                                <p>{drinkReceiptRow.created_at}</p>
-                                            </div>
-                                            <div>
-                                                <p>{drinkReceiptRow.total_price}</p>
-                                            </div>
-                                        </div>
-                                  
+                                            {/if}
+                                        {/each}
+                                    {/if}
+                                {/each}
                                 
-                            {/each}
-                            
+                            </div>
+
                         </div>
+                    {:else}
+                        <div class="py-6 grow bg-surface-100">
+                            <div class="px-12">
+                                {#each tableReservationRows as tableReservationRow}
+                                <!-- one entry -->
+                                    {#if isDateInRange(tableReservationRow.date)}
+                                        {#each tableReservationStatusRows as tableReservationStatusRow}
+                                            
+                                        
+                                            {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_done}
+                                                
+                                            
+                                                <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                                    <div>
+                                                        <p>Reservation No. {tableReservationRow.reservation_no}</p>
+                                                    </div>
+                                                    {#each tableRows as tableRow}
+                                                        {#if tableReservationRow.table_id === tableRow.table_id}
+                                                            <div>
+                                                                <p>{tableRow.table_name}</p>
+                                                            </div>
+                                                                    
+                                                        {/if}
+                                                    {/each}
+                                                    {#each customerRows as customerRow}
+                                                            {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                                            <div>
+                                                                <p>{customerRow.customer_name}</p>
+                                                            </div>
+                                                            {/if}
+                                                    {/each}
+                                                    <div>
+                                                        <p>{tableReservationRow.date} to {tableReservationRow.end_date}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p>total cost</p>
+                                                    </div>
+                                                </div>
+                                            
+                                            {/if}
+                                        {/each}
+                                    {/if}
+                                {/each}
+                                
+                            </div>
 
-                    </div>
-
+                        </div>
+                    {/if}
                 </div>
             </div>
         </div>
@@ -241,7 +334,7 @@
                 </div>
     
                 <div class="flex items-center">
-                    <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
+                    <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600" checked>
                     <label for="default-radio-1" class="ms-2 font-medium">Order</label>
                 </div>
             </div>
