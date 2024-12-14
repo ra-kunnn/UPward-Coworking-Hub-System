@@ -45,6 +45,10 @@
     ];
 	let drinkSelected = "";
 
+    let tableOptions = []; // Holds the processed table options
+    let tableSelected = 'shared'; // Selected table
+
+
 
     export let data:PageData;
 
@@ -73,7 +77,9 @@
 
     console.log("TESTING CUST DATA" + customer_name);
 
-    onMount(() => {
+  
+
+    onMount(async () => {
     console.log("IS IT MOUNTING??/");
         try {
             customer_name = data.user?.customer_name ?? '';
@@ -83,7 +89,112 @@
         } catch (error) {
             console.error(error);
         }
-    });
+
+});
+
+    let tablePlaceholder = 'Select a table...';
+    let tableTypePlaceholder = 'Select a table type...';
+
+const changeTable =  async () => {
+        
+        const { supabase } = data; // Destructure Supabase client from data
+        try {
+            // Fetch table data from Supabase
+            const { data: tables, error: tableError } = await supabase
+                .from('Table')
+                .select('table_name, table_type, table_id');
+
+            const { data: tableAvailability, error: availabilityError } = await supabase
+                .from('Table Availability')
+                .select('availability, table_id');
+
+            if (tableError || availabilityError) throw error;
+
+            const availabilityMap = new Map(
+                   tableAvailability.map((entry) => [entry.table_id, entry.availability])
+               );
+
+            // Group and process the table data
+            const groupedTables = {
+                shared: [],
+                drafting: [],
+                individual: []
+            };
+
+            tables.forEach((table) => {
+                   const isAvailable = availabilityMap.get(table.table_id); // Check availability
+                   if (isAvailable) {
+                       switch (table.table_type) {
+                           case 'Sharing Table':
+                               groupedTables.shared.push(table.table_name);
+                               break;
+                           case 'Drafting Table':
+                               groupedTables.drafting.push(table.table_name);
+                               break;
+                           case 'Individual Focus':
+                               groupedTables.individual.push(table.table_name);
+                               break;
+                       }
+                   }
+               });
+
+               let allTableOptions = [];
+
+               // Dynamically add options for each table type
+               allTableOptions.push({
+                   label: groupedTables.shared.length > 0
+                       ? `Sharing Tables (${groupedTables.shared.join(', ')})`
+                       : "Sharing Tables (No available tables)",
+                   value: groupedTables.shared.length > 0 ? 'shared' : null
+               });
+
+               allTableOptions.push({
+                   label: groupedTables.individual.length > 0
+                       ? `Individual Focus (${groupedTables.individual.join(', ')})`
+                       : "Individual Focus (No available tables)",
+                   value: groupedTables.individual.length > 0 ? 'individual' : null
+               });
+
+               allTableOptions.push({
+                   label: groupedTables.drafting.length > 0
+                       ? `Drafting Tables (${groupedTables.drafting.join(', ')})`
+                       : "Drafting Tables (No available tables)",
+                   value: groupedTables.drafting.length > 0 ? 'drafting' : null
+               });
+
+               // Filter out invalid options (e.g., those with value = null)
+               allTableOptions = allTableOptions.filter(option => option.value !== null);
+
+               console.log("Available options:", allTableOptions);
+
+        // Update table options based on the selected table type
+        $: {
+            console.log("bruh, should show selected table"+ tableSelected);
+
+
+            if (tableSelected) { // the table selected part is the problem
+                // Filter table options based on the selected type
+
+                tableOptions = allTableOptions.filter(option => option.value === tableSelected);
+            } 
+            else{tableOptions = allTableOptions;}
+
+            if (tableOptions.length === 0) {
+                tablePlaceholder = 'No Available Tables';
+            } else {
+                    tablePlaceholder = 'Select a table...'; // Default placeholder
+                }
+
+        }
+    } catch (err) {
+        console.error("Error fetching tables:", err.message);
+    }
+    };
+
+
+    // Watch for changes in reserveSelected and other relevant variables
+    $: changeTable();
+
 
     // Existing imports and declarations...
 
@@ -255,13 +366,21 @@ const handleConfirm = async () => {
                         <div class="flex-1">
                             <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
                                 <label for="tableType">Table Type</label>
-                                <select name="tableType" class="select-style rounded-full mt-1 mb-3">
-                                    <option value="1">Sharing Table</option>
-                                    <option value="2">Individual Focus Table</option>
-                                    <option value="3">Drafting Table</option>
+                                <select name="tableType" bind:value={tableSelected} on:change={changeTable} class="select-style rounded-full mt-1 mb-3">
+                                    <option value='shared'>Sharing Table</option>
+                                    <option value='individual'>Individual Focus Table</option>
+                                    <option value='drafting'>Drafting Table</option>
                                 </select>
+
             
-                                <!-- ADD A PICKER FOR ALL THE TABLES UNDER THAT TABLE TYPE -->
+                                <label for="tableNum">Table</label>
+                                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                                    {#each tableOptions as table}
+                                        <option value={table.value}>{table.label}</option>
+                                    {/each}
+                                    <option value="" disabled selected>{tablePlaceholder}</option>
+                                </select>
+                                
             
                                 <label for="tableRate">Reservation Rates</label>
 
