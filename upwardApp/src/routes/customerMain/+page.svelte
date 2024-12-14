@@ -205,18 +205,27 @@ const changeTable =  async () => {
 
     // Function to calculate the total price based on reservation type
     const calculateTotal = () => {
-        const hourlyRate = 100; // Set the hourly rate
-        const dailyRate = 100; // Set the daily rate
-        const weeklyRate = 100; // Set the weekly rate
+        const hourlySharedRate = 100; 
+        const hourlyIndividualRate = 100;
+        const hourlyDraftingRate = 100; 
+
+        const dailySharedRate = 100; 
+        const dailyIndividualRate = 100;
+        const dailyDraftingRate = 100; 
+
+        const weeklySharedRate = 100; 
+        const weeklyIndividualRate = 100;
+        const weeklyDraftingRate = 100; 
 
         if (reserveSelected === "1") { // Hourly rate
             const start = new Date(startDate);
             const end = new Date(endDate);
             hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60); // Difference in hours
             total_price = hours > 0 ? Math.ceil(hours) * hourlyRate : console.log("Invalid time range.");
-        } else if (reserveSelected === "2") { // Daily rate
+
+        } else if (reserveSelected === "2") { // Daily rate, daily rate lasts until time started until 6 am the next day
             total_price = dailyRate;
-        } else if (reserveSelected === "3") { // Weekly rate
+        } else if (reserveSelected === "3") { // Weekly rate, equivalent to 7 dailies, usuable within 2 weeks
             total_price = weeklyRate;
         } else {
             total_price = "Invalid selection.";
@@ -235,9 +244,11 @@ const handleConfirm = async () => {
 
             const startDate = formData.get('startDate') as string;
             const endDate = formData.get('endDate') as string;
-            const week = formData.get('week') as string;
+            
             const total = total_price;
             const customer_id =  data.user?.customer_id ?? 0;
+
+            const durationHourInterval = `${Math.ceil(hours)} hours`; 
 
 
             if (reserveSelected === "1") { // Hourly rate
@@ -248,34 +259,31 @@ const handleConfirm = async () => {
                     customer_id: customer_id,
                     table_id: ,
                     date: startDate,
-                    duration: hours,
+                    duration: durationHourInterval,
                     end_date: endDate
 
                 });*/
                 
             } else if (reserveSelected === "2") { // Daily rate
-                total_price = dailyRate;
+                 /*   const { reserveError } = await supabase
+                .from('Table Reservation')
+                .insert({ 
+                    customer_id: customer_id,
+                    table_id: ,
+                    date: startDate,
+                    duration: durationHourInterval,
+                    end_date: endDate
+
+                });*/
             } else if (reserveSelected === "3") { // Weekly rate
                 total_price = weeklyRate;
             } else {
                 total_price = "Invalid selection.";
             }
 
-            console.log(reserveForm, customer_id, week, hours);
-           /* const { reserveError } = await supabase
-                .from('Table Reservation')
-                .insert({ 
-                    customer_id: customer_id,
-                    table_id:,
-                    date:,
-                    duration:
-                    end_date:
-
-                });
-
              if (reserveError){
               console.log("errorr bruh. also u dont have an error message yet In Website")
-             }*/
+             }
 
     }
 
@@ -400,17 +408,21 @@ const handleConfirm = async () => {
                                 <div class="mt-5">
                                 {#if reserveSelected == '1'}
                                     <!-- PUT THE START AND END HOURS SIDE BY SIDE-->
+
+                                    <p>Hourly Rate is charged for every hour, smth minutes past the time is considered an hour</p> <br />
                                     
-                                    <label for="startDate" class="mb-2">Start Date</label>
+                                    <label for="startDate" class="mb-2">Start Time</label>
                                     <input name="startDate" type="datetime-local" class="input time-input rounded-3xl"  bind:value={startDate} on:change={calculateTotal}>
-                                    <label for="endDate" class="mb-2">End Date</label>
+                                    <label for="endDate" class="mb-2">End Time</label>
                                     <input name="endDate" type="datetime-local" class="input time-input rounded-3xl"  bind:value={endDate} on:change={calculateTotal}>
                                 {:else if reserveSelected == '2'}
-                                    <label for="date" class="mb-2">Appointment Date</label>
-                                    <input name="date" type="date" class="input date-input rounded-3xl" on:change={calculateTotal}>
+                                    <p>Daily Rate lasts until time started until closing time (6 am). </p> <br />
+                                    <label for="startDate" class="mb-2">Appointment Date</label>
+                                    <input name="startDate" type="datetime-local" class="input date-input rounded-3xl" on:change={calculateTotal}>
                                 {:else if reserveSelected == '3'}
-                                    <label for="week" class="mb-2">Appointment Week</label>
-                                    <input name="week" type="week" class="input week-input rounded-3xl" on:change={calculateTotal}>
+                                    <p>Weekly Rate is good for 7 days but can be used flexibly within 2 weeks from appointment date. </p> <br />
+                                    <label for="startDate" class="mb-2">Start Date</label>
+                                    <input name="startDate" type="datetime-local" class="input time-input rounded-3xl"  bind:value={startDate} on:change={calculateTotal}>
                                 {:else}
                                     <div></div>
                                 {/if}
