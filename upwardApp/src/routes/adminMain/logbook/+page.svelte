@@ -18,80 +18,80 @@
     export let data:PageData;
 
     interface Drink{
-        drinkID: number;
-        drinkName: string;
+        drink_id: number;
+        drink_name: string;
         description: string;
         price: number;
-        drinkType: string;
+        drink_type: string;
     }
 
     interface DrinkAvailability{
-        drinkAvailNo: number;
-        drinkID: number;
+        drink_avail_no: number;
+        drink_id: number;
         availability: boolean;
         stock: number;
     }
 
     interface DrinkOrderLine{
-        orderID: number;
-        createdAt: Date;
-        customerID: string;
-        drinkID: number;
-        receiptID: number;
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
         qty: number;
-        totalPrice: number;
+        total_price: number;
     }
 
     interface DrinkOrderStatus{
-        receiptID: number;
-        isIncoming: boolean;
-        isOngoing: boolean;
-        isDone: boolean;
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
     }
 
     interface DrinkReceipt{
-        receiptID: number;
-        totalPrice: number;
-        customerID: string;
-        createdAt: Date;
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
     }
 
     interface Customer {
-        customerID: string;
-        customerName: string;
-        customerEmail: string;
-        customerPhone: string;
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
     }
 
     interface Table{
-        tableID: number;
-        tableName: string;
+        table_id: number;
+        table_name: string;
         description: string;
         pax: number;
-        tableType: string;
+        table_type: string;
     }
 
     interface TableAvailability{
-        tableAvailNo: number;
-        tableID: number;
+        table_avail_id: number;
+        table_id: number;
         availability: boolean;
-        customerID: string;
+        customer_id: string;
     }
 
     interface TableReservation{
-        reservationID: number;
-        dateReserved: Date;
-        customerID: string;
-        tableID: number;
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
         duration: Date;
-        dateEnd: Date;
+        end_date: Date;
     }
 
     interface TableReservationStatus{
-        reservationID: number;
-        isIncoming: boolean;
-        isOngoing: boolean;
-        isDone: boolean;
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
     }
 
     let drinkRows : Drink[] = [];
@@ -117,17 +117,6 @@
             tableAvailabilityRows = data.tableAvailability || [];
             tableReservationRows = data.tableReservation || [];
             tableReservationStatusRows = data.tableReservationStatus || [];
-            console.log("drinkRows:", drinkRows);
-            console.log("drinkAvailabilityRows:", drinkAvailabilityRows);
-            console.log("drinkOrderLineRows:", drinkOrderLineRows);
-            console.log("drinkOrderStatusRows:", drinkOrderStatusRows);
-            console.log("drinkReceiptRows:", drinkReceiptRows);
-            
-            console.log("tableRows:", tableRows);
-            console.log("tableAvailabilityRows:", tableAvailabilityRows);
-            console.log("tableReservationRows:", tableReservationRows);
-            console.log("tableReservationStatusRows:", tableReservationStatusRows);
-            console.log("customerRows:", customerRows);
             
         } catch (error) {
             console.error(error);
@@ -142,6 +131,7 @@
             tableReservationStatusRows = [];
         }
     });
+    
 </script>
 
 <style>
@@ -182,7 +172,7 @@
         <div class="mx-40 mt-20">
             <!-- date reservations -->
             <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
-
+                
                 <!-- for padding -->
                 <div class="min-h-full flex flex-col">
                     <div class="px-12 py-6 flex flex-row justify-between items-center">
@@ -192,38 +182,42 @@
 
                     <div class="py-6 grow bg-surface-100">
                         <div class="px-12">
-
+                            {#each drinkReceiptRows as drinkReceiptRow}
                             <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                <div>
-                                    <p>Receipt No.</p>
-                                </div>
-                                <div>
-                                    <p>Drink No.</p>
-                                </div>
-                                <div>
-                                    <p>Customer</p>
-                                </div>
-                                <div>
-                                    <p>Total</p>
-                                </div>
-                            </div>
-
-                            <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                <div>
-                                    <p>Receipt No.</p>
-                                </div>
-                                <div>
-                                    <p>Drink No.</p>
-                                </div>
-                                <div>
-                                    <p>Customer</p>
-                                </div>
-                                <div>
-                                    <p>Total</p>
-                                </div>
-                            </div>
+                                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                            <div>
+                                                <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                            </div>
+                                            {#each drinkOrderLineRows as drinkOrderLineRow}
+                                                {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                                    <div>
+                                                        {#each drinkRows as drinkRow}
+                                                            {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                                <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                            {/if}
+                                                        {/each}
+                                                    </div>
+                                                            
+                                                {/if}
+                                            {/each}
+                                            {#each customerRows as customerRow}
+                                                    {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                    <div>
+                                                        <p>{customerRow.customer_name}</p>
+                                                    </div>
+                                                    {/if}
+                                            {/each}
+                                            <div>
+                                                <p>{drinkReceiptRow.created_at}</p>
+                                            </div>
+                                            <div>
+                                                <p>{drinkReceiptRow.total_price}</p>
+                                            </div>
+                                        </div>
+                                  
+                                
+                            {/each}
+                            
                         </div>
 
                     </div>

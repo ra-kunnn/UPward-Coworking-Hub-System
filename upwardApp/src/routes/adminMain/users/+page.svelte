@@ -17,49 +17,49 @@
    
 
     interface Drink{
-        drinkID: number;
-        drinkName: string;
+        drink_id: number;
+        drink_name: string;
         description: string;
         price: number;
-        drinkType: string;
+        drink_type: string;
     }
 
     interface DrinkAvailability{
-        drinkAvailNo: number;
-        drinkID: number;
+        drink_avail_no: number;
+        drink_id: number;
         availability: boolean;
         stock: number;
     }
 
     interface DrinkOrderLine{
-        orderID: number;
-        createdAt: Date;
-        customerID: string;
-        drinkID: number;
-        receiptID: number;
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
         qty: number;
-        totalPrice: number;
+        total_price: number;
     }
 
     interface DrinkOrderStatus{
-        receiptID: number;
-        isIncoming: boolean;
-        isOngoing: boolean;
-        isDone: boolean;
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
     }
 
     interface DrinkReceipt{
-        receiptID: number;
-        totalPrice: number;
-        customerID: string;
-        createdAt: Date;
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
     }
 
     interface Customer {
-        customerID: string;
-        customerName: string;
-        customerEmail: string;
-        customerPhone: string;
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
     }
 
     let drinkRows : Drink[] = [];
@@ -68,7 +68,7 @@
     let drinkOrderStatusRows: DrinkOrderStatus[] = [];
     let drinkReceiptRows: DrinkReceipt[] = [];
     let customerRows : Customer[] = [];
-console.log("test");
+    
     onMount(() => {
         try {
             drinkRows = data.drinks || [];
