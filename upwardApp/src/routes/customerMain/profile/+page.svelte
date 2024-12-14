@@ -66,7 +66,7 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}</h1>
+        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
          
         <!-- container for the two boxes -->
         <div class="flex gap-8">

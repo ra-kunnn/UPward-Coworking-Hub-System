@@ -85,6 +85,99 @@
         }
     });
 
+    // Existing imports and declarations...
+
+    let total_price: number | string = ""; // Default value for total_price
+    let startDate: string = ""; // Variable for start date and time
+    let endDate: string = ""; // Variable for end date and time
+    let hours: number = "";
+
+    // Function to calculate the total price based on reservation type
+    const calculateTotal = () => {
+        const hourlyRate = 100; // Set the hourly rate
+        const dailyRate = 100; // Set the daily rate
+        const weeklyRate = 100; // Set the weekly rate
+
+        if (reserveSelected === "1") { // Hourly rate
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60); // Difference in hours
+            total_price = hours > 0 ? Math.ceil(hours) * hourlyRate : console.log("Invalid time range.");
+        } else if (reserveSelected === "2") { // Daily rate
+            total_price = dailyRate;
+        } else if (reserveSelected === "3") { // Weekly rate
+            total_price = weeklyRate;
+        } else {
+            total_price = "Invalid selection.";
+        }
+    };
+
+
+    // Watch for changes in reserveSelected and other relevant variables
+    $: calculateTotal();
+
+const handleConfirm = async () => {
+    if (toggleReserve) {
+        const reserveForm = document.getElementById("reserveForm") as HTMLFormElement;
+        if (reserveForm) {
+            const formData = new FormData(reserveForm);
+
+            const startDate = formData.get('startDate') as string;
+            const endDate = formData.get('endDate') as string;
+            const week = formData.get('week') as string;
+            const total = total_price;
+            const customer_id =  data.user?.customer_id ?? 0;
+
+
+            if (reserveSelected === "1") { // Hourly rate
+
+                /*   const { reserveError } = await supabase
+                .from('Table Reservation')
+                .insert({ 
+                    customer_id: customer_id,
+                    table_id: ,
+                    date: startDate,
+                    duration: hours,
+                    end_date: endDate
+
+                });*/
+                
+            } else if (reserveSelected === "2") { // Daily rate
+                total_price = dailyRate;
+            } else if (reserveSelected === "3") { // Weekly rate
+                total_price = weeklyRate;
+            } else {
+                total_price = "Invalid selection.";
+            }
+
+            console.log(reserveForm, customer_id, week, hours);
+           /* const { reserveError } = await supabase
+                .from('Table Reservation')
+                .insert({ 
+                    customer_id: customer_id,
+                    table_id:,
+                    date:,
+                    duration:
+                    end_date:
+
+                });
+
+             if (reserveError){
+              console.log("errorr bruh. also u dont have an error message yet In Website")
+             }*/
+
+    }
+
+    if (toggleOrder) {
+        const orderForm = document.getElementById("orderForm") as HTMLFormElement;
+        if (orderForm) {
+            const orderData = new FormData(orderForm);
+        }
+    }
+   }
+};
+
+
 </script>
 
 <style>
@@ -160,20 +253,20 @@
                 {#if toggleReserve}
                     <div class="flex pt-4 gap-6 px-12">
                         <div class="flex-1">
-                            <form>
-                                <label for="tableNum">Table Number</label>
-                                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                            <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
+                                <label for="tableType">Table Type</label>
+                                <select name="tableType" class="select-style rounded-full mt-1 mb-3">
                                     <option value="1">Sharing Table</option>
                                     <option value="2">Individual Focus Table</option>
                                     <option value="3">Drafting Table</option>
                                 </select>
             
-                                <!-- Reservation Rates should change according to the kind of table reserved -->
+                                <!-- ADD A PICKER FOR ALL THE TABLES UNDER THAT TABLE TYPE -->
             
                                 <label for="tableRate">Reservation Rates</label>
 
                                 <!-- change values in typescript -->
-                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}>    
+                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}  on:change={calculateTotal}>    
                                     {#if reservePlaceholder}
                                         <option value="" disabled selected>{reservePlaceholder}</option>
                                     {/if}
@@ -187,14 +280,18 @@
                                 <!-- change depending on selected rate -->
                                 <div class="mt-5">
                                 {#if reserveSelected == '1'}
-                                    <label for="tableDate" class="mb-2">Appointment Hours</label>
-                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                    <!-- PUT THE START AND END HOURS SIDE BY SIDE-->
+                                    
+                                    <label for="startDate" class="mb-2">Start Date</label>
+                                    <input name="startDate" type="datetime-local" class="input time-input rounded-3xl"  bind:value={startDate} on:change={calculateTotal}>
+                                    <label for="endDate" class="mb-2">End Date</label>
+                                    <input name="endDate" type="datetime-local" class="input time-input rounded-3xl"  bind:value={endDate} on:change={calculateTotal}>
                                 {:else if reserveSelected == '2'}
-                                    <label for="tableDate" class="mb-2">Appointment Date</label>
-                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                    <label for="date" class="mb-2">Appointment Date</label>
+                                    <input name="date" type="date" class="input date-input rounded-3xl" on:change={calculateTotal}>
                                 {:else if reserveSelected == '3'}
-                                    <label for="tableDate" class="mb-2">Appointment Week</label>
-                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                                    <label for="week" class="mb-2">Appointment Week</label>
+                                    <input name="week" type="week" class="input week-input rounded-3xl" on:change={calculateTotal}>
                                 {:else}
                                     <div></div>
                                 {/if}
@@ -202,7 +299,7 @@
 
                                 {#if reserveSelected}
                                     <div class="py-6">
-                                        <p class="mt-2 font-semibold">Total:</p>
+                                        <p class="mt-2 font-semibold">Total: {total_price}</p>
                                     </div>
                                 {/if}
                             </form>
@@ -226,7 +323,7 @@
                 </div>
                 
                 {#if toggleOrder}
-                    <form class="px-12 pb-20">
+                    <form class="px-12 pb-20" id="orderForm" method="POST" action="?/order" on:submit|preventDefault>
                         <label for="drinkOrder">Drink Selection</label>
                         
                         <!-- change values in typescript -->
@@ -267,7 +364,7 @@
 
 
         <div class="flex flex-row justify-end items-center">
-            <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold">Confirm</button>
+            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={handleConfirm}>Confirm</button>
         </div>
     </div>
 </div>
