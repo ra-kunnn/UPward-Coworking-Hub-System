@@ -46,7 +46,8 @@
 	let drinkSelected = "";
 
     let tableOptions = []; // Holds the processed table options
-    let tableSelected = 'shared'; // Selected table
+    let tableSelected = 'shared'; // Selected 
+    let chosenTable_id = "";
 
 
 
@@ -94,6 +95,13 @@
 
     let tablePlaceholder = 'Select a table...';
     let tableTypePlaceholder = 'Select a table type...';
+
+    const handleTableSelection = () => {
+        const selectElement = document.getElementById("tableNum");
+        const selectedOption = selectElement.selectedOptions[0]; // Get the selected <option> element
+        chosenTable_id = selectedOption ? selectedOption.getAttribute('data-table-id') : ""; // Get the data-table-id
+        console.log(chosenTable_id + " should be tableID");
+    };
 
 const changeTable =  async () => {
         
@@ -145,22 +153,26 @@ const changeTable =  async () => {
                    label: groupedTables.shared.length > 0
                        ? `Sharing Tables (${groupedTables.shared.join(', ')})`
                        : "Sharing Tables (No available tables)",
-                   value: groupedTables.shared.length > 0 ? 'shared' : null
+                   value: groupedTables.shared.length > 0 ? 'shared' : null,
+                   table_id: groupedTables.shared.length > 0 ? tables.find(table => table.table_name === groupedTables.shared[0])?.table_id : null
                });
 
                allTableOptions.push({
                    label: groupedTables.individual.length > 0
                        ? `Individual Focus (${groupedTables.individual.join(', ')})`
                        : "Individual Focus (No available tables)",
-                   value: groupedTables.individual.length > 0 ? 'individual' : null
+                   value: groupedTables.individual.length > 0 ? 'individual' : null,
+                   table_id: groupedTables.individual.length > 0 ? tables.find(table => table.table_name === groupedTables.individual[0])?.table_id : null
                });
 
                allTableOptions.push({
                    label: groupedTables.drafting.length > 0
                        ? `Drafting Tables (${groupedTables.drafting.join(', ')})`
                        : "Drafting Tables (No available tables)",
-                   value: groupedTables.drafting.length > 0 ? 'drafting' : null
+                   value: groupedTables.drafting.length > 0 ? 'drafting' : null,
+                   table_id: groupedTables.drafting.length > 0 ? tables.find(table => table.table_name === groupedTables.drafting[0])?.table_id : null
                });
+
 
                // Filter out invalid options (e.g., those with value = null)
                allTableOptions = allTableOptions.filter(option => option.value !== null);
@@ -169,23 +181,24 @@ const changeTable =  async () => {
 
         // Update table options based on the selected table type
         $: {
-            console.log("bruh, should show selected table"+ tableSelected);
+    console.log("bruh, should show selected table", tableSelected);
+
+    if (tableSelected) {
+        // Filter table options based on the selected table type
+        tableOptions = allTableOptions.filter(option => option.value === tableSelected);
+    } else {
+        tableOptions = allTableOptions;
+    }
+
+    if (tableOptions.length === 0) {
+        tablePlaceholder = 'No Available Tables';
+    } else {
+        tablePlaceholder = 'Select a table...'; // Default placeholder
+    }
 
 
-            if (tableSelected) { // the table selected part is the problem
-                // Filter table options based on the selected type
+}
 
-                tableOptions = allTableOptions.filter(option => option.value === tableSelected);
-            } 
-            else{tableOptions = allTableOptions;}
-
-            if (tableOptions.length === 0) {
-                tablePlaceholder = 'No Available Tables';
-            } else {
-                    tablePlaceholder = 'Select a table...'; // Default placeholder
-                }
-
-        }
     } catch (err) {
         console.error("Error fetching tables:", err.message);
     }
@@ -206,6 +219,7 @@ const changeTable =  async () => {
     // Function to calculate the total price based on reservation type
     const calculateTotal = () => {
         const hourlySharedRate = 100; 
+        const hourlyRate = 100;
         const hourlyIndividualRate = 100;
         const hourlyDraftingRate = 100; 
 
@@ -223,7 +237,7 @@ const changeTable =  async () => {
             hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60); // Difference in hours
             total_price = hours > 0 ? Math.ceil(hours) * hourlyRate : console.log("Invalid time range.");
 
-        } else if (reserveSelected === "2") { // Daily rate, daily rate lasts until time started until 6 am the next day
+        } else if (reserveSelected === "2") { // Daily rate, daily rate lasts from time started until 6 am the next day
             total_price = dailyRate;
         } else if (reserveSelected === "3") { // Weekly rate, equivalent to 7 dailies, usuable within 2 weeks
             total_price = weeklyRate;
@@ -237,6 +251,8 @@ const changeTable =  async () => {
     $: calculateTotal();
 
 const handleConfirm = async () => {
+
+    const { supabase } = data;
     if (toggleReserve) {
         const reserveForm = document.getElementById("reserveForm") as HTMLFormElement;
         if (reserveForm) {
@@ -248,31 +264,51 @@ const handleConfirm = async () => {
             const total = total_price;
             const customer_id =  data.user?.customer_id ?? 0;
 
-            const durationHourInterval = `${Math.ceil(hours)} hours`; 
 
+            console.log(chosenTable_id + "in confirms")
 
             if (reserveSelected === "1") { // Hourly rate
 
-                /*   const { reserveError } = await supabase
+            const durationHourInterval = `${Math.ceil(hours)} hours`; 
+
+            console.log(customer_id, chosenTable_id, startDate, durationHourInterval, endDate);
+
+                const { reserveError } = await supabase
                 .from('Table Reservation')
                 .insert({ 
                     customer_id: customer_id,
-                    table_id: ,
+                    table_id: chosenTable_id,
                     date: startDate,
                     duration: durationHourInterval,
                     end_date: endDate
 
-                });*/
+                });
+                 if (reserveError){
+              console.log("errorr bruh. also u dont have an error message yet In Website")
+             }
                 
             } else if (reserveSelected === "2") { // Daily rate
+
+                const start = new Date(startDate); // Convert startDate string to Date object
+
+                // Create the end date: 6 AM the next day
+                const dailyEnd = new Date(start);
+                dailyEnd.setDate(dailyEnd.getDate() + 1); // Move to the next day
+                dailyEnd.setHours(6, 0, 0, 0); // Set time to 6:00 AM
+
+                // Calculate the duration in hours
+                const dailyDuration = (dailyEnd.getTime() - start.getTime()) / (1000 * 60 * 60); // Duration in hours
+                const durationDailyInterval = `${Math.ceil(dailyDuration)} hours`; // Round up to nearest hour
+
+
                  /*   const { reserveError } = await supabase
                 .from('Table Reservation')
                 .insert({ 
                     customer_id: customer_id,
                     table_id: ,
                     date: startDate,
-                    duration: durationHourInterval,
-                    end_date: endDate
+                    duration: durationDailyInterval,
+                    end_date: dailyEnd
 
                 });*/
             } else if (reserveSelected === "3") { // Weekly rate
@@ -281,9 +317,7 @@ const handleConfirm = async () => {
                 total_price = "Invalid selection.";
             }
 
-             if (reserveError){
-              console.log("errorr bruh. also u dont have an error message yet In Website")
-             }
+            
 
     }
 
@@ -374,7 +408,7 @@ const handleConfirm = async () => {
                         <div class="flex-1">
                             <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
                                 <label for="tableType">Table Type</label>
-                                <select name="tableType" bind:value={tableSelected} on:change={changeTable} class="select-style rounded-full mt-1 mb-3">
+                                <select name="tableType" bind:value={tableSelected} on:change={() => { handleTableSelection(); changeTable(); }} class="select-style rounded-full mt-1 mb-3">
                                     <option value='shared'>Sharing Table</option>
                                     <option value='individual'>Individual Focus Table</option>
                                     <option value='drafting'>Drafting Table</option>
@@ -382,18 +416,18 @@ const handleConfirm = async () => {
 
             
                                 <label for="tableNum">Table</label>
-                                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                                <select name="tableNum"  id="tableNum" class="select-style rounded-full mt-1 mb-3" on:change={handleTableSelection} required>
+                                    <option value="" disabled selected >{tablePlaceholder}</option>
                                     {#each tableOptions as table}
-                                        <option value={table.value}>{table.label}</option>
+                                        <option value={table.value} data-table-id={table.table_id}>{table.label}</option>
                                     {/each}
-                                    <option value="" disabled selected>{tablePlaceholder}</option>
                                 </select>
                                 
             
                                 <label for="tableRate">Reservation Rates</label>
 
                                 <!-- change values in typescript -->
-                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}  on:change={calculateTotal}>    
+                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}  on:change={() => { handleTableSelection(); calculateTotal(); }}>    
                                     {#if reservePlaceholder}
                                         <option value="" disabled selected>{reservePlaceholder}</option>
                                     {/if}
@@ -416,7 +450,7 @@ const handleConfirm = async () => {
                                     <label for="endDate" class="mb-2">End Time</label>
                                     <input name="endDate" type="datetime-local" class="input time-input rounded-3xl"  bind:value={endDate} on:change={calculateTotal}>
                                 {:else if reserveSelected == '2'}
-                                    <p>Daily Rate lasts until time started until closing time (6 am). </p> <br />
+                                    <p>Daily Rate lasts from time started until closing time (6 am). </p> <br />
                                     <label for="startDate" class="mb-2">Appointment Date</label>
                                     <input name="startDate" type="datetime-local" class="input date-input rounded-3xl" on:change={calculateTotal}>
                                 {:else if reserveSelected == '3'}
@@ -495,7 +529,8 @@ const handleConfirm = async () => {
 
 
         <div class="flex flex-row justify-end items-center">
-            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={handleConfirm}>Confirm</button>
+            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={() => { handleTableSelection(); handleConfirm(); }}>Confirm</button>
+            <!-- HANDLE TABLE SELECTION SHOULD ONLY RUN IF RESERVE IS TOGGLED!-->
         </div>
     </div>
 </div>
