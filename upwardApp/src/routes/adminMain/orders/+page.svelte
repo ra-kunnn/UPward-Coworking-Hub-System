@@ -21,19 +21,33 @@
 
 
     function carouselLeft(): void {
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            currentIndex = drinkRows.length - 1; // Loop to last drink
+        }
         const x =
             elemCarousel.scrollLeft === 0
                 ? elemCarousel.clientWidth * elemCarousel.childElementCount // loop
                 : elemCarousel.scrollLeft - elemCarousel.clientWidth; // step left
         elemCarousel.scroll(x, 0);
+
+        
     }
     
     function carouselRight(): void {
+        if (currentIndex < drinkRows.length - 1) {
+            currentIndex++;
+        } else {
+            currentIndex = 0; // Loop back to first drink
+        }
         const x =
             elemCarousel.scrollLeft === elemCarousel.scrollWidth - elemCarousel.clientWidth
                 ? 0 // loop
                 : elemCarousel.scrollLeft + elemCarousel.clientWidth; // step right
         elemCarousel.scroll(x, 0);
+
+        
     }
 
     export let data:PageData;
@@ -92,6 +106,11 @@
     let drinkReceiptRows: DrinkReceipt[] = [];
     let customerRows : Customer[] = [];
 
+    let currentIndex = 0; // Track current drink being viewed
+    let nameInput = ''; // Input for drink name
+    let priceInput = ''; // Input for drink price
+    let drinkTypeInput = ''; // Input for drink type
+
 console.log("test");
     onMount(() => {
         try {
@@ -101,7 +120,10 @@ console.log("test");
             drinkOrderStatusRows = data.drinkOrderStatus || [];
             drinkReceiptRows = data.drinkReceipt || [];
             customerRows = data.customer || [];
-            
+            const currentDrink = drinkRows[currentIndex];
+            nameInput = currentDrink.drink_name;
+            priceInput = currentDrink.price.toString();
+            drinkTypeInput = currentDrink.drink_type;
         } catch (error) {
             console.error(error);
             drinkRows = [];
@@ -111,6 +133,17 @@ console.log("test");
             drinkReceiptRows = [];
         }
     });
+    
+    // Update input fields based on the current drink
+    
+
+    $: if (drinkRows.length > 0) {
+        const currentDrink = drinkRows[currentIndex];
+        nameInput = currentDrink.drink_name;
+        priceInput = currentDrink.price.toString();
+        drinkTypeInput = currentDrink.drink_type;
+        console.log("itworks")
+    }
     
     const cancelOrder = async (receipt_no: number) => {
         const { supabase } = data;
@@ -140,34 +173,34 @@ console.log("test");
         }
         
     }
-    const confirmOrder = async (receipt_no: number) => {
-        const { supabase } = data;
+    const updateDrink = async () => {
+        const { supabase } = data; // Ensure supabase is accessible from your data context
+
         try {
-            const {error, count} = await supabase
-                .from('Drink Order Status')
+            const { error, count } = await supabase
+                .from('Drink') // Replace 'Drink' with your table name
                 .update({
-                    is_incoming: false,
-                    is_ongoing: true,
-                    is_done: false
+                    drink_name: nameInput,
+                    price: Number(priceInput),
+                    drink_type: drinkTypeInput
                 })
-                .eq('receipt_no', receipt_no)
-                .select();;
+                .eq('drink_id', drinkRows[currentIndex].drink_id) // Update specific drink based on ID
+                .select();
 
             if (error) {
-                console.error('Error updating order status:', error.message);
+                console.error('Error updating drink:', error.message);
                 return { success: false, message: error.message };
             }
 
             console.log('Update response:', count);
-            window.location.reload();
+            window.location.reload(); // Refresh the page to fetch the updated data
             return { success: true };
-            
         } catch (err) {
             console.error('Unexpected error:', err);
             return { success: false, message: 'Unexpected error occurred.' };
         }
-        
-    }
+    };
+
 </script>
 
 <HideOverflow />
@@ -192,42 +225,68 @@ console.log("test");
             <!-- user alerts -->
             <div class="flex-1">
                 <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 grow min-h-[600px] overflow-hidden">
-
                     <!-- for padding -->
                     <div class="p-12 min-h-full rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center">
-                        <!-- button: left -->
-                        <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
+                        <!-- Left Button -->
+                        <button
+                            type="button"
+                            class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md"
+                            on:click={carouselLeft}>
                             ⮜
                         </button>
-            
+                
                         <!-- images -->
-                        <div bind:this={elemCarousel} class="mx-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
-                            {#each unsplashIds as unsplashId}
+                        <div class="mx-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
+                            {#if drinkRows.length > 0}
                                 <img
                                     class="snap-center w-[1024px] rounded-container-token"
-                                    src="https://images.unsplash.com/photo-{unsplashId}"
-                                    alt={unsplashId}
-                                    loading="lazy"
+                                    src="https://via.placeholder.com/1024x400?text={drinkRows[currentIndex].drink_name}"
+                                    alt={drinkRows[currentIndex].drink_name}
                                 />
-                            {/each}
+                            {:else}
+                                <p>No drinks available</p>
+                            {/if}
                         </div>
-        
-                        <!-- button: right -->
-                        <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
-                        ⮞
+                
+                        <!-- Right Button -->
+                        <button
+                            type="button"
+                            class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md"
+                            on:click={carouselRight}>
+                            ⮞
                         </button>
-                            
+                
                         <!-- information, changes when carousel is moved -->
                         <div class="col-span-3 text-center mb-4">
-                            <p class="text-surface-800">Food ID</p>
-                            <input class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="text" placeholder="Name" aria-label="Product Name">
-                            <input class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="text" placeholder="Price" aria-label="Price">
-                            <input class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="text" placeholder="Food Type" aria-label="Food Type">
+                            <p class="text-surface-800">Drink ID: {drinkRows[currentIndex]?.drink_id || 'N/A'}</p>
+                            <input
+                                class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                type="text"
+                                placeholder="Name"
+                                bind:value={nameInput}
+                            />
+                            <input
+                                class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                type="number"
+                                placeholder="Price"
+                                bind:value={priceInput}
+                            />
+                            <input
+                                class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                type="text"
+                                placeholder="Food Type"
+                                bind:value={drinkTypeInput}
+                            />
                         </div>
                     </div>
-                    
+                
+                    <!-- Update Button -->
                     <div class="py-7 flex flex-row justify-end items-end">
-                        <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 mr-12 font-semibold">Update</button>
+                        <button
+                            class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 mr-12 font-semibold"
+                            on:click={updateDrink}>
+                            Update
+                        </button>
                     </div>
                 </div>
 
@@ -305,8 +364,9 @@ console.log("test");
                     </div>
 
                 </div>
+                
             </div>
-
+            
         </div>
 
 </div>

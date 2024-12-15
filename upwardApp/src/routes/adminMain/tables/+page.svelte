@@ -37,6 +37,7 @@
         table_id: number;
         duration: Date;
         end_date: Date;
+        price: number;
     }
 
     interface TableReservationStatus{
