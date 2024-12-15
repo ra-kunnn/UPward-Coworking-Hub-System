@@ -235,7 +235,7 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold font-fredoka">Welcome back, Admin Name!</h1>
             <div class="text-right">
@@ -248,7 +248,7 @@
         <div class="flex gap-8">
 
             <!-- user alerts -->
-            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden">
 
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
@@ -301,7 +301,7 @@
             </div>
 
         <!-- Reservation Section -->
-        <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden grid grid-rows-2 h-[600px]">
+        <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden grid grid-rows-2 h-[600px]">
             <!-- Upcoming Reservations -->
             <div class="px-12 py-6 overflow-auto">
                 <div class="flex justify-between items-center mb-4">
