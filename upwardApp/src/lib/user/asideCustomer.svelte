@@ -89,12 +89,6 @@
                 </a>
             </li>
             <li>
-                <a href="/customerMain/foodAnddrink" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/foodAnddrink' ? 'active' : ''}">
-                    <span class="icon">🧋</span>
-                    <span class="text">Food & Drinks</span>
-                </a>
-            </li>
-            <li>
                 <a href="/customerMain/orderHistory" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/orderHistory' ? 'active' : ''}">
                     <span class="icon">📂</span>
                     <span class="text">Orders</span>

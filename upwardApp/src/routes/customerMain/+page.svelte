@@ -254,6 +254,7 @@ const handleConfirm = async () => {
 
     const { supabase } = data;
     if (toggleReserve) {
+        handleTableSelection();
         const reserveForm = document.getElementById("reserveForm") as HTMLFormElement;
         if (reserveForm) {
             const formData = new FormData(reserveForm);
@@ -529,7 +530,7 @@ const handleConfirm = async () => {
 
 
         <div class="flex flex-row justify-end items-center">
-            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={() => { handleTableSelection(); handleConfirm(); }}>Confirm</button>
+            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={() => {handleConfirm(); }}>Confirm</button>
             <!-- HANDLE TABLE SELECTION SHOULD ONLY RUN IF RESERVE IS TOGGLED!-->
         </div>
     </div>
