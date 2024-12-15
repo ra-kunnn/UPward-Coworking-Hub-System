@@ -79,11 +79,8 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-<<<<<<< HEAD
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
-=======
+
         <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, {customer_name}</h1>
->>>>>>> frontend
          
         <!-- container for the two boxes -->
         <div class="flex gap-8">
@@ -93,11 +90,8 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-<<<<<<< HEAD
-                        <h1 class="h1 font-bold">Reservation Details</h1>
-=======
-                        <h1 class="h1 font-bold font-fredoka">Table Details</h1>
->>>>>>> frontend
+
+                        <h1 class="h1 font-bold font-fredoka">Reservation Details</h1>
                     </div>
                     
                     <div class="pt-10 py-6 flex-grow">
