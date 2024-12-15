@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/user/headerUser.svelte';
-    import Aside from '$lib/user/asideCustomer.svelte';
+    import Aside from '$lib/user/asideAdmin.svelte';
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
     import { onMount } from 'svelte';
@@ -34,6 +34,7 @@
 	}];
 	let reserveSelected = "";
 
+    /** values for order selection */
     /** Placeholder and drink options */
     let orderPlaceholder = 'Select a drink...';
     let drinkOptions = [
@@ -209,64 +210,66 @@
 
                 <!-- for padding -->
                 <div class="px-12 py-6 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-fredoka">Would you like to reserve?</h1>
-                    <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
+                    <h1 class="h2 font-fredoka">Table Reservations</h1>
                 </div>
                 
-                {#if toggleReserve}
-                    <div class="flex pt-4 gap-6 px-12">
-                        <div class="flex-1">
-                            <form>
-                                <label for="tableNum">Table Number</label>
-                                <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
-                                    <option value="1">Sharing Table</option>
-                                    <option value="2">Individual Focus Table</option>
-                                    <option value="3">Drafting Table</option>
-                                </select>
-            
-                                <!-- Reservation Rates should change according to the kind of table reserved -->
-            
-                                <label for="tableRate">Reservation Rates</label>
+                <div class="flex pt-4 gap-6 px-12">
+                    <div class="flex-1">
+                        <form>
+                            
+                            <select class="select-style rounded-full mt-1 mb-5">
+                                <option>Reservation for Table 1</option>
+                                <option>Reservation for Table 3</option>
+                                <option>Reservation for Table 4</option>
+                            </select>
 
-                                <!-- change values in typescript -->
-                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}>    
-                                    {#if reservePlaceholder}
-                                        <option value="" disabled selected>{reservePlaceholder}</option>
-                                    {/if}
-                                    {#each reserveOptions as option}
-                                        <option value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    {/each}
-                                </select>
+                            <label for="tableNum">Table Number</label>
+                            <select name="tableNum" class="select-style rounded-full mt-1 mb-3">
+                                <option value="1">Sharing Table</option>
+                                <option value="2">Individual Focus Table</option>
+                                <option value="3">Drafting Table</option>
+                            </select>
+        
+                            <!-- Reservation Rates should change according to the kind of table reserved -->
+        
+                            <label for="tableRate">Reservation Rates</label>
 
-                                <!-- change depending on selected rate -->
-                                <div class="mt-5">
-                                {#if reserveSelected == '1'}
-                                    <label for="tableDate" class="mb-2">Appointment Hours</label>
-                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
-                                {:else if reserveSelected == '2'}
-                                    <label for="tableDate" class="mb-2">Appointment Date</label>
-                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
-                                {:else if reserveSelected == '3'}
-                                    <label for="tableDate" class="mb-2">Appointment Week</label>
-                                    <input name="dateFrom" type="date" class="input date-input rounded-3xl">
-                                {:else}
-                                    <div></div>
+                            <!-- change values in typescript -->
+                            <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}>    
+                                {#if reservePlaceholder}
+                                    <option value="" disabled selected>{reservePlaceholder}</option>
                                 {/if}
+                                {#each reserveOptions as option}
+                                    <option value={option.value}>
+                                        {option.label}
+                                    </option>
+                                {/each}
+                            </select>
+
+                            <!-- change depending on selected rate -->
+                            <div class="mt-5">
+                            {#if reserveSelected == '1'}
+                                <label for="tableDate" class="mb-2">Appointment Hours</label>
+                                <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                            {:else if reserveSelected == '2'}
+                                <label for="tableDate" class="mb-2">Appointment Date</label>
+                                <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                            {:else if reserveSelected == '3'}
+                                <label for="tableDate" class="mb-2">Appointment Week</label>
+                                <input name="dateFrom" type="date" class="input date-input rounded-3xl">
+                            {:else}
+                                <div></div>
+                            {/if}
+                            </div>
+
+                            {#if reserveSelected}
+                                <div class="py-6">
+                                    <p class="mt-2 font-semibold">Total:</p>
                                 </div>
-
-                                {#if reserveSelected}
-                                    <div class="py-6">
-                                        <p class="mt-2 font-semibold">Total:</p>
-                                    </div>
-                                {/if}
-                            </form>
-                        </div>
+                            {/if}
+                        </form>
                     </div>
-                {:else}
-                    <div class="min-h-full"></div>
-                {/if}
+                </div>
                 
                 
 
@@ -277,44 +280,43 @@
 
                 <!-- for padding -->
                 <div class="px-12 py-6 pb-10 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-fredoka">Would you like to order?</h1>
-                    <SlideToggle name="slide" bind:checked={toggleOrder} active="bg-primary-500" />
+                    <h1 class="h2 font-fredoka">Customer Orders</h1>
                 </div>
                 
-                {#if toggleOrder}
-                    <div class="px-12 pb-20">
-                        <label for="drinkOrder">Drink Selection</label>
-                        
-                        <div style=" border-color: #38728A; height: 10rem;" class="border my-1 rounded-3xl overflow-y-auto">
-                            {#each drinkOptions as drink}
-                                <div class="flex justify-between items-center px-4 py-2 border-b">
-                                    <span>{drink.label} - ₱{drink.price}</span>
-                                    <div class="flex items-center gap-5">
-                                        <button class="border-none px-3 rounded-lg text-base" on:click={() => decrement(drink)}>-</button>
-                                        <span>{drink.count}</span>
-                                        <button class="border-none px-3 rounded-lg text-base" on:click={() => increment(drink)}>+</button>
-                                    </div>
+                <div class="px-12 pb-20">
+                    <select class="select-style rounded-full mt-1 mb-5">
+                        <option>Order of John</option>
+                        <option>Order of John</option>
+                    </select>
+                    
+                    <label>(name)'s Order</label>
+                    <div style=" border-color: #38728A; height: 10rem;" class="border my-1 rounded-3xl overflow-y-auto">
+                        {#each drinkOptions as drink}
+                            <div class="flex justify-between items-center px-4 py-2 border-b">
+                                <span>{drink.label} - ₱{drink.price}</span>
+                                <div class="flex items-center gap-5">
+                                    <button class="border-none px-3 rounded-lg text-base" on:click={() => decrement(drink)}>-</button>
+                                    <span>{drink.count}</span>
+                                    <button class="border-none px-3 rounded-lg text-base" on:click={() => increment(drink)}>+</button>
                                 </div>
-                            {/each}
-                        </div>
-                        <div class="mt-4">
-                            <h3>Order Summary</h3>
-                            {#if totalOrder.length === 0}
-                                <p>No drinks selected.</p>
-                            {:else}
-                                <ul>
-                                    {#each totalOrder as drink}
-                                        <li>{drink.label} x {drink.count} = ₱{drink.count * drink.price}</li>
-                                    {/each}
-                                </ul>
-                                <p class="font-bold">Total: ₱{totalOrder.reduce((sum, drink) => sum + drink.count * drink.price, 0)}</p>
-                            {/if}
-                        </div>
-                        
+                            </div>
+                        {/each}
                     </div>
-                {:else}
-                    <div class="min-h-full"></div>
-                {/if}
+                    <div class="mt-4">
+                        <h3>Order Summary</h3>
+                        {#if totalOrder.length === 0}
+                            <p>No drinks selected.</p>
+                        {:else}
+                            <ul>
+                                {#each totalOrder as drink}
+                                    <li>{drink.label} x {drink.count} = ₱{drink.count * drink.price}</li>
+                                {/each}
+                            </ul>
+                            <p class="font-bold">Total: ₱{totalOrder.reduce((sum, drink) => sum + drink.count * drink.price, 0)}</p>
+                        {/if}
+                    </div>
+                    
+                </div>
                     
             </div>
 

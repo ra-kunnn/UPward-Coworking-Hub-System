@@ -258,32 +258,38 @@
                             <!-- one entry -->
                             <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
                                 <div>
-                                    <p>Receipt No.</p>
+                                    <p>Customer ID</p>
                                 </div>
                                 <div>
-                                    <p>Drink No.</p>
+                                    <p>Customer Name</p>
                                 </div>
                                 <div>
-                                    <p>Customer</p>
+                                    <p>Credits and Reservations</p>
                                 </div>
                                 <div>
-                                    <p>Total</p>
+                                    <p>E-mail</p>
+                                </div>
+                                <div>
+                                    <p>Phone Number</p>
                                 </div>
                             </div>
 
                             <!-- one entry -->
                             <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
                                 <div>
-                                    <p>Receipt No.</p>
+                                    <p>Customer ID</p>
                                 </div>
                                 <div>
-                                    <p>Drink No.</p>
+                                    <p>Customer Name</p>
                                 </div>
                                 <div>
-                                    <p>Customer</p>
+                                    <p>Credits and Reservations</p>
                                 </div>
                                 <div>
-                                    <p>Total</p>
+                                    <p>E-mail</p>
+                                </div>
+                                <div>
+                                    <p>Phone Number</p>
                                 </div>
                             </div>
                         </div>
