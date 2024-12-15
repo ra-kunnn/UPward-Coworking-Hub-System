@@ -72,6 +72,18 @@
 </script>
 
 <style>
+    
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+
     .carousel-image {
         transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     }
@@ -108,10 +120,6 @@
         gap: 15px;
     }
 
-    html {
-    scroll-behavior: smooth;
-    }
-
 </style>
 
 <HideOverflow />
@@ -126,14 +134,14 @@
         <div class="flex justify-between items-center w-full p-8 bg-white max-lg:flex-col">
             <!-- Text Section -->
             <div class="w-2/3 max-lg:w-full max-lg:mb-6 text-secondary-800">
-                <h2 class="font-inter font-semibold text-3xl mb-6">Join UPward Today</h2>
-                <p class="font-inter text-l font-normal">
+                <h1 class="h1 font-fredoka font-semibold mb-6">Join UPWARD Today</h1>
+                <p class="text-l font-normal">
                     UPward is the ultimate work and study environment designed for students and professionals alike. 
                 </p>
-                <p class="font-inter text-l font-normal">
+                <p class="text-l font-normal">
                     Enjoy a productive co-working space tailored to meet all your study needs. 
                 </p>
-                <p class="font-inter text-l font-normal mb-6">
+                <p class="text-l font-normal mb-6">
                     Register now to access a dynamic hub for collaboration and focus!
                 </p>
                 <a href="account/signup" class="btn bg-tertiary-500 text-surface-50 hover:text-secondary-800 hover:bg-tertiary-600 rounded border-none px-4 py-2 text-sm font-semibold">Register Now</a>
@@ -154,11 +162,11 @@
         <!-- Right Square with Text -->
         <div class="w-1/2 h-[700px] bg-[#38728A] rounded-tl-[400px] rounded-tr-none rounded-br-none rounded-bl-none flex items-center justify-center p-8 text-surface-50">
             <div class="text-center mt-12 ml-20">
-                <strong class="font-century-gothic font-bold text-3xl mb-6">What makes UPward different?</strong><br /><br />
-                <p class="font-century-gothic font-normal text-lg">
-                    UPward offers:
+                <strong class="h1 font-fredoka font-bold mb-6">What makes UPWARD different?</strong><br /><br />
+                <p class="font-normal text-lg">
+                    UPWARD offers:
                 </p>
-                <ul class="list-disc list-inside mt-2 font-century-gothic font-normal text-lg">
+                <ul class="list-disc list-inside mt-2 font-normal text-lg">
                     <li>WiFi up to 300Mbps</li>
                     <li>Free parking</li>
                     <li>Unlimited brewed coffee</li>
@@ -182,7 +190,7 @@
         <div class="flex justify-between items-center gap-0">
             <!-- Content with Margin -->
             <div class="p-10">
-                <h2 class="font-inter font-semibold text-3xl mb-6">Access UPward</h2>
+                <h1 class="h1 font-fredoka font-semibold mb-6">Access UPWARD</h1>
                 <p class="font-inter text-l font-normal">
                     Reserve a table and order drinks or snacks seamlessly.
                 </p>
@@ -203,24 +211,16 @@
     <!-- Carousel Section -->
     <div id="gallery-section" class="w-full px-0 flex justify-between items-center gap-0">
         <!-- Left Side Image -->
-        <img 
-            src={images[(currentIndex - 1 + images.length) % images.length]} 
+        <img src={images[(currentIndex - 1 + images.length) % images.length]} 
             alt="Image on the left side" 
             class={`w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer mr-4 carousel-image ${fadeClass}`} 
-            on:click={() => changeImage('left')} 
-        />
+            on:click={() => changeImage('left')} />
         
         <!-- Center Image -->
-        <img 
-            id="main-image" 
-            src={images[currentIndex]} 
-            alt="Main displayed image" 
-            class={`w-1/2 rounded-lg carousel-image ${fadeClass}`} 
-        />
+        <img id="main-image" src={images[currentIndex]} alt="Main displayed image" class={`w-1/2 rounded-lg carousel-image ${fadeClass}`} />
         
         <!-- Right Side Image -->
-        <img 
-            src={images[(currentIndex + 1) % images.length]} 
+        <img src={images[(currentIndex + 1) % images.length]} 
             alt="Image on the right side" 
             class={`w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer ml-4 carousel-image ${fadeClass}`} 
             on:click={() => changeImage('right')} 
@@ -230,25 +230,42 @@
     <!-- Dots for Image Indicators -->
     <div class="flex justify-center mt-4">
         {#each images as _, index}
-            <span 
-                class={`dot w-3 h-3 rounded-full mx-1 cursor-pointer ${currentIndex === index ? 'bg-gray-800' : 'bg-gray-400'}`} 
-                on:click={() => setImage(index)}>
+            <span class={`dot w-3 h-3 rounded-full mx-1 cursor-pointer ${currentIndex === index ? 'bg-gray-800' : 'bg-gray-400'}`} 
+            on:click={() => setImage(index)}>
             </span>
         {/each}
     </div>
-    
-    
-    <!-- Footer Section -->
-    <footer class="footer w-full my-24 py-24 flex flex-col items-center">
+</div>
+
+<!-- Footer Section -->
+<footer class="footer w-full mt-24 pt-24 pb-8 flex flex-col items-center">
         <!-- Squares in the middle of the page -->
-        <div class="flex gap-8 mb-8">
-            <div class="footer-square bg-[#EAB940]"></div>
-            <div class="footer-square bg-[#EAB940]"></div>
-            <div class="footer-square bg-[#EAB940]"></div>
+        <div class="flex items-center gap-3 mb-8">
+            <!-- First Square: About Us -->
+            <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
+                <h3 class="h3 font-bold font-fredoka">About Us</h3>
+                <p class="text-xs">UPWARD is a co-working hub empowering students with collaborative spaces.</p>
+            </div>
+            <div class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md">
+                ⮞
+            </div>
+            <!-- Second Square: Contact Us -->
+            <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
+                <h3 class="h3 font-bold font-fredoka">Contact Us</h3>
+                <p class="text-xs">📞 0912-345-6789<br>📧 upwardcoworkinghub@gmail.com</p>
+            </div>
+            <div class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md">
+                ⮞
+            </div>
+            <!-- Third Square: Visit Us -->
+            <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
+                <h3 class="h3 font-bold font-fredoka">Visit Us</h3>
+                <p class="text-xs">UP Mindanao, Davao City<br>Open: 9 AM - 8 PM</p>
+            </div>
         </div>
         
         <!-- Clickable Section Labels -->
-        <div class="flex gap-12 mb-8 footer-section">
+        <div class="flex gap-12 mt-8 mb-10 footer-section">
             <a href="#register-now" class="text-white hover:text-tertiary-500">Register</a>
             <a href="#what-makes-us-different" class="text-white hover:text-tertiary-500">Benefits</a>
             <a href="#access-section" class="text-white hover:text-tertiary-500">Access</a>
@@ -256,15 +273,21 @@
         </div>
         
         <!-- Social Media Icons (replace # with actual links) -->
-        <div class="social-icons">
-            <a href="#" class="hover:text-tertiary-500"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="hover:text-tertiary-500"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="hover:text-tertiary-500"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="hover:text-tertiary-500"><i class="fab fa-linkedin-in"></i></a>
+        <div class="flex items-center gap-4">
+            <a href="https://www.facebook.com/upwardcoworkinghub" class="text-white hover:text-tertiary-500">
+                <img src="/src/lib/landing/fb icon.png" alt="fb icon" class="h-11 w-11">
+            </a>
+            <a href="https://www.instagram.com/upwardcoworkinghub/" class="text-white hover:text-tertiary-500">
+                <img src="/src/lib/landing/insta icon.png" alt="insta icon" class="h-16 w-16">
+            </a>
+            <a href="https://mail.google.com/mail/?view=cm&to=upwardcoworkinghub@gmail.com" target="_blank" class="text-white hover:text-tertiary-500">
+                <img src="/src/lib/landing/email icon.png" alt="email icon" class="h-9 w-9">
+            </a>
+        </div>
+
+        <!-- Logo at the bottom left -->
+        <div class="flex justify-between w-full px-8 mt-12">
+            <img src="/src/lib/landing/Upward logo1.png" alt="Site Logo" class="h-12 w-auto">
+            <span class="text-white text-sm">© 2024 UPWARD. All rights reserved.</span>
         </div>
     </footer>
-
-
-    <a href="/adminMain">to admin</a>
-    <a href="/customerMain">to customer</a>
-</div>

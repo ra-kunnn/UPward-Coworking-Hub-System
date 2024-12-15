@@ -170,6 +170,16 @@
 </script>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
 
     /* Custom input style */
     .date-input {
@@ -341,9 +351,6 @@
             </div>
             
         </div>
-
-
-        
 
     </div>
 

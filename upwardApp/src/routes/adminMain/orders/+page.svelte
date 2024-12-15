@@ -232,6 +232,19 @@ console.log("test");
 
 </script>
 
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -243,9 +256,9 @@ console.log("test");
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Food and Drinks</h1>
+            <h1 class="h2 font-bold font-fredoka">Food and Drinks</h1>
         </div>
 
         <!-- container for the two boxes -->
@@ -321,82 +334,68 @@ console.log("test");
 
             </div>
 
-            <!-- date reservations -->
-            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
-
-                <!-- for padding -->
-                <div class="px-12 min-h-full flex flex-col">
-                    <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Incoming Orders</h1>
-                    </div>
-
-                    <div class="py-6 flex-grow">
-
-                        <!-- one entry -->
+           <!-- Orders Section -->
+           <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden grid grid-rows-2 h-[600px]">
+            <!-- Incoming Orders -->
+            <div class="px-12 py-6 overflow-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="h2 font-bold font-fredoka">Incoming Orders</h2>
+                </div>
+                <div class="flex-grow">
+                    <!-- One entry -->
                         {#each drinkReceiptRows as drinkReceiptRow}
                             {#each drinkOrderStatusRows as drinkOrderStatusRow}
                                 {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_incoming}      
-                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                                        <div>
-                                            <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
-                                        </div>
+                                <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                                    <div>
+                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                    </div>
                                         {#each drinkOrderLineRows as drinkOrderLineRow}
                                             {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
-                                                <div>
+                                            <div>
                                                     {#each drinkRows as drinkRow}
                                                         {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
-                                                            <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                        <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
                                                         {/if}
                                                     {/each}
-                                                </div>
+                                            </div>
                                                         
                                             {/if}
                                         {/each}
                                         {#each customerRows as customerRow}
                                                 {#if customerRow.customer_id === drinkReceiptRow.customer_id}
-                                                    <div>
-                                                        <p>{customerRow.customer_name}</p>
-                                                    </div>
+                                                <div>
+                                                    <p>{customerRow.customer_name}</p>
+                                                </div>
                                                 {/if}
                                         {/each}
-                                        <div>
-                                            <p>{drinkReceiptRow.total_price}</p>
-                                        </div>
-                                        <div class="flex flex-auto mx-auto">
-                                            <button on:click={() => {confirmOrder(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
-                                            <button on:click={() => {cancelOrder(drinkReceiptRow.receipt_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
-                                        </div>
+                                    <div>
+                                        <p>{drinkReceiptRow.total_price}</p>
                                     </div>
+                                    <div class="flex flex-auto mx-auto">
+                                        <button on:click={() => {confirmOrder(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {cancelOrder(drinkReceiptRow.receipt_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                    </div>
+                                </div>
                                 {/if}
                             {/each}
                         {/each}
+                    <!-- Add more entries here as needed -->
+                </div>
+            </div>
 
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p>Receipt No.</p>
-                            </div>
-                            <div>
-                                <p>Drink No.</p>
-                            </div>
-                            <div>
-                                <p>Customer</p>
-                            </div>
-                            <div>
-                                <p>Total</p>
-                            </div>
-                            <div class="flex flex-auto mx-auto">
-                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                            </div>
-                        </div>
-
-                    </div>
-
+            <!-- Ongoing Orders -->
+            <div class="px-12 py-6 overflow-auto border-t">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="h2 font-bold font-fredoka">Ongoing Orders</h2>
+                </div>
+                <div class="flex-grow ongoing-orders-container">
+                    <!-- Ongoing order entries will dynamically appear here -->
                 </div>
                 
             </div>
-            
-        </div>
+                    </div>
+    </div>    
 
 </div>
 

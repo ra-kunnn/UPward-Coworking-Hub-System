@@ -84,6 +84,19 @@
     });
 </script>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -95,9 +108,9 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Tables</h1>
+            <h1 class="h2 font-bold font-fredoka">Tables</h1>
         </div>
         
         <!-- container for the two boxes -->
@@ -127,7 +140,7 @@
                     <div class="px-12 min-h-full flex flex-col">
 
                         <div class="pt-6">
-                            <h1 class="h2 font-bold">Table 1</h1>
+                            <h1 class="h2 font-bold font-fredoka">Table 1</h1>
                             <!-- remove this p when done implementing -->
                             <p class="mt-1 blockquote">display changes depending on clicked box, grayed out tables mean someone is currently occupying</p>
                         </div>
@@ -172,7 +185,7 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Upcoming Reservations</h1>
+                        <h1 class="h1 font-bold font-fredoka">Upcoming Reservations</h1>
                     </div>
 
                     <div class="pt-10 py-6 flex-grow">

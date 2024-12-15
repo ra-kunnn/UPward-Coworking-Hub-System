@@ -4,6 +4,10 @@
 
 </script>
 
+<svelte:head>
+    <title>UPward Coworking Hub System</title>    
+</svelte:head>
+
 <main>
 	<slot />
 </main>
