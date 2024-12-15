@@ -130,7 +130,11 @@
         chosenTable_type = selectedOption ? selectedOption.getAttribute('value') : "";
         //set global table type
         console.log(chosenTable_id, chosenTable_type + " should be tableID");
+        
+         setTimeout(() => {
+         console.log("Calculating total with:", { chosenTable_type, chosenTable_id });
         calculateTotal();
+    }, 0);
     };
 
 const changeTable =  async () => {
@@ -171,6 +175,7 @@ const changeTable =  async () => {
                                break;
                            case 'Individual Focus':
                                groupedTables.individual.push(table.table_name);
+                               console.log(table.table_name);
                                break;
                        }
                    }
@@ -178,40 +183,69 @@ const changeTable =  async () => {
 
                let allTableOptions = [];
 
-               // Dynamically add options for each table type
-               allTableOptions.push({
-                   label: groupedTables.shared.length > 0
-                       ? `Sharing Tables (${groupedTables.shared.join(', ')})`
-                       : "Sharing Tables (No available tables)",
-                   value: groupedTables.shared.length > 0 ? 'shared' : null,
-                   table_id: groupedTables.shared.length > 0 ? tables.find(table => table.table_name === groupedTables.shared[0])?.table_id : null
-               });
+               // Add options for each table type dynamically
+               if (groupedTables.shared.length > 0) {
+                   groupedTables.shared.forEach((tableName) => {
+                       const table = tables.find(t => t.table_name === tableName);
+                       allTableOptions.push({
+                           label: `Sharing Table (${tableName})`,
+                           value: 'shared',
+                           table_id: table?.table_id || null,
+                       });
+                   });
+               } else {
+                   allTableOptions.push({
+                       label: "Sharing Tables (No available tables)",
+                       value: null,
+                       table_id: null,
+                   });
+               }
 
-               allTableOptions.push({
-                   label: groupedTables.individual.length > 0
-                       ? `Individual Focus (${groupedTables.individual.join(', ')})`
-                       : "Individual Focus (No available tables)",
-                   value: groupedTables.individual.length > 0 ? 'individual' : null,
-                   table_id: groupedTables.individual.length > 0 ? tables.find(table => table.table_name === groupedTables.individual[0])?.table_id : null
-               });
+               if (groupedTables.individual.length > 0) {
+                   groupedTables.individual.forEach((tableName) => {
+                       const table = tables.find(t => t.table_name === tableName);
+                       allTableOptions.push({
+                           label: `Individual Focus (${tableName})`,
+                           value: 'individual',
+                           table_id: table?.table_id || null,
+                       });
+                   });
+               } else {
+                   allTableOptions.push({
+                       label: "Individual Focus (No available tables)",
+                       value: null,
+                       table_id: null,
+                   });
+               }
 
-               allTableOptions.push({
-                   label: groupedTables.drafting.length > 0
-                       ? `Drafting Tables (${groupedTables.drafting.join(', ')})`
-                       : "Drafting Tables (No available tables)",
-                   value: groupedTables.drafting.length > 0 ? 'drafting' : null,
-                   table_id: groupedTables.drafting.length > 0 ? tables.find(table => table.table_name === groupedTables.drafting[0])?.table_id : null
-               });
-
+               if (groupedTables.drafting.length > 0) {
+                   groupedTables.drafting.forEach((tableName) => {
+                       const table = tables.find(t => t.table_name === tableName);
+                       allTableOptions.push({
+                           label: `Drafting Table (${tableName})`,
+                           value: 'drafting',
+                           table_id: table?.table_id || null,
+                       });
+                   });
+               } else {
+                   allTableOptions.push({
+                       label: "Drafting Tables (No available tables)",
+                       value: null,
+                       table_id: null,
+                   });
+               }
 
                // Filter out invalid options (e.g., those with value = null)
                allTableOptions = allTableOptions.filter(option => option.value !== null);
 
                console.log("Available options:", allTableOptions);
 
+
         // Update table options based on the selected table type
         $: {
     console.log("bruh, should show selected table", tableSelected);
+    chosenTable_type = tableSelected;
+    calculateTotal();
 
     if (tableSelected) {
         // Filter table options based on the selected table type
@@ -238,13 +272,16 @@ const changeTable =  async () => {
     // Watch for changes in reserveSelected and other relevant variables
     $: changeTable();
 
+    $: if (chosenTable_type && chosenTable_id) {
+    calculateTotal();}
+
 
     // Existing imports and declarations...
 
     let total_price: number | string = ""; // Default value for total_price
     let startDate: string = ""; // Variable for start date and time
     let endDate: string = ""; // Variable for end date and time
-    let hours: number = "";
+    let hours: number = 0;
 
     // Function to calculate the total price based on reservation type
     const calculateTotal = () => {
@@ -280,6 +317,7 @@ const changeTable =  async () => {
             }
             else{
                 console.log("how bro");
+                hourlyRate = 0;
             }
 
             const start = new Date(startDate);
@@ -300,6 +338,7 @@ const changeTable =  async () => {
             }
             else{
                 console.log("how bro");
+                dailyRate = 0;
             }            
             total_price = dailyRate;
         } else if (reserveSelected === "3") { // Weekly rate, equivalent to 7 dailies, usuable within 2 weeks
@@ -315,7 +354,7 @@ const changeTable =  async () => {
                 weeklyRate = weeklyDraftingRate;
             }
             else{
-                console.log("how bro");
+                weejlyRate = 0;
             }
 
 
@@ -363,7 +402,8 @@ const handleConfirm = async () => {
                     table_id: chosenTable_id,
                     date: startDate,
                     duration: durationHourInterval,
-                    end_date: endDate
+                    end_date: endDate,
+                    price: total_price
 
                 });
                  if (reserveError){
@@ -391,7 +431,8 @@ const handleConfirm = async () => {
                     table_id: ,
                     date: startDate,
                     duration: durationDailyInterval,
-                    end_date: dailyEnd
+                    end_date: dailyEnd,
+                    price: total_price
 
                 });*/
             } else if (reserveSelected === "3") { // Weekly rate
@@ -479,11 +520,8 @@ const handleConfirm = async () => {
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10">
-<<<<<<< HEAD
         <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
-=======
-        <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, Customer ID!</h1>
->>>>>>> frontend
+
 
         <!-- container for the two boxes -->
         <div class="flex gap-8">
@@ -501,7 +539,7 @@ const handleConfirm = async () => {
                         <div class="flex-1">
                             <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
                                 <label for="tableType">Table Type</label>
-                                <select name="tableType" bind:value={tableSelected} on:change={() => { handleTableSelection(); changeTable(); }} class="select-style rounded-full mt-1 mb-3">
+                                <select name="tableType" bind:value={tableSelected} on:change={() => { changeTable(); handleTableSelection(); }} class="select-style rounded-full mt-1 mb-3">
                                     <option value='shared'>Sharing Table</option>
                                     <option value='individual'>Individual Focus Table</option>
                                     <option value='drafting'>Drafting Table</option>
@@ -509,7 +547,7 @@ const handleConfirm = async () => {
 
             
                                 <label for="tableNum">Table</label>
-                                <select name="tableNum"  id="tableNum" class="select-style rounded-full mt-1 mb-3" on:change={handleTableSelection} required>
+                                <select name="tableNum"  id="tableNum" class="select-style rounded-full mt-1 mb-3" on:change={() => { handleTableSelection(); }} required>
                                     <option value="" disabled selected >{tablePlaceholder}</option>
                                     {#each tableOptions as table}
                                         <option value={table.value} data-table-id={table.table_id}>{table.label}</option>
@@ -520,7 +558,7 @@ const handleConfirm = async () => {
                                 <label for="tableRate">Reservation Rates</label>
 
                                 <!-- change values in typescript -->
-                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}  on:change={() => { handleTableSelection(); calculateTotal(); }}>    
+                                <select name="tableRate" class="select-style rounded-full mt-1 mb-3" bind:value={reserveSelected}  on:change={() => { handleTableSelection();}}>    
                                     {#if reservePlaceholder}
                                         <option value="" disabled selected>{reservePlaceholder}</option>
                                     {/if}
@@ -581,25 +619,28 @@ const handleConfirm = async () => {
                 </div>
                 
                 {#if toggleOrder}
-<<<<<<< HEAD
-                    <form class="px-12 pb-20" id="orderForm" method="POST" action="?/order" on:submit|preventDefault>
-=======
+
+                <form class="px-12 pb-20" id="orderForm" method="POST" action="?/order" on:submit|preventDefault>
+
                     <div class="px-12 pb-20">
->>>>>>> frontend
+
                         <label for="drinkOrder">Drink Selection</label>
                         
                         <div style=" border-color: #38728A; height: 10rem;" class="border my-1 rounded-3xl overflow-y-auto">
-                            {#each drinkOptions as drink}
-                                <div class="flex justify-between items-center px-4 py-2 border-b">
-                                    <span>{drink.label} - ₱{drink.price}</span>
-                                    <div class="flex items-center gap-5">
-                                        <button class="border-none px-3 rounded-lg text-base" on:click={() => decrement(drink)}>-</button>
-                                        <span>{drink.count}</span>
-                                        <button class="border-none px-3 rounded-lg text-base" on:click={() => increment(drink)}>+</button>
+
+                            
+                                {#each drinkOptions as drink}
+                                    <div class="flex justify-between items-center px-4 py-2 border-b">
+                                        <span>{drink.label} - ₱{drink.price}</span>
+                                        <div class="flex items-center gap-5">
+                                            <button class="border-none px-3 rounded-lg text-base" on:click={() => decrement(drink)}>-</button>
+                                            <span>{drink.count}</span>
+                                            <button class="border-none px-3 rounded-lg text-base" on:click={() => increment(drink)}>+</button>
+                                        </div>
                                     </div>
-                                </div>
-                            {/each}
+                                {/each}
                         </div>
+
                         <div class="mt-4">
                             <h3>Order Summary</h3>
                             {#if totalOrder.length === 0}
@@ -612,14 +653,15 @@ const handleConfirm = async () => {
                                 </ul>
                                 <p class="font-bold">Total: ₱{totalOrder.reduce((sum, drink) => sum + drink.count * drink.price, 0)}</p>
                             {/if}
+                             
                         </div>
-                        
-                    </div>
+                    </div></form>
+                   
                 {:else}
                     <div class="min-h-full"></div>
                 {/if}
                     
-            </div>
+            </div> 
 
         </div>
 
