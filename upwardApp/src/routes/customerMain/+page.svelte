@@ -34,15 +34,8 @@
 	}];
 	let reserveSelected = "";
 
-    /** values for order selection */
     /** Placeholder and drink options */
     let orderPlaceholder = 'Select a drink...';
-	let drinkOptions = [
-        { label: "Spanish Latte", value: "1",price: 40 }, 
-        { label: "Cappuccino", value: "2", price: 40 },
-        { label: "Nescafe", value: "3", price: 40 },
-        { label: "Strawberry Fizz", value: "4", price: 40 },
-        { label: "Blueberry Fizz", value: "5", price: 40 },
     let drinkOptions = [
         { label: "Drink 1", value: "1", price: 40, count: 0 },
         { label: "Drink 2", value: "2", price: 40, count: 0 },
@@ -54,7 +47,6 @@
         { label: "Drink 8", value: "8", price: 40, count: 0 },
         { label: "Drink 9", value: "9", price: 40, count: 0 },
     ];
-	let drinkSelected = "";
     let totalOrder = [];
 
     /** Increment drink count */
@@ -500,7 +492,6 @@ const handleConfirm = async () => {
 
                 <!-- for padding -->
                 <div class="px-12 py-6 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-bold">Would you like to reserve?</h1>
                     <h1 class="h2 font-fredoka">Would you like to reserve?</h1>
                     <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
                 </div>
@@ -585,7 +576,6 @@ const handleConfirm = async () => {
 
                 <!-- for padding -->
                 <div class="px-12 py-6 pb-10 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-bold">Would you like to order?</h1>
                     <h1 class="h2 font-fredoka">Would you like to order?</h1>
                     <SlideToggle name="slide" bind:checked={toggleOrder} active="bg-primary-500" />
                 </div>
@@ -598,16 +588,8 @@ const handleConfirm = async () => {
 >>>>>>> frontend
                         <label for="drinkOrder">Drink Selection</label>
                         
-                        <!-- change values in typescript -->
-                        <select name="customerOrder" multiple size="4" class="select-style rounded-full mt-1 mb-3" bind:value={drinkSelected}>    
-                            {#if orderPlaceholder}
-                                <option value="" disabled selected>{orderPlaceholder}</option>
-                            {/if}
                         <div style=" border-color: #38728A; height: 10rem;" class="border my-1 rounded-3xl overflow-y-auto">
                             {#each drinkOptions as drink}
-                                <option value={drink.value}>
-                                    {drink.label}
-                                </option>
                                 <div class="flex justify-between items-center px-4 py-2 border-b">
                                     <span>{drink.label} - ₱{drink.price}</span>
                                     <div class="flex items-center gap-5">
@@ -617,16 +599,6 @@ const handleConfirm = async () => {
                                     </div>
                                 </div>
                             {/each}
-                        </select>
-
-                        {#if drinkSelected.length > 0}
-                            <p class="mt-2 font-semibold">Order:</p>
-                            <ul>
-                                {#each drinkSelected as selectedValue}
-                                    {#each drinkOptions as drink (drink.value)}
-                                        {#if drink.value === selectedValue}
-                                            <li>{drink.label} ({drink.price})</li>
-                                        {/if}
                         </div>
                         <div class="mt-4">
                             <h3>Order Summary</h3>
@@ -637,15 +609,11 @@ const handleConfirm = async () => {
                                     {#each totalOrder as drink}
                                         <li>{drink.label} x {drink.count} = ₱{drink.count * drink.price}</li>
                                     {/each}
-                                {/each}
-                            </ul>
-                        {/if}
                                 </ul>
                                 <p class="font-bold">Total: ₱{totalOrder.reduce((sum, drink) => sum + drink.count * drink.price, 0)}</p>
                             {/if}
                         </div>
                         
-                    </form>
                     </div>
                 {:else}
                     <div class="min-h-full"></div>
