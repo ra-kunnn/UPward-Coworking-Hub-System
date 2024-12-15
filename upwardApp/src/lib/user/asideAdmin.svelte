@@ -83,6 +83,12 @@
                 </a>
             </li>
             <li>
+                <a href="/adminMain/create" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/create' ? 'active' : ''}">
+                    <span class="icon">📝</span>
+                    <span class="text">Create</span>
+                </a>
+            </li>
+            <li>
                 <a href="/adminMain/tables" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/tables' ? 'active' : ''}">
                     <span class="icon">📋</span>
                     <span class="text">Tables</span>

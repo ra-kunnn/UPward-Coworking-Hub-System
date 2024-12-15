@@ -211,6 +211,19 @@
     */
 </script>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -222,16 +235,16 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Tables</h1>
+            <h1 class="h2 font-bold font-fredoka">Tables</h1>
         </div>
         
         <!-- container for the two boxes -->
         <div class="flex gap-8">
 
             <!-- table display -->
-            <div class="w-3/5 flex-col gap-5">
+            <div class="w-4/7 flex-col gap-5">
 
                 <!-- tables -->
                 <div class="mb-6 h-96">
@@ -254,7 +267,7 @@
                     <div class="px-12 min-h-full flex flex-col">
 
                         <div class="pt-6">
-                            <h1 class="h2 font-bold">Table 1</h1>
+                            <h1 class="h2 font-bold font-fredoka">Table 1</h1>
                             <!-- remove this p when done implementing -->
                             <p class="mt-1 blockquote">display changes depending on clicked box, grayed out tables mean someone is currently occupying</p>
                         </div>
@@ -294,17 +307,15 @@
             </div>
 
             <!-- date reservations -->
-            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 w-2/5 overflow-hidden">
-
-                <!-- for padding -->
-                <div class="px-12 min-h-full flex flex-col">
-                    <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Upcoming Reservations</h1>
+            <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden grid grid-rows-2 h-[600px]">
+                <!-- Upcoming Reservations -->
+                <div class="px-12 py-6 overflow-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="h2 font-bold font-fredoka">Upcoming Reservations</h2>
                     </div>
-
-                    <div class="pt-10 py-6 flex-grow">
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
+                    <div class="flex-grow upcoming-reservations-container">
+                        <!-- One entry -->
+                        <div class="grid grid-cols-5 items-center gap-3 pb-4">
                             <div>
                                 <p>Reservation ID</p>
                             </div>
@@ -321,28 +332,18 @@
                                 <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                             </div>
                         </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p>Reservation ID</p>
-                            </div>
-                            <div>
-                                <p>Customer ID</p>
-                            </div>
-                            <div>
-                                <p>Table No.</p>
-                            </div>
-                            <div>
-                                <p>Per hour</p>
-                            </div>
-                            <div class="flex flex-auto mx-auto">
-                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                            </div>
-                        </div>
-
+                        <!-- Add more entries here as needed -->
                     </div>
-
+                </div>
+    
+                <!-- Ongoing Reservations -->
+                <div class="px-12 py-6 overflow-auto border-t">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="h2 font-bold font-fredoka">Ongoing Reservations</h2>
+                    </div>
+                    <div class="flex-grow ongoing-reservations-container">
+                        <!-- Ongoing reservation entries will dynamically appear here -->
+                    </div>
                 </div>
             </div>
 

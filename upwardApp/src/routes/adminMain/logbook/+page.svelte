@@ -212,6 +212,16 @@
 </script>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
 
     /* Custom input style */
     .date-input {
@@ -245,87 +255,80 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pt-10 pb-8 gap-5">
-            <p>Data from:</p>
-            <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
-            <p>to</p>
-            <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
-        </div>
 
-        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pb-6 gap-5">
-            <p>Filters:</p>
+        <div class="mx-40 mt-20">
+            <!-- date reservations -->
+            <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
-            <div class="flex items-center">
-                <input type="radio" id="reservationRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
+                <!-- for padding -->
+                <div class="min-h-full flex flex-col">
+                    <div class="px-12 py-6 flex flex-row justify-between items-center">
+                        <h1 class="h1 font-bold font-fredoka">Logbook</h1>
+                        <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
+                    </div>
+
+                    <div class="py-6 grow bg-surface-100">
+                        <div class="px-12">
+
+                            <!-- one entry -->
+                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                <div>
+                                    <p>Receipt No.</p>
+                                </div>
+                                <div>
+                                    <p>Drink No.</p>
+                                </div>
+                                <div>
+                                    <p>Customer</p>
+                                </div>
+                                <div>
+                                    <p>Total</p>
+                                </div>
+                            </div>
+
+                            <!-- one entry -->
+                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                <div>
+                                    <p>Receipt No.</p>
+                                </div>
+                                <div>
+                                    <p>Drink No.</p>
+                                </div>
+                                <div>
+                                    <p>Customer</p>
+                                </div>
+                                <div>
+                                    <p>Total</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
-
-            <div class="flex items-center">
-                <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">Order</label>
-            </div>
         </div>
-
-        <div class="flex items-center justify-center pb-14">
-            <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
-        </div>
-
         
-        <div class="mx-80 mb-20">
-            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Logs</h1>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                </div>
-
+        <div class="mx-40 block">
+            <div class="flex justify-end items-center pb-1">
+                <p>Data from</p>
+                <input class="appearance-none bg-transparent border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="date" name="dateFrom">
+                <p>to</p>
+                <input class="appearance-none bg-transparent border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="date" name="dateTo">
             </div>
+
+            <div class="flex justify-end items-center pb-1 gap-4 mr-6">
+                <div class="flex items-center">
+                    <input type="radio" id="reservationRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
+                    <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
+                </div>
+    
+                <div class="flex items-center">
+                    <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
+                    <label for="default-radio-1" class="ms-2 font-medium">Order</label>
+                </div>
+            </div>
+            
         </div>
 
     </div>

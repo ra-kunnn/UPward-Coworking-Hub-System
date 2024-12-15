@@ -211,6 +211,19 @@
     */
 </script>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -223,89 +236,67 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="grid grid-flow-col justify-center items-center pt-10 pb-4 gap-5">
-            <p>Search customer:</p>
-            <input name="dateFrom" type="text" class="input bg-white border-2 border-primary-600 rounded-3xl w-60 p-2">
-        </div>
 
-        <div class="grid grid-flow-col justify-center items-center pt-2 pb-6 gap-10">
+        <div class="mx-40 mt-20">
+            <!-- date reservations -->
+            <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
-            <div class="flex items-center">
-                <input type="radio" id="idRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">ID</label>
-            </div>
+                <!-- for padding -->
+                <div class="min-h-full flex flex-col">
+                    <div class="px-12 py-6 flex flex-row justify-between items-center">
+                        <h1 class="h1 font-bold font-fredoka">Users</h1>
+                        <div class="flex justify-normal gap-4">
+                            <input class="appearance-none bg-surface-100 rounded-2xl border-none text-surface-700 py-1 px-2 leading-tight focus:outline-none text-right" type="name" name="dateFrom" placeholder="Search...">
+                            <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
+                        </div>
+                        
+                    </div>
 
-            <div class="flex items-center">
-                <input type="radio" id="nameRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">Name</label>
-            </div>
-        </div>
+                    <div class="py-6 grow bg-surface-100">
+                        <div class="px-12">
 
-        
-        <div class="mx-80 mb-20">
-            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
+                            <!-- one entry -->
+                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                <div>
+                                    <p>Customer ID</p>
+                                </div>
+                                <div>
+                                    <p>Customer Name</p>
+                                </div>
+                                <div>
+                                    <p>Credits and Reservations</p>
+                                </div>
+                                <div>
+                                    <p>E-mail</p>
+                                </div>
+                                <div>
+                                    <p>Phone Number</p>
+                                </div>
+                            </div>
 
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Customers</h1>
+                            <!-- one entry -->
+                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                <div>
+                                    <p>Customer ID</p>
+                                </div>
+                                <div>
+                                    <p>Customer Name</p>
+                                </div>
+                                <div>
+                                    <p>Credits and Reservations</p>
+                                </div>
+                                <div>
+                                    <p>E-mail</p>
+                                </div>
+                                <div>
+                                    <p>Phone Number</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Customer Name</p>
-                    </div>
-                    <div>
-                        <p>Credits and Reservations</p>
-                    </div>
-                    <div>
-                        <p>E-mail</p>
-                    </div>
-                    <div>
-                        <p>Phone Number</p>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Customer Name</p>
-                    </div>
-                    <div>
-                        <p>Credits and Reservations</p>
-                    </div>
-                    <div>
-                        <p>E-mail</p>
-                    </div>
-                    <div>
-                        <p>Phone Number</p>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Customer Name</p>
-                    </div>
-                    <div>
-                        <p>Credits and Reservations</p>
-                    </div>
-                    <div>
-                        <p>E-mail</p>
-                    </div>
-                    <div>
-                        <p>Phone Number</p>
-                    </div>
-                </div>
-
             </div>
         </div>
 

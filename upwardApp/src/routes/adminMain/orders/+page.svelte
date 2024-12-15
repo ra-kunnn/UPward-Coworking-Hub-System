@@ -234,6 +234,19 @@
     */
 </script>
 
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -245,110 +258,100 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
-
-        <!-- orders -->
-        <div class="mx-80 mb-20">
-            <div class="card p-4 bg-white border-4 border-primary-600 rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
-
-                <!-- button: left -->
-                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
-                ⮜
-                </button>
-
-                <!-- images -->
-                <div bind:this={elemCarousel} class="m-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
-                    {#each unsplashIds as unsplashId}
-                        <img
-                            class="snap-center w-[1024px] rounded-container-token"
-                            src="https://images.unsplash.com/photo-{unsplashId}"
-                            alt={unsplashId}
-                            loading="lazy"
-                        />
-                    {/each}
-                </div>
-
-                <!-- button: right -->
-                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
-                ⮞
-                </button>
-                <!-- information -->
-                <div class="col-span-3 text-center mb-4">
-                    <p class="text-surface-800">Food No.</p>
-                    <p class="text-surface-800">Description</p>
-                    <p class="text-surface-800">Price</p>
-                    <p class="text-surface-800">Food Type</p>
-                </div>
-            </div>
+    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
+        <div class="flex justify-between items-center px-8 pb-6">
+            <h1 class="h2 font-bold font-fredoka">Food and Drinks</h1>
         </div>
 
-        <div class="mx-80 mb-20">
-            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
+        <!-- container for the two boxes -->
+        <div class="flex gap-8">
 
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Orders</h1>
-                </div>
+            <!-- user alerts -->
+            <div class="flex-1">
+                <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 grow min-h-[600px] overflow-hidden">
 
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
+                    <!-- for padding -->
+                    <div class="p-12 min-h-full rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+                        <!-- button: left -->
+                        <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
+                            ⮜
+                        </button>
+            
+                        <!-- images -->
+                        <div bind:this={elemCarousel} class="mx-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
+                            {#each unsplashIds as unsplashId}
+                                <img
+                                    class="snap-center w-[1024px] rounded-container-token"
+                                    src="https://images.unsplash.com/photo-{unsplashId}"
+                                    alt={unsplashId}
+                                    loading="lazy"
+                                />
+                            {/each}
+                        </div>
+        
+                        <!-- button: right -->
+                        <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
+                        ⮞
+                        </button>
+                            
+                        <!-- information, changes when carousel is moved -->
+                        <div class="col-span-3 text-center mb-4">
+                            <p class="text-surface-800">Food ID</p>
+                            <input class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="text" placeholder="Name" aria-label="Product Name">
+                            <input class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="text" placeholder="Price" aria-label="Price">
+                            <input class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="text" placeholder="Food Type" aria-label="Food Type">
+                        </div>
                     </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
+                    
+                    <div class="py-7 flex flex-row justify-end items-end">
+                        <button class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 mr-12 font-semibold">Update</button>
                     </div>
                 </div>
 
             </div>
-        </div>
 
-    </div>
+           <!-- Orders Section -->
+           <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden grid grid-rows-2 h-[600px]">
+            <!-- Incoming Orders -->
+            <div class="px-12 py-6 overflow-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="h2 font-bold font-fredoka">Incoming Orders</h2>
+                </div>
+                <div class="flex-grow">
+                    <!-- One entry -->
+                    <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                        <div>
+                            <p>Receipt No.</p>
+                        </div>
+                        <div>
+                            <p>Drink No.</p>
+                        </div>
+                        <div>
+                            <p>Customer</p>
+                        </div>
+                        <div>
+                            <p>Total</p>
+                        </div>
+                        <div class="flex flex-auto mx-auto">
+                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
+                        </div>
+                    </div>
+                    <!-- Add more entries here as needed -->
+                </div>
+            </div>
+
+            <!-- Ongoing Orders -->
+            <div class="px-12 py-6 overflow-auto border-t">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="h2 font-bold font-fredoka">Ongoing Orders</h2>
+                </div>
+                <div class="flex-grow ongoing-orders-container">
+                    <!-- Ongoing order entries will dynamically appear here -->
+                </div>
+            </div>
+        </div>
+    </div>    
+
+</div>
 
 </div>

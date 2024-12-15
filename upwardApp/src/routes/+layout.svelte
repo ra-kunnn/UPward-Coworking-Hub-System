@@ -36,5 +36,4 @@
     <title>UPward Coworking Hub System</title>
 </svelte:head>
 
-
 <slot />
