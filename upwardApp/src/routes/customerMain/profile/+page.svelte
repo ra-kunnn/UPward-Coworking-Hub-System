@@ -76,7 +76,7 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Table Details</h1>
+                        <h1 class="h1 font-bold">Reservation Details</h1>
                     </div>
                     
                     <div class="pt-10 py-6 flex-grow">
