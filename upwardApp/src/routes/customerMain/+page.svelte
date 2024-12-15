@@ -48,6 +48,7 @@
     let tableOptions = []; // Holds the processed table options
     let tableSelected = 'shared'; // Selected 
     let chosenTable_id = "";
+    let chosenTable_type = "";
 
 
 
@@ -100,7 +101,11 @@
         const selectElement = document.getElementById("tableNum");
         const selectedOption = selectElement.selectedOptions[0]; // Get the selected <option> element
         chosenTable_id = selectedOption ? selectedOption.getAttribute('data-table-id') : ""; // Get the data-table-id
-        console.log(chosenTable_id + " should be tableID");
+
+        chosenTable_type = selectedOption ? selectedOption.getAttribute('value') : "";
+        //set global table type
+        console.log(chosenTable_id, chosenTable_type + " should be tableID");
+        calculateTotal();
     };
 
 const changeTable =  async () => {
@@ -218,29 +223,80 @@ const changeTable =  async () => {
 
     // Function to calculate the total price based on reservation type
     const calculateTotal = () => {
+
         const hourlySharedRate = 100; 
-        const hourlyRate = 100;
-        const hourlyIndividualRate = 100;
-        const hourlyDraftingRate = 100; 
+        const hourlyIndividualRate = 150;
+        const hourlyDraftingRate = 200; 
 
-        const dailySharedRate = 100; 
-        const dailyIndividualRate = 100;
-        const dailyDraftingRate = 100; 
+        const dailySharedRate = 120; 
+        const dailyIndividualRate = 170;
+        const dailyDraftingRate = 220; 
 
-        const weeklySharedRate = 100; 
-        const weeklyIndividualRate = 100;
-        const weeklyDraftingRate = 100; 
+        const weeklySharedRate = 1100; 
+        const weeklyIndividualRate = 160;
+        const weeklyDraftingRate = 210; 
+
+        let hourlyRate: number = 0 ;
+        let dailyRate: number = 0 ;
+        let weeklyRate: number = 0 ;
+
+        console.log("in calculate total, chosentabletype is" + chosenTable_type);
 
         if (reserveSelected === "1") { // Hourly rate
+
+            if(chosenTable_type == "shared"){
+                hourlyRate = hourlySharedRate;
+            }
+            else if(chosenTable_type == "individual"){
+                hourlyRate = hourlyIndividualRate;
+            }
+            else if(chosenTable_type == "drafting"){
+                hourlyRate = hourlyDraftingRate;
+            }
+            else{
+                console.log("how bro");
+            }
+
             const start = new Date(startDate);
             const end = new Date(endDate);
             hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60); // Difference in hours
             total_price = hours > 0 ? Math.ceil(hours) * hourlyRate : console.log("Invalid time range.");
 
         } else if (reserveSelected === "2") { // Daily rate, daily rate lasts from time started until 6 am the next day
+
+            if(chosenTable_type == "shared"){
+                dailyRate = dailySharedRate;
+            }
+            else if(chosenTable_type == "individual"){
+                dailyRate = dailyIndividualRate;
+            }
+            else if(chosenTable_type == "drafting"){
+                dailyRate = dailyDraftingRate;
+            }
+            else{
+                console.log("how bro");
+            }            
             total_price = dailyRate;
         } else if (reserveSelected === "3") { // Weekly rate, equivalent to 7 dailies, usuable within 2 weeks
+            
+
+            if(chosenTable_type == "shared"){
+                weeklyRate = weeklySharedRate;
+            }
+            else if(chosenTable_type == "individual"){
+                weeklyRate = weeklyIndividualRate;
+            }
+            else if(chosenTable_type == "drafting"){
+                weeklyRate = weeklyDraftingRate;
+            }
+            else{
+                console.log("how bro");
+            }
+
+
             total_price = weeklyRate;
+
+
         } else {
             total_price = "Invalid selection.";
         }
@@ -255,6 +311,7 @@ const handleConfirm = async () => {
     const { supabase } = data;
     if (toggleReserve) {
         handleTableSelection();
+        console.log(total_price);
         const reserveForm = document.getElementById("reserveForm") as HTMLFormElement;
         if (reserveForm) {
             const formData = new FormData(reserveForm);
@@ -317,18 +374,14 @@ const handleConfirm = async () => {
             } else {
                 total_price = "Invalid selection.";
             }
-
-            
-
     }
-
-    if (toggleOrder) {
+   }
+   if (toggleOrder) {
         const orderForm = document.getElementById("orderForm") as HTMLFormElement;
         if (orderForm) {
             const orderData = new FormData(orderForm);
         }
     }
-   }
 };
 
 
