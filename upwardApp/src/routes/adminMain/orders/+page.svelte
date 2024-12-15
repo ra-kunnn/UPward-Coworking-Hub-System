@@ -173,6 +173,35 @@ console.log("test");
         }
         
     }
+    const confirmOrder = async (receipt_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_done: false
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
     const updateDrink = async () => {
         const { supabase } = data; // Ensure supabase is accessible from your data context
 
