@@ -16,9 +16,6 @@
 <!-- global container div -->
 <div>
 
-    <!-- header -->
-    <!-- should there be header?? -->
-
     <!-- screen div -->
     <div class="h-dvh w-dvw bg-surface-50">
 
@@ -29,9 +26,7 @@
             <div class="grid grid-cols-2 rounded-3xl overflow-hidden w-9/12 shadow-xl">
 
                 <div class="flex bg-primary-600 justify-center items-center">
-                    <div class="h2 font-bold text-tertiary-300">
-                        UPward
-                    </div>
+                    <img src="/src/lib/landing/Upward Logo2.png" alt="Upward Logo" class="w-1/4" />
                 </div>
 
                 <div class="block bg-surface-50">

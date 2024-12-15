@@ -234,6 +234,19 @@
     */
 </script>
 
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -247,7 +260,7 @@
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Food and Drinks</h1>
+            <h1 class="h2 font-bold font-fredoka">Food and Drinks</h1>
         </div>
 
         <!-- container for the two boxes -->
@@ -303,7 +316,7 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Incoming Orders</h1>
+                        <h1 class="h1 font-bold font-fredoka">Incoming Orders</h1>
                     </div>
 
                     <div class="py-6 flex-grow">

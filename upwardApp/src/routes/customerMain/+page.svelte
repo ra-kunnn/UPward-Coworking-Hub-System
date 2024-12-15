@@ -110,6 +110,17 @@
 
 <style>
 
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+
     /* Custom input style */
     .date-input {
         background-color: white; /* Match the white background of the card */
@@ -150,7 +161,6 @@
         padding: 0.5rem; /* Adds spacing to the option text */
     }
 
-
 </style>
 
 <HideOverflow />
@@ -165,7 +175,7 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
+        <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, Customer ID!</h1>
 
         <!-- container for the two boxes -->
         <div class="flex gap-8">
@@ -174,7 +184,7 @@
 
                 <!-- for padding -->
                 <div class="px-12 py-6 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-bold">Would you like to reserve?</h1>
+                    <h1 class="h2 font-fredoka">Would you like to reserve?</h1>
                     <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
                 </div>
                 
@@ -242,7 +252,7 @@
 
                 <!-- for padding -->
                 <div class="px-12 py-6 pb-10 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-bold">Would you like to order?</h1>
+                    <h1 class="h2 font-fredoka">Would you like to order?</h1>
                     <SlideToggle name="slide" bind:checked={toggleOrder} active="bg-primary-500" />
                 </div>
                 

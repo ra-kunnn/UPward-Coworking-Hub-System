@@ -211,6 +211,19 @@
     */
 </script>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -224,7 +237,7 @@
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold">Welcome back, Admin Name!</h1>
+            <h1 class="h2 font-bold font-fredoka">Welcome back, Admin Name!</h1>
             <div class="text-right">
                 <p>Number of User Accounts: ###</p>
                 <p>Users Online Now: ###</p>
@@ -240,7 +253,7 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Table Details</h1>
+                        <h1 class="h1 font-bold font-fredoka">Table Details</h1>
                     </div>
 
                     <div class="pt-10 py-6 flex-grow">
@@ -293,7 +306,7 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Upcoming Reservations</h1>
+                        <h1 class="h1 font-bold font-fredoka">Upcoming Reservations</h1>
                     </div>
 
                     <div class="pt-10 py-6 flex-grow">

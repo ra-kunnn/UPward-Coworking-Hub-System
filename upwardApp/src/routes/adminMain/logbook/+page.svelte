@@ -212,6 +212,16 @@
 </script>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
 
     /* Custom input style */
     .date-input {
@@ -253,7 +263,7 @@
                 <!-- for padding -->
                 <div class="min-h-full flex flex-col">
                     <div class="px-12 py-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Logbook</h1>
+                        <h1 class="h1 font-bold font-fredoka">Logbook</h1>
                         <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
                     </div>
 
@@ -320,9 +330,6 @@
             </div>
             
         </div>
-
-
-        
 
     </div>
 
