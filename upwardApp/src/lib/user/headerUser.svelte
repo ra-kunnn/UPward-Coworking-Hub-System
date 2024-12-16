@@ -1,6 +1,5 @@
 <script>
 
-    /**
 
     export let logout; // Receive the logout function through props
 
@@ -9,9 +8,9 @@
         if (logout) {
             await logout(); // Call the logout function
         }
+        console.log("LOGGING OUT");
     };
 
-    */
 
 </script>
 
@@ -21,7 +20,7 @@
             <img src="/src/lib/landing/Upward logo1.png" alt="UPward Logo" class="h-10 max-sm:h-8 max-md:h-6 max-[480px]:h-4">
         </a>
         <div class="flex items-center gap-3">
-            <a href="/" class="btn bg-surface-50 hover:text-secondary-800 hover:bg-surface-300 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Log Out</a>
+            <button class="btn bg-surface-50 hover:text-secondary-800 hover:bg-surface-300 rounded border-none px-3 py-1 my-1 text-sm font-semibold" on:click={handleLogout}>Log Out</button>
         </div>
     </div>
 </div>

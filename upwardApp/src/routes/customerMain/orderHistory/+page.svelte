@@ -10,66 +10,44 @@
     import type { PageData } from '../orderHistory/$types';
 	import HideOverflowX from '$lib/hideOverflowX.svelte';
                         
-    /**
-    
-    const modalStore = getModalStore();
-
-    function makeAnAccount(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'CreateAccount',
-        };
-        modalStore.trigger(modal);
-    }
-
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-
-    interface Availability {
-        dormNo: number;
-        availability: boolean;
-        availableSlots: number;
-        preexistingTenants: number;
-        // Add other columns as needed
-    }
-
     export let data:PageData;
-    const { rooms, availability }: { rooms: Room[], availability: Availability[] } = data;
 
-    let roomRows: Room[] = [];
-    let availRows: Availability[] = [];
-    let availableRooms: Room[] = [];
+    const logout = async () => {
+        const { supabase } = data; // Destructure supabase from data
+        const { error } = await supabase.auth.signOut();
+        console.log("LOGGING OUT");
+        document.cookie = 'sb-access-token=; Max-Age=0; path=/';
+            document.cookie = 'sb-refresh-token=; Max-Age=0; path=/';
+        window.location.replace('/redirectToHome');
+        if (error) {
+            console.error(error);
+            }
+        };
+
+            interface User {
+        customer_name: string;
+        customer_id: number;
+        customer_phone: number;
+        customer_email: string;
+    }
+
+    let customer_name: string = '';
+    let customer_email: string = '';
+    let customer_id: number = 0;
+
+    console.log("TESTING CUST DATA" + customer_name);
 
     onMount(() => {
+    console.log("IS IT MOUNTING??/");
         try {
-            roomRows = rooms || [];
-            availRows = availability || [];
-            availableRooms = roomRows.filter(room => {
-                const roomAvailability = availRows.find(avail => avail.dormNo === room.dormNo);
-                return roomAvailability && roomAvailability.availability;
-            });
+            customer_name = data.user?.customer_name ?? '';
+            customer_email = data.user?.customer_email ?? '';
+            customer_id = data.user?.customer_id ?? 0;
+            console.log("testing cookies"+ customer_id, customer_email);
         } catch (error) {
             console.error(error);
-            roomRows = [];
-            availRows = [];
-            availableRooms = [];
         }
     });
-
-    function createArray(length: number): number[] {
-        return Array.from({ length }, (_, i) => i);
-    } 
-
-    */
 
 </script>
 
@@ -79,14 +57,14 @@
 <div>
 
     <!-- header -->
-    <Header />
+    <Header {logout}/>
 
     <!-- aside -->
     <Aside />
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, Customer ID!</h1>
+        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
 
         <!-- table details -->
         <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">

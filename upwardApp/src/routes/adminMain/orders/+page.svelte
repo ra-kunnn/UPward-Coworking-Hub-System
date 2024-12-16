@@ -286,7 +286,7 @@ console.log("test");
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
+    <div class="w-dvw px-40 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold font-fredoka">Food and Drinks</h1>
         </div>
@@ -296,7 +296,7 @@ console.log("test");
 
             <!-- user alerts -->
             <div class="flex-1">
-                <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 grow min-h-[600px] overflow-hidden">
+                <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 grow h-[600px] overflow-hidden">
                     <!-- for padding -->
                     <div class="p-12 min-h-full rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center">
                         <!-- Left Button -->
@@ -350,16 +350,19 @@ console.log("test");
                                 bind:value={drinkTypeInput}
                             />
                         </div>
+
                     </div>
+                            
+                </div>
+                        
                 
-                    <!-- Update Button -->
-                    <div class="py-7 flex flex-row justify-end items-end">
-                        <button
-                            class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 mr-12 font-semibold"
-                            on:click={updateDrink}>
-                            Update
-                        </button>
-                    </div>
+                <!-- Update Button -->
+                <div class="flex flex-row justify-end items-end">
+                    <button
+                        class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold"
+                        on:click={updateDrink}>
+                        Update
+                    </button>
                 </div>
 
             </div>

@@ -1,9 +1,11 @@
 <script lang="ts">
     import { Modal, getModalStore } from '@skeletonlabs/skeleton';
-    import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+    import type { ModalSettings } from '@skeletonlabs/skeleton';
     import { onMount } from 'svelte';
 
     const modalStore = getModalStore();
+    let sidebarVisible = false; // State to toggle the sidebar visibility
+    let currentPath = '';
 
     function passwordChange(): void {
         const modal: ModalSettings = {
@@ -13,31 +15,33 @@
         modalStore.trigger(modal);
     }
 
-    let currentPath = '';
-
-    // Get the current path on component mount
     onMount(() => {
         currentPath = window.location.pathname;
     });
+
+    function toggleSidebar(): void {
+        sidebarVisible = !sidebarVisible;
+    }
 </script>
 
 <style>
     /* Sidebar Styling */
-    .hover-sidebar {
-        width: 125px; /* Initial width */
+    .sidebar {
+        width: 200px;
         height: 100vh;
         background-color: #ffffff;
         box-shadow: inset -4px 0 10px rgba(0, 0, 0, 0.1);
         border-top-right-radius: 70px;
         border-bottom-right-radius: 70px;
         overflow-x: hidden;
-        transition: width 0.3s ease;
         position: fixed;
         z-index: 100;
+        transition: transform 0.3s ease;
+        transform: translateX(-100%); /* Initially hidden */
     }
 
-    .hover-sidebar:hover {
-        width: 200px; /* Expanded width */
+    .sidebar.visible {
+        transform: translateX(0); /* Show when visible */
     }
 
     /* Sidebar Item Styling */
@@ -47,10 +51,12 @@
         padding: 15px;
         cursor: pointer;
         color: #333333;
-        margin-top: 50px;
+        margin-top: 35px;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: "fredoka";
         white-space: nowrap;
+        white-space: normal; /* Allow text wrapping */
+        word-break: break-word; /* Break long words if necessary */
     }
 
     .icon {
@@ -58,22 +64,48 @@
         margin-right: 10px;
     }
 
-    .text {
-        opacity: 0;
-        transition: opacity 0.3s ease;
+    .active {
+        background-color: #38728A;
+        color: #ffffff;
     }
 
-    .hover-sidebar:hover .text {
-        opacity: 1;
+    /* Hamburger Menu Styling */
+    .hamburger {
+        cursor: pointer;
+        position: absolute;
+        top: 25px;
+        left: 30px;
+        z-index: 150; /* Above sidebar */
     }
-    
-    .active {
-        background-color: #38728A; /* Active background color (matches border style) */
-        color: #ffffff; /* Text color when active */
+
+    .hamburger div {
+        width: 25px;
+        height: 3px;
+        background-color: #ffff;
+        margin: 5px 0;
+        transition: all 0.3s ease;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
     }
 </style>
 
-<aside class="hover-sidebar">
+<!-- Hamburger Button -->
+<div class="hamburger" on:click={toggleSidebar}>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar {sidebarVisible ? 'visible' : ''}">
     <div class="h-full px-3 py-4 overflow-y-auto">
         <ul class="space-y-2 font-medium">
             <li>
@@ -97,7 +129,7 @@
             <li>
                 <a href="/adminMain/orders" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/orders' ? 'active' : ''}">
                     <span class="icon">🛒</span>
-                    <span class="text">Orders</span>
+                    <span class="text">Orders and Reservation</span>
                 </a>
             </li>
             <li>
