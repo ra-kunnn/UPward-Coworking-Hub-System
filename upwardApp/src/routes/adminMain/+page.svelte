@@ -70,7 +70,6 @@
     }
 
     interface TableAvailability{
-        table_avail_id: number;
         table_id: number;
         availability: boolean;
         customer_id: string;
@@ -142,6 +141,182 @@ onMount(() => {
         tableReservationStatusRows = [];
     }
 });
+
+const cancelOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+
+    const confirmCurrent = async (reservation_no: number, table_id: number, customer_id: string) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: true,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: false,
+                    customer_id: customer_id
+                })
+                .eq('table_id', table_id)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmDone = async (reservation_no: number, table_id: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: true
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+                
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: true,
+                    customer_id: null
+                })
+                .eq('table_id', table_id)
+                .select();;
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const cancelledReserve = async (reservation_no: number, table_id: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+                
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: true,
+                    customer_id: null
+                })
+                .eq('table_id', table_id)
+                .select();;
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
 </script>
 
 <style>
@@ -170,15 +345,12 @@ onMount(() => {
     <!-- main div -->
     <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center px-4 pb-6 gap-4">
-            <h1 class="h1 text-3xl font-bold font-fredoka">Welcome back, Admin Name!</h1>
-            <div class="text-left lg:text-right text-sm md:text-base">
-                <p>Number of User Accounts: ###</p>
-                <p>Users Online Now: ###</p>
-            </div>
+            <h1 class="h2 font-bold font-fredoka">Welcome back, Admin Name!</h1>
+            
         </div>
 
         <!-- container for the two boxes -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 2xl:grid-cols-2 gap-8">
 
             <!-- table details -->
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden">
@@ -191,20 +363,47 @@ onMount(() => {
 
                     <div class="pt-10 py-6 flex-grow">
                         <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-5 pb-4">
-                            <p class="font-bold whitespace-normal break-all">Table 1</p>
-                            <p class="whitespace-normal break-all">Customer Name</p>
-                            <p class="whitespace-normal break-all">Time/Credit Status</p>
-                            <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                        </div>
+                        {#each tableReservationRows as tableReservationRow}
+                            {#each tableReservationStatusRows as tableReservationStatusRow}
+                                {#if tableReservationRow.reservation_no === tableReservationStatusRow.reservation_no && tableReservationStatusRow.is_current}
+                                    <div class="grid grid-flow-col justify-between items-center gap-5 pb-4">
+                                        <div>
+                                            {#each tableRows as tableRow}
+                                                {#if tableReservationRow.table_id === tableRow.table_id}
+                                                    <p class="font-bold whitespace-normal break-word">{tableRow.table_name}</p>
+                                                {/if}
+                                            {/each}
+                                        </div>
+                                        <div>
+                                            {#each customerRows as customerRow}
+                                                {#if tableReservationRow.customer_id === customerRow.customer_id}
+                                                    <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
+                                                {/if}
+                                            {/each}
+                                        </div>
+                                        <div>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                        </div>
+                                        <div>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.end_date}</p>
+                                        </div>
+                                        <div class="flex flex-auto gap-2">
+                                            <button on:click={() => {confirmDone(tableReservationRow.reservation_no, tableReservationRow.table_id);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {cancelledReserve(tableReservationRow.reservation_no, tableReservationRow.table_id);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                        </div>
+                                    </div>
+                                {/if}
+                            {/each}
+                        {/each}
 
+                        
                     </div>
 
                 </div>
             </div>
 
         <!-- Reservation Section -->
-        <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden grid grid-rows-2 h-[600px]">
+        <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden grid grid-rows-2 h-auto">
             <!-- Upcoming Reservations -->
             <div class="px-12 py-6 overflow-auto">
                 <div class="flex justify-between items-center mb-4">
@@ -212,16 +411,35 @@ onMount(() => {
                 </div>
                 <div class="flex-grow upcoming-reservations-container">
                     <!-- One entry -->
-                    <div class="grid grid-cols-5 items-center gap-5 pb-4">
-                        <p class="whitespace-normal break-all">Reservation ID</p>
-                        <p class="whitespace-normal break-all">Customer ID</p>
-                        <p class="whitespace-normal break-all">Table No.</p>
-                        <p class="whitespace-normal break-all">Per hour</p>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
+                    {#each tableReservationRows as tableReservationRow}
+                        {#each tableReservationStatusRows as tableReservationStatusRow}    
+                            {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_incoming}
+                                <div class="grid grid-cols-7 items-center gap-5 pb-4">
+                                    <div>
+                                        <p class="whitespace-normal break-all">{tableReservationRow.reservation_no}</p>
+                                    </div>
+                                    {#each customerRows as customerRow}
+                                        {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                            <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
+                                        {/if}
+                                    {/each}
+                                    {#each tableRows as tableRow}
+                                        {#if tableRow.table_id === tableReservationRow.table_id}
+                                            <p class="whitespace-normal break-word">{tableRow.table_name}</p>
+                                        {/if}
+                                    {/each}
+                                    <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                    <p class="whitespace-normal break-all">{tableReservationRow.duration}</p>
+                                    <p class="whitespace-normal break-all">{tableReservationRow.price}</p>
+                                    <div class="flex flex-auto gap-2">
+                                        <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                        <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                    </div>
+                                </div>
+                            {/if}
+                        {/each}
                     <!-- Add more entries here as needed -->
+                    {/each}
                 </div>
             </div>
 
@@ -231,6 +449,33 @@ onMount(() => {
                     <h2 class="h2 font-bold font-fredoka">Ongoing Reservations</h2>
                 </div>
                 <div class="flex-grow ongoing-reservations-container">
+                    {#each tableReservationRows as tableReservationRow}
+                        {#each tableReservationStatusRows as tableReservationStatusRow}    
+                            {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_ongoing}
+                                {#each customerRows as customerRow}     
+                                    {#if customerRow.customer_id === tableReservationRow.customer_id}       
+                                        <div class="grid grid-cols-7 items-center gap-3 pb-4">
+                                            <p class="whitespace-normal break-word">{tableReservationRow.reservation_no}</p>
+                                            <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
+                                            {#each tableRows as tableRow}
+                                                {#if tableRow.table_id === tableReservationRow.table_id}
+                                                    <p class="whitespace-normal break-word">{tableRow.table_name}</p>
+                                                {/if}
+                                            {/each}
+                                            <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.duration}</p>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.price}</p>
+                                            <div class="flex flex-auto gap-2">
+                                                <button on:click={() => {confirmCurrent(tableReservationRow.reservation_no, tableReservationRow.table_id, customerRow.customer_id);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                                <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                {/each}
+                            {/if}
+                        {/each}
+                    <!-- Add more entries here as needed -->
+                    {/each}
                     <!-- Ongoing reservation entries will dynamically appear here -->
                 </div>
             </div>
