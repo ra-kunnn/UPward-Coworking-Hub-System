@@ -232,7 +232,44 @@
         }
         
     }
+const cancelledReserve = async (reservation_no: number, table_id: number) => {
+        const { supabase } = data;
 
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+                
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: true,
+                    customer_id: null
+                })
+                .eq('table_id', table_id)
+                .select();;
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
     async function fetchTableDetails(tableId: number) {
         const { supabase } = data;
         selectedTableId = tableId;
@@ -242,14 +279,16 @@
         try {
         // Step 1: Fetch reservations for the selected table
         let reservationQuery = supabase
-            .from('Table Reservation')
-            .select('reservation_no, table_id, date, end_date, customer_id')
-            .eq('table_id', tableId);
+        .from('Table Reservation')
+        .select('reservation_no, table_id, date, end_date, customer_id');
+
 
         // Include multiple table IDs if tableId is 8
         if (tableId === 8) {
             reservationQuery = reservationQuery.in('table_id', [8, 9, 10, 11, 12, 13, 14, 15]);
-        }
+        } else {
+            reservationQuery = reservationQuery.eq('table_id', tableId);
+      }
 
         const { data: reservations, error: reservationError } = await reservationQuery;
         console.log(reservations);
@@ -449,7 +488,7 @@
                                                 <p class="whitespace-normal break-all">{detail.end_date}</p>
                                             <div class="flex flex-auto mx-auto">
                                                 <button on:click={() => {confirmDone(detail.reservation_no, selectedTableId);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
-                                                <button on:click={() => {cancelOrder(detail.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                                <button on:click={() => {cancelledReserve(detail.reservation_no, selectedTableId);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                             </div>
                                         </div>
                                 {/each}
