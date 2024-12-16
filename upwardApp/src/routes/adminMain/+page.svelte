@@ -83,12 +83,14 @@
         table_id: number;
         duration: Date;
         end_date: Date;
+        price: number;
     }
 
     interface TableReservationStatus{
         reservation_no: number;
         is_incoming: boolean;
         is_ongoing: boolean;
+        is_current: boolean;
         is_done: boolean;
     }
 
@@ -166,19 +168,19 @@ onMount(() => {
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="flex justify-between items-center px-8 pb-6">
-            <h1 class="h2 font-bold font-fredoka">Welcome back, Admin Name!</h1>
-            <div class="text-right">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center px-4 pb-6 gap-4">
+            <h1 class="h1 text-3xl font-bold font-fredoka">Welcome back, Admin Name!</h1>
+            <div class="text-left lg:text-right text-sm md:text-base">
                 <p>Number of User Accounts: ###</p>
                 <p>Users Online Now: ###</p>
             </div>
         </div>
 
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-            <!-- user alerts -->
+            <!-- table details -->
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden">
 
                 <!-- for padding -->
@@ -189,132 +191,13 @@ onMount(() => {
 
                     <div class="pt-10 py-6 flex-grow">
                         <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 1</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
+                        <div class="grid grid-flow-col justify-between items-center gap-5 pb-4">
+                            <p class="font-bold whitespace-normal break-all">Table 1</p>
+                            <p class="whitespace-normal break-all">Customer Name</p>
+                            <p class="whitespace-normal break-all">Time/Credit Status</p>
+                            <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
                         </div>
 
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 2</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 3</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 4</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 5</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 6</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 7</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
-
-                        <!-- one entry -->
-                        <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                            <div>
-                                <p class="font-bold">Table 8</p>
-                            </div>
-                            <div>
-                                <p>Customer Name</p>
-                            </div>
-                            <div>
-                                <p>Time/Credit Status</p>
-                            </div>
-                            <div>
-                                <a href="/adminMain" class="text-tertiary-300 font-semibold hover:underline">Notify</a>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
@@ -329,19 +212,11 @@ onMount(() => {
                 </div>
                 <div class="flex-grow upcoming-reservations-container">
                     <!-- One entry -->
-                    <div class="grid grid-cols-5 items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
+                    <div class="grid grid-cols-5 items-center gap-5 pb-4">
+                        <p class="whitespace-normal break-all">Reservation ID</p>
+                        <p class="whitespace-normal break-all">Customer ID</p>
+                        <p class="whitespace-normal break-all">Table No.</p>
+                        <p class="whitespace-normal break-all">Per hour</p>
                         <div class="flex flex-auto mx-auto">
                             <button class="btn bg-primary-600 text-tertiary-300">✓</button>
                         </div>

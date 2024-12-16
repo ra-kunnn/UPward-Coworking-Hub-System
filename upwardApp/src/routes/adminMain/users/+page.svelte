@@ -15,7 +15,37 @@
 
     export let data:PageData;
    
+    interface Table{
+        table_id: number;
+        table_name: string;
+        description: string;
+        pax: number;
+        table_type: string;
+    }
 
+    interface TableAvailability{
+        table_avail_id: number;
+        table_id: number;
+        availability: boolean;
+        customer_id: string;
+    }
+
+    interface TableReservation{
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
+        duration: Date;
+        end_date: Date;
+        price: number;
+    }
+
+    interface TableReservationStatus{
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
+    }
     interface Drink{
         drink_id: number;
         drink_name: string;
@@ -68,7 +98,11 @@
     let drinkOrderStatusRows: DrinkOrderStatus[] = [];
     let drinkReceiptRows: DrinkReceipt[] = [];
     let customerRows : Customer[] = [];
-    
+    let tableRows : Table[] = [];
+    let tableAvailabilityRows: TableAvailability[] = [];
+    let tableReservationRows: TableReservation[] = [];
+    let tableReservationStatusRows: TableReservationStatus[] = [];
+
     onMount(() => {
         try {
             drinkRows = data.drinks || [];
@@ -77,6 +111,10 @@
             drinkOrderStatusRows = data.drinkOrderStatus || [];
             drinkReceiptRows = data.drinkReceipt || [];
             customerRows = data.customer || [];
+            tableRows = data.tables || [];
+            tableAvailabilityRows = data.tableAvailability || [];
+            tableReservationRows = data.tableReservation || [];
+            tableReservationStatusRows = data.tableReservationStatus || [];
             console.log("drinkRows:", drinkRows);
             console.log("drinkAvailabilityRows:", drinkAvailabilityRows);
             console.log("drinkOrderLineRows:", drinkOrderLineRows);
@@ -137,26 +175,33 @@
 
                     <div class="py-6 grow bg-surface-100">
                         <div class="px-12">
-
+                            {#each customerRows as customerRow}
                             <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                <div>
-                                    <p>Customer ID</p>
-                                </div>
-                                <div>
-                                    <p>Customer Name</p>
-                                </div>
-                                <div>
-                                    <p>Credits and Reservations</p>
-                                </div>
-                                <div>
-                                    <p>E-mail</p>
-                                </div>
-                                <div>
-                                    <p>Phone Number</p>
-                                </div>
-                            </div>
-
+                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                        
+                                        <div>
+                                            <p>{customerRow.customer_name}</p>
+                                        </div>
+                                        <!--{#each tableReservationRows as tableReservationRow}
+                                            {#if tableReservationRow.customer_id === customerRow.customer_id}
+                                                {#each tableReservationStatusRows as tableReservationStatusRow}
+                                                    {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_done}
+                                                        <div>
+                                                            <p>{tableReservationRow.date} to {tableReservationRow.end_date}</p>
+                                                        </div>
+                                                    {/if}
+                                                {/each}
+                                            {/if}
+                                        {/each}
+                                        -->
+                                        <div>
+                                            <p>{customerRow.customer_email}</p>
+                                        </div>
+                                        <div>
+                                            <p>{customerRow.customer_phone}</p>
+                                        </div>
+                                    </div>
+                            {/each}
                             <!-- one entry -->
                             <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
                                 <div>
