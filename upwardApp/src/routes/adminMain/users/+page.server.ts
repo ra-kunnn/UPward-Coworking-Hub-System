@@ -81,10 +81,25 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     return { drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
   }
 
+  const { data: tableData, error: tableError } = await supabase
+    .from('Table')
+    .select('*');
+
   
+  const { data: tableAvailabilityData, error: tableAvailabilityError } = await supabase
+    .from('Table Availability')
+    .select('*');
+
+  const { data: tableReservationData, error: tableReservationError } = await supabase
+    .from('Table Reservation')
+    .select('*');  
+
+  const { data: tableReservationStatusData, error: tableReservationStatusError } = await supabase
+    .from('Table Reservation Status')
+    .select('*'); 
 
 
-  return {drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], drinkOrderLine: drinkOrderLineData ?? [], drinkOrderStatus : drinkOrderStatusData ?? [], drinkReceipt: drinkReceiptData ?? [], customer: customerData ?? []};
+  return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], tableReservation : tableReservationData ?? [], tableReservationStatus : tableReservationStatusData ?? [], drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], drinkOrderLine: drinkOrderLineData ?? [], drinkOrderStatus : drinkOrderStatusData ?? [], drinkReceipt: drinkReceiptData ?? [], customer: customerData ?? []};
 
 };
 

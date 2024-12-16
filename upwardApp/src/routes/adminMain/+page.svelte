@@ -83,12 +83,14 @@
         table_id: number;
         duration: Date;
         end_date: Date;
+        price: number;
     }
 
     interface TableReservationStatus{
         reservation_no: number;
         is_incoming: boolean;
         is_ongoing: boolean;
+        is_current: boolean;
         is_done: boolean;
     }
 
