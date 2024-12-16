@@ -230,13 +230,13 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold font-fredoka">Tables</h1>
         </div>
         
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 xl:flex gap-8">
 
             <!-- table display -->
             <div class="w-2.25/5 flex-col gap-5">
@@ -271,29 +271,17 @@
                         <div class="py-6 flex-grow">
 
                             <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                                <div>
-                                    <p>Customer Name</p>
-                                </div>
-                                <div>
-                                    <p>Hours Remaining</p>
-                                </div>
-                                <div>
-                                    <p>Date Reserved</p>
-                                </div>
+                            <div class="grid grid-flow-col justify-between items-center gap-5 pb-4">
+                                <p class="whitespace-normal break-all">Customer Name</p>
+                                <p class="whitespace-normal break-all">Hours Remaining</p>
+                                <p class="whitespace-normal break-all">Date Reserved</p>
                             </div>
 
                             <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                                <div>
-                                    <p>Customer Name</p>
-                                </div>
-                                <div>
-                                    <p>Hours Remaining</p>
-                                </div>
-                                <div>
-                                    <p>Date Reserved</p>
-                                </div>
+                            <div class="grid grid-flow-col justify-between items-center gap-5 pb-4">
+                                <p class="whitespace-normal break-all">Customer Name</p>
+                                <p class="whitespace-normal break-all">Hours Remaining</p>
+                                <p class="whitespace-normal break-all">Date Reserved</p>
                             </div>
                         </div>
 
@@ -313,34 +301,22 @@
                         {#each tableReservationRows as tableReservationRow}
                             {#each tableReservationStatusRows as tableReservationStatusRow}    
                                 {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_incoming}
-                                    <div class="grid grid-cols-7 items-center gap-3 pb-4">
-                                        <div>
+                                    <div class="grid grid-cols-7 items-center gap-5 pb-4">
                                             <p>{tableReservationRow.reservation_no}</p>
-                                        </div>
                                         {#each customerRows as customerRow}
                                             {#if customerRow.customer_id === tableReservationRow.customer_id}
-                                                <div>
-                                                    <p>{customerRow.customer_name}</p>
-                                                </div>
+                                                <p>{customerRow.customer_name}</p>
                                             {/if}
                                         {/each}
                                         {#each tableRows as tableRow}
                                             {#if tableRow.table_id === tableReservationRow.table_id}
-                                                <div>
-                                                    <p>{tableRow.table_name}</p>
-                                                </div>
+                                                <p>{tableRow.table_name}</p>
                                             {/if}
                                         {/each}
-                                        <div>
-                                            <p>{tableReservationRow.date}</p>
-                                        </div>
-                                        <div>
-                                            <p>{tableReservationRow.duration}</p>
-                                        </div>
-                                        <div>
-                                            <p>{tableReservationRow.price}</p>
-                                        </div>
-                                        <div class="flex flex-auto mx-auto">
+                                        <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                        <p>{tableReservationRow.duration}</p>
+                                        <p>{tableReservationRow.price}</p>
+                                        <div class="flex flex-auto mx-auto gap-2">
                                             <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
                                             <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                         </div>
@@ -361,7 +337,7 @@
                         {#each tableReservationRows as tableReservationRow}
                             {#each tableReservationStatusRows as tableReservationStatusRow}    
                                 {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_ongoing}
-                                    <div class="grid grid-cols-7 items-center gap-3 pb-4">
+                                    <div class="grid grid-cols-7 items-center gap-5 pb-4">
                                         <div>
                                             <p>{tableReservationRow.reservation_no}</p>
                                         </div>
@@ -379,16 +355,10 @@
                                                 </div>
                                             {/if}
                                         {/each}
-                                        <div>
-                                            <p>{tableReservationRow.date}</p>
-                                        </div>
-                                        <div>
-                                            <p>{tableReservationRow.duration}</p>
-                                        </div>
-                                        <div>
-                                            <p>{tableReservationRow.price}</p>
-                                        </div>
-                                        <div class="flex flex-auto mx-auto">
+                                        <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                        <p>{tableReservationRow.duration}</p>
+                                        <p>{tableReservationRow.price}</p>
+                                        <div class="flex flex-auto gap-2">
                                             <button on:click={() => {confirmCurrent(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
                                             <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                         </div>
@@ -403,124 +373,6 @@
             </div>
 
         </div>
-
-            <!-- 
-            
-
-            <div class="card col-span-1">
-
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold mb-5">Reservations</h1>
-
-                    <div class="grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
-
-            <div class="px-12 py-6">
-                <h1 class="h3 font-bold">Table No. 1</h1>
-            </div>
-            
-            <div class="px-12 pt-2 pb-6">
-
-                <div class="flex flex-auto justify-normal items-center gap-16 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Hours Remaining</p>
-                    </div>
-                    <div>
-                        <p>Date Reserved</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-auto justify-normal items-center gap-16 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Hours Remaining</p>
-                    </div>
-                    <div>
-                        <p>Date Reserved</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-auto justify-normal items-center gap-16 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Hours Remaining</p>
-                    </div>
-                    <div>
-                        <p>Date Reserved</p>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        -->
 
     </div>
 

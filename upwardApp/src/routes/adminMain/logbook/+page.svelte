@@ -212,9 +212,9 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
 
-        <div class="mx-40 mt-20">
+        <div class="mt-20">
             <!-- date reservations -->
             <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
                 
@@ -241,34 +241,24 @@
                                         {#each drinkOrderStatusRows as drinkOrderStatusRow}
                                             {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_done}
                                                     <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                                        <div>
-                                                            <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
-                                                        </div>
+                                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
                                                         {#each drinkOrderLineRows as drinkOrderLineRow}
                                                             {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
-                                                                <div>
-                                                                    {#each drinkRows as drinkRow}
-                                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
-                                                                            <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
-                                                                        {/if}
-                                                                    {/each}
-                                                                </div>
+                                                                {#each drinkRows as drinkRow}
+                                                                    {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                                        <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                                    {/if}
+                                                                {/each}
                                                                         
                                                             {/if}
                                                         {/each}
                                                         {#each customerRows as customerRow}
-                                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
-                                                                <div>
-                                                                    <p>{customerRow.customer_name}</p>
-                                                                </div>
-                                                                {/if}
+                                                            {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                                <p>{customerRow.customer_name}</p>
+                                                            {/if}
                                                         {/each}
-                                                        <div>
-                                                            <p>{drinkReceiptRow.created_at}</p>
-                                                        </div>
-                                                        <div>
-                                                            <p>{drinkReceiptRow.total_price}</p>
-                                                        </div>
+                                                        <p class="whitespace-normal break-all">{drinkReceiptRow.created_at}</p>
+                                                        <p>{drinkReceiptRow.total_price}</p>
                                                     </div>
                                             {/if}
                                         {/each}
@@ -291,30 +281,19 @@
                                                 
                                             
                                                 <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                                    <div>
-                                                        <p>Reservation No. {tableReservationRow.reservation_no}</p>
-                                                    </div>
+                                                    <p>Reservation No. {tableReservationRow.reservation_no}</p>
                                                     {#each tableRows as tableRow}
                                                         {#if tableReservationRow.table_id === tableRow.table_id}
-                                                            <div>
-                                                                <p>{tableRow.table_name}</p>
-                                                            </div>
-                                                                    
+                                                            <p>{tableRow.table_name}</p>
                                                         {/if}
                                                     {/each}
                                                     {#each customerRows as customerRow}
-                                                            {#if customerRow.customer_id === tableReservationRow.customer_id}
-                                                            <div>
-                                                                <p>{customerRow.customer_name}</p>
-                                                            </div>
-                                                            {/if}
+                                                        {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                                            <p>{customerRow.customer_name}</p>
+                                                        {/if}
                                                     {/each}
-                                                    <div>
-                                                        <p>{tableReservationRow.date} to {tableReservationRow.end_date}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p>total cost</p>
-                                                    </div>
+                                                    <p>{tableReservationRow.date} to {tableReservationRow.end_date}</p>
+                                                    <p>total cost</p>
                                                 </div>
                                             
                                             {/if}
@@ -330,7 +309,7 @@
             </div>
         </div>
         
-        <div class="mx-40 block">
+        <div class="block">
             <div class="flex justify-end items-center pb-1">
                 <p>Data from</p>
                 <input class="appearance-none bg-transparent border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="date" name="dateFrom">
