@@ -16,12 +16,15 @@
     const logout = async () => {
         const { supabase } = data; // Destructure supabase from data
         const { error } = await supabase.auth.signOut();
+        console.log("LOGGING OUT");
+        document.cookie = 'sb-access-token=; Max-Age=0; path=/';
+            document.cookie = 'sb-refresh-token=; Max-Age=0; path=/';
+        window.location.replace('/redirectToHome');
         if (error) {
             console.error(error);
-        }
-    };
+            }
+        };
 
-    /*NO LOGOUT YET, ITS JUST REDIRECTING RN*/
 
     interface User {
         customer_name: string;
@@ -69,13 +72,14 @@
 <div>
 
     <!-- header -->
-    <Header />
+    <Header {logout}/>
 
     <!-- aside -->
     <Aside />
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
+
         <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, {customer_name}</h1>
          
         <!-- container for the two boxes -->
@@ -86,7 +90,8 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold font-fredoka">Table Details</h1>
+
+                        <h1 class="h1 font-bold font-fredoka">Reservation Details</h1>
                     </div>
                     
                     <div class="pt-10 py-6 flex-grow">

@@ -114,19 +114,13 @@
             <li>
                 <a href="/customerMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain' ? 'active' : ''}">
                     <span class="icon">💻</span>
-                    <span class="text">Reservation</span>
-                </a>
-            </li>
-            <li>
-                <a href="/customerMain/foodAnddrink" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/foodAnddrink' ? 'active' : ''}">
-                    <span class="icon">🧋</span>
-                    <span class="text">Food & Drinks</span>
+                    <span class="text">Reservation & Orders</span>
                 </a>
             </li>
             <li>
                 <a href="/customerMain/orderHistory" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/orderHistory' ? 'active' : ''}">
                     <span class="icon">📂</span>
-                    <span class="text">Orders</span>
+                    <span class="text">History</span>
                 </a>
             </li>
         </ul>

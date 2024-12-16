@@ -1,8 +1,4 @@
 import type { PageServerLoad } from './$types';
-import { redirect } from '@sveltejs/kit'
-import type { Actions } from './$types'
-
-
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
