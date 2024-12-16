@@ -350,7 +350,7 @@ const cancelOrder = async (reservation_no: number) => {
         </div>
 
         <!-- container for the two boxes -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 2xl:grid-cols-2 gap-8">
 
             <!-- table details -->
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden">
@@ -370,14 +370,14 @@ const cancelOrder = async (reservation_no: number) => {
                                         <div>
                                             {#each tableRows as tableRow}
                                                 {#if tableReservationRow.table_id === tableRow.table_id}
-                                                    <p class="font-bold whitespace-normal break-all">{tableRow.table_name}</p>
+                                                    <p class="font-bold whitespace-normal break-word">{tableRow.table_name}</p>
                                                 {/if}
                                             {/each}
                                         </div>
                                         <div>
                                             {#each customerRows as customerRow}
                                                 {#if tableReservationRow.customer_id === customerRow.customer_id}
-                                                    <p class="whitespace-normal break-all">{customerRow.customer_name}</p>
+                                                    <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
                                                 {/if}
                                             {/each}
                                         </div>
@@ -387,7 +387,7 @@ const cancelOrder = async (reservation_no: number) => {
                                         <div>
                                             <p class="whitespace-normal break-all">{tableReservationRow.end_date}</p>
                                         </div>
-                                        <div class="flex flex-auto mx-auto">
+                                        <div class="flex flex-auto gap-2">
                                             <button on:click={() => {confirmDone(tableReservationRow.reservation_no, tableReservationRow.table_id);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
                                             <button on:click={() => {cancelledReserve(tableReservationRow.reservation_no, tableReservationRow.table_id);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                         </div>
@@ -420,18 +420,18 @@ const cancelOrder = async (reservation_no: number) => {
                                     </div>
                                     {#each customerRows as customerRow}
                                         {#if customerRow.customer_id === tableReservationRow.customer_id}
-                                            <p class="whitespace-normal break-all">{customerRow.customer_name}</p>
+                                            <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
                                         {/if}
                                     {/each}
                                     {#each tableRows as tableRow}
                                         {#if tableRow.table_id === tableReservationRow.table_id}
-                                            <p class="whitespace-normal break-all">{tableRow.table_name}</p>
+                                            <p class="whitespace-normal break-word">{tableRow.table_name}</p>
                                         {/if}
                                     {/each}
                                     <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
                                     <p class="whitespace-normal break-all">{tableReservationRow.duration}</p>
                                     <p class="whitespace-normal break-all">{tableReservationRow.price}</p>
-                                    <div class="flex flex-auto mx-auto">
+                                    <div class="flex flex-auto gap-2">
                                         <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
                                         <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                     </div>
@@ -455,33 +455,17 @@ const cancelOrder = async (reservation_no: number) => {
                                 {#each customerRows as customerRow}     
                                     {#if customerRow.customer_id === tableReservationRow.customer_id}       
                                         <div class="grid grid-cols-7 items-center gap-3 pb-4">
-                                            <div>
-                                                <p>{tableReservationRow.reservation_no}</p>
-                                            </div>
-                                            
-                                                
-                                                    <div>
-                                                        <p>{customerRow.customer_name}</p>
-                                                    </div>
-                                                
-                                            
+                                            <p class="whitespace-normal break-word">{tableReservationRow.reservation_no}</p>
+                                            <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
                                             {#each tableRows as tableRow}
                                                 {#if tableRow.table_id === tableReservationRow.table_id}
-                                                    <div>
-                                                        <p>{tableRow.table_name}</p>
-                                                    </div>
+                                                    <p class="whitespace-normal break-word">{tableRow.table_name}</p>
                                                 {/if}
                                             {/each}
-                                            <div>
-                                                <p>{tableReservationRow.date}</p>
-                                            </div>
-                                            <div>
-                                                <p>{tableReservationRow.duration}</p>
-                                            </div>
-                                            <div>
-                                                <p>{tableReservationRow.price}</p>
-                                            </div>
-                                            <div class="flex flex-auto mx-auto">
+                                            <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.duration}</p>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.price}</p>
+                                            <div class="flex flex-auto gap-2">
                                                 <button on:click={() => {confirmCurrent(tableReservationRow.reservation_no, tableReservationRow.table_id, customerRow.customer_id);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
                                                 <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                             </div>
