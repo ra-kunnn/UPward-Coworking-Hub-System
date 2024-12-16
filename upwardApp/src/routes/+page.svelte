@@ -69,7 +69,29 @@
          currentIndex = index; // Set the current image based on the dot clicked
     }
 
-    
+        // Initial state for the squares
+    let squares = [
+        {
+        title: "About Us",
+        content: "UPWARD is a co-working hub empowering students with collaborative spaces.",
+        },
+        {
+        title: "Contact Us",
+        content: "📞 0912-345-6789<br>📧 upwardcoworkinghub@gmail.com",
+        },
+        {
+        title: "Visit Us",
+        content: "UP Mindanao, Davao City<br>Open: 9 AM - 8 PM",
+        },
+    ];
+
+    // Function to rotate squares to the right
+    function rotateRight() {
+    if (squares.length > 0) {
+        squares = [squares[squares.length - 1], ...squares.slice(0, -1)];
+    }
+    }
+
 
 
 </script>
@@ -122,17 +144,6 @@
         display: flex;
         gap: 15px;
     }
-
-    @media (max-width: 768px) { /* Adjust the max-width as needed */
-    #square {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .btn {
-        margin-top: 10px; /* Optional: Adjust spacing between the squares and buttons */
-    }
-}
 
 
 
@@ -203,49 +214,49 @@
     
     
     
-<!-- Outer Margin Div -->
-<div id="access-section" class="w-full bg-surface-50 py-24 mx-auto max-w-screen-xl">
-    <div class="flex flex-wrap justify-between items-stretch gap-0">
-        <!-- Content with Margin -->
-        <div class="p-10">
-            <h1 class="h1 font-fredoka font-semibold mb-6">Access UPWARD</h1>
-            <p class="font-inter text-l font-normal">
-                Reserve a table and order drinks or snacks seamlessly.
-            </p>
-            <p class="font-inter text-l font-normal mb-6">
-                Experience a comfortable environment designed for productivity.
-            </p>
-            <a href="account/login" class="btn bg-tertiary-500 text-surface-50 hover:text-secondary-800 hover:bg-tertiary-600 rounded border-none px-4 py-2 text-sm font-semibold">Log In</a>
-        </div>
-        
-        <!-- Right Side Image -->
-        <div class="w-full md:w-1/3 h-auto">
-            <img src="/src/lib/landing/image2.png" alt="Log In to UPward" class="w-full h-auto" />
+    <!-- Outer Margin Div -->
+    <div id="access-section" class="w-full bg-surface-50 py-24 mx-auto max-w-screen-xl">
+        <div class="flex flex-wrap justify-between items-stretch gap-0">
+            <!-- Content with Margin -->
+            <div class="p-10">
+                <h1 class="h1 font-fredoka font-semibold mb-6">Access UPWARD</h1>
+                <p class="font-inter text-l font-normal">
+                    Reserve a table and order drinks or snacks seamlessly.
+                </p>
+                <p class="font-inter text-l font-normal mb-6">
+                    Experience a comfortable environment designed for productivity.
+                </p>
+                <a href="account/login" class="btn bg-tertiary-500 text-surface-50 hover:text-secondary-800 hover:bg-tertiary-600 rounded border-none px-4 py-2 text-sm font-semibold">Log In</a>
+            </div>
+            
+            <!-- Right Side Image -->
+            <div class="w-full md:w-1/3 h-auto">
+                <img src="/src/lib/landing/image2.png" alt="Log In to UPward" class="w-full h-auto" />
+            </div>
         </div>
     </div>
-</div>
 
     
     
     <!-- Carousel Section -->
-    <div id="gallery-section" class="w-full px-0 flex justify-between items-center gap-0">
+    <div id="gallery-section" class="w-full px-0 flex justify-center items-center gap-0 relative">
         <!-- Left Side Image -->
         <img src={images[(currentIndex - 1 + images.length) % images.length]} 
             alt="Image on the left side" 
-            class={`w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer mr-4 carousel-image ${fadeClass}`} 
+            class="carousel-image w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer mr-4" 
             on:click={() => changeImage('left')} />
-        
+
         <!-- Center Image -->
-        <img id="main-image" src={images[currentIndex]} alt="Main displayed image" class={`w-1/2 rounded-lg carousel-image ${fadeClass}`} />
-        
+        <img id="main-image" src={images[currentIndex]} alt="Main displayed image" 
+            class={`carousel-image transition-all duration-500 ease-in-out w-[600px] h-[400px] rounded-lg ${fadeClass}`} />
+
         <!-- Right Side Image -->
         <img src={images[(currentIndex + 1) % images.length]} 
             alt="Image on the right side" 
-            class={`w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer ml-4 carousel-image ${fadeClass}`} 
-            on:click={() => changeImage('right')} 
-        />
+            class="carousel-image w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer ml-4"
+            on:click={() => changeImage('right')} />
     </div>
-    
+
     <!-- Dots for Image Indicators -->
     <div class="flex justify-center mt-4">
         {#each images as _, index}
@@ -258,30 +269,23 @@
 
 <!-- Footer Section -->
 <footer class="footer w-full mt-24 pt-24 pb-8 flex flex-col items-center">
-<!-- Squares in the middle of the page -->
-<div id= "square" class="flex items-center gap-3 mb-8">
-    <!-- First Square: About Us -->
-    <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
-        <h3 class="h3 font-bold font-fredoka">About Us</h3>
-        <p class="text-xs">UPWARD is a co-working hub empowering students with collaborative spaces.</p>
-    </div>
-    <div class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md">
-        ⮞
-    </div>
-    <!-- Second Square: Contact Us -->
-    <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
-        <h3 class="h3 font-bold font-fredoka">Contact Us</h3>
-        <p class="text-xs">📞 0912-345-6789<br>📧 upwardcoworkinghub@gmail.com</p>
-    </div>
-    <div class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md">
-        ⮞
-    </div>
-    <!-- Third Square: Visit Us -->
-    <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
-        <h3 class="h3 font-bold font-fredoka">Visit Us</h3>
-        <p class="text-xs">UP Mindanao, Davao City<br>Open: 9 AM - 8 PM</p>
-    </div>
-</div>
+    <div id="square" class="flex items-center gap-3 mb-8">
+        {#each squares as square, index}
+          <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
+            <h3 class="h3 font-bold font-fredoka">{square.title}</h3>
+            <p class="text-xs">{@html square.content}</p>
+
+          </div>
+          {#if index < squares.length - 1}
+            <button
+              class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md"
+              on:click={rotateRight}
+            >
+              ⮞
+            </button>
+          {/if}
+        {/each}
+      </div>
 
 
         
