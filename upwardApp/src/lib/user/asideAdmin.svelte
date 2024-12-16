@@ -72,7 +72,7 @@
     /* Hamburger Menu Styling */
     .hamburger {
         cursor: pointer;
-        position: absolute;
+        position: fixed;
         top: 25px;
         left: 30px;
         z-index: 150; /* Above sidebar */

@@ -55,6 +55,8 @@
         position: relative;
         font-family: "fredoka";
         white-space: nowrap;
+        white-space: normal; /* Allow text wrapping */
+        word-break: break-word; /* Break long words if necessary */
     }
 
     .icon {
@@ -70,7 +72,7 @@
     /* Hamburger Menu Styling */
     .hamburger {
         cursor: pointer;
-        position: absolute;
+        position: fixed;
         top: 25px;
         left: 30px;
         z-index: 150; /* Above sidebar */
