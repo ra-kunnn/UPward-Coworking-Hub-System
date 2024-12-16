@@ -24,7 +24,6 @@
     }
 
     interface TableAvailability{
-        table_avail_id: number;
         table_id: number;
         availability: boolean;
         customer_id: string;
@@ -44,6 +43,7 @@
         reservation_no: number;
         is_incoming: boolean;
         is_ongoing: boolean;
+        is_current: boolean;
         is_done: boolean;
     }
     interface Drink{
@@ -130,6 +130,142 @@
             drinkReceiptRows = [];
         }
     });
+    const cancelOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+
+    const confirmCurrent = async (reservation_no: number, table_id: number, customer_id: string) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: true,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: false,
+                    customer_id: customer_id
+                })
+                .eq('table_id', table_id)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmDone = async (reservation_no: number, table_id: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: true
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+                
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: true
+                })
+                .eq('table_id', table_id)
+                .select();;
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
 </script>
 
 <style>
