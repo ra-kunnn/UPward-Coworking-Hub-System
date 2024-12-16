@@ -53,7 +53,7 @@
         color: #333333;
         margin-top: 50px;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: "fredoka";
         white-space: nowrap;
     }
 
@@ -82,6 +82,16 @@
         background-color: #ffff;
         margin: 5px 0;
         transition: all 0.3s ease;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
     }
 </style>
 

@@ -53,8 +53,10 @@
         color: #333333;
         margin-top: 35px;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: "fredoka";
         white-space: nowrap;
+        white-space: normal; /* Allow text wrapping */
+        word-break: break-word; /* Break long words if necessary */
     }
 
     .icon {
@@ -82,6 +84,16 @@
         background-color: #ffff;
         margin: 5px 0;
         transition: all 0.3s ease;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
     }
 </style>
 
@@ -117,7 +129,7 @@
             <li>
                 <a href="/adminMain/orders" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/adminMain/orders' ? 'active' : ''}">
                     <span class="icon">🛒</span>
-                    <span class="text">Orders</span>
+                    <span class="text">Orders and Reservation</span>
                 </a>
             </li>
             <li>
