@@ -13,202 +13,133 @@
     import type { PageData } from './$types';
     import { supabase } from '$lib/supabaseClient';
 
-    /**
-
-    const modalStore = getModalStore();
-
-    function billPopUp(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'BillingForm',
-        };
-        modalStore.trigger(modal);
-    }
-
     export let data:PageData;
 
-    const logout = async () => {
-        const { supabase } = data; // Destructure supabase from data
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.error(error);
-        }
-    };
-
-    
-
-    interface Tenant{
-        tenantID: number;
-        tenantName: string;
-        tenantSex: string;
-        dormNo: number;
-        tenantEmail: string;
-        tenantPhone: number;
+    interface Drink{
+        drink_id: number;
+        drink_name: string;
+        description: string;
+        price: number;
+        drink_type: string;
     }
 
-    interface Bills{
-        billID: number;
-        dormNo: number;
-        dateIssued: Date;
-        paymentStatus: boolean;
-        datePaid: Date;
-        monthlyRent: number;
-        waterBill: number;
-        electricityBill: number;
-        hutRent: number;
-        visitorOvernightBill: number;
-        maintenanceBill: number;
-        totalBillAmount?: number;
+    interface DrinkAvailability{
+        drink_avail_no: number;
+        drink_id: number;
+        availability: boolean;
+        stock: number;
+    }
+
+    interface DrinkOrderLine{
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
+        qty: number;
+        total_price: number;
+    }
+
+    interface DrinkOrderStatus{
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
+    }
+
+    interface DrinkReceipt{
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
+    }
+
+    interface Customer {
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
+    }
+
+    interface Table{
+        table_id: number;
+        table_name: string;
+        description: string;
+        pax: number;
+        table_type: string;
+    }
+
+    interface TableAvailability{
+        table_avail_id: number;
+        table_id: number;
+        availability: boolean;
+        customer_id: string;
+    }
+
+    interface TableReservation{
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
+        duration: Date;
+        end_date: Date;
+    }
+
+    interface TableReservationStatus{
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
+    }
+
+let drinkRows : Drink[] = [];
+let drinkAvailabilityRows: DrinkAvailability[] = [];
+let drinkOrderLineRows: DrinkOrderLine[] = [];
+let drinkOrderStatusRows: DrinkOrderStatus[] = [];
+let drinkReceiptRows: DrinkReceipt[] = [];
+let customerRows : Customer[] = [];
+let tableRows : Table[] = [];
+let tableAvailabilityRows: TableAvailability[] = [];
+let tableReservationRows: TableReservation[] = [];
+let tableReservationStatusRows: TableReservationStatus[] = [];
+
+onMount(() => {
+    try {
+        drinkRows = data.drinks || [];
+        drinkAvailabilityRows = data.drinkAvailability || [];
+        drinkOrderLineRows = data.drinkOrderLine || [];
+        drinkOrderStatusRows = data.drinkOrderStatus || [];
+        drinkReceiptRows = data.drinkReceipt || [];
+        customerRows = data.customer || [];
+        tableRows = data.tables || [];
+        tableAvailabilityRows = data.tableAvailability || [];
+        tableReservationRows = data.tableReservation || [];
+        tableReservationStatusRows = data.tableReservationStatus || [];
+        console.log("drinkRows:", drinkRows);
+        console.log("drinkAvailabilityRows:", drinkAvailabilityRows);
+        console.log("drinkOrderLineRows:", drinkOrderLineRows);
+        console.log("drinkOrderStatusRows:", drinkOrderStatusRows);
+        console.log("drinkReceiptRows:", drinkReceiptRows);
         
+        console.log("tableRows:", tableRows);
+        console.log("tableAvailabilityRows:", tableAvailabilityRows);
+        console.log("tableReservationRows:", tableReservationRows);
+        console.log("tableReservationStatusRows:", tableReservationStatusRows);
+        console.log("customerRows:", customerRows);
+        
+    } catch (error) {
+        console.error(error);
+        drinkRows = [];
+        drinkAvailabilityRows = [];
+        drinkOrderLineRows = [];
+        drinkOrderStatusRows = [];
+        drinkReceiptRows = [];
+        tableRows = [];
+        tableAvailabilityRows = [];
+        tableReservationRows = [];
+        tableReservationStatusRows = [];
     }
-
-    interface Visitors{
-        visitorID: number;
-        visitorName: string;
-        startDateOfVisit: Date;
-        visitorRelation: string;
-        tenantID: number;
-        endDateOfVisit: Date;
-        isApproved: boolean;
-    }
-
-    interface Maintenance{
-        maintenanceID: number;
-        maintenanceRequest: string;
-        startDateOfMaintenance: Date;
-        dormNo: number;
-        endDateOfMaintenance: Date;
-        isDone: boolean;
-    }
-
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-    const maxThings = 4;
-
-
-
-    let managerName: string = '';
-    let managerEmail: string = '';
-    let tenantRows: Tenant[] = [];
-    let billRows: Bills[] = [];
-    let visitorRows: Visitors[] = [];  
-    let maintenanceRows: Maintenance[] = [];
-    let roomRows: Room[] = [];
-    const maxBills = 4;
-
-    function calculateTotalBillAmount(bill: Bills): number {
-        return bill.monthlyRent + bill.waterBill + bill.electricityBill + bill.hutRent + bill.visitorOvernightBill + bill.maintenanceBill;
-    }
-
-    onMount(() => {
-        try {
-            billRows = data.bill || [];
-            tenantRows = data.allTenants || [];
-            visitorRows = data.visitor || [];
-            maintenanceRows = data.maintenance || [];
-            roomRows = data.rooms || [];
-            managerName = data.user[0]?.managerName ?? '';
-            managerEmail = data.user[0]?.managerEmail ?? '';
-            Cookies.set('email', managerEmail);
-            billRows = billRows.map(bill => ({
-                ...bill,
-                totalBillAmount: calculateTotalBillAmount(bill)
-            }));
-            
-        } catch (error) {
-            console.error(error);
-            tenantRows = [];
-            billRows = [];
-        }
-    });
-    
-    Cookies.set('email', managerEmail); 
-    function handleProfile(event) {
-        managerName = event.detail.managerName;
-        managerEmail = event.detail.managerEmail;
-  }
-
-    
-    function getYear(date: Date): number {
-        return date.getFullYear();
-    }
-    function getMonth(date: Date): number {
-        return date.getMonth() + 1; // Months are zero-based, so we add 1
-    }
-    const confirmPayment = async (billID: number) => {
-
-            const { error: billError } = await supabase
-                .from('Tenant Bill') 
-                .update([
-                {
-                    paymentStatus : true,
-                },
-                ])
-                .eq('billID', billID);
-
-                if (billError) {
-                    console.error('Error confirming payment:', billError);
-                    alert('Error confirming payment');
-                } 
-       
-       
-
-        alert('Payment Confirmed');
-        window.location.reload();
-    };
-    const confirmVisitor = async (visitorID: number) => {
-
-            const { error: visitorError } = await supabase
-                .from('Visitor Info') 
-                .update([
-                {
-                    isApproved : true,
-                },
-                ])
-                .eq('visitorID', visitorID);
-
-                if (visitorError) {
-                    console.error('Error confirming visit:', visitorError);
-                    alert('Error confirming visit');
-                } 
-       
-       
-
-        alert('Visit Confirmed');
-        window.location.reload();
-    };
-    const confirmMaintenance = async (maintenanceID: number) => {
-
-            const { error: maintenanceError } = await supabase
-                .from('Maintenance Info') 
-                .update([
-                {
-                    isDone: true,
-                },
-                ])
-                .eq('maintenanceID', maintenanceID);
-
-                if (maintenanceError) {
-                    console.error('Error marking maintenance done:', maintenanceError);
-                    alert('Error marking maintenance done');
-                } 
-       
-       
-
-        alert('Maintenance Done');
-        window.location.reload();
-    };
-
-    */
+});
 </script>
 
 <style>

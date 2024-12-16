@@ -3,6 +3,7 @@ import { redirect } from '@sveltejs/kit'
 import type { Actions } from './$types'
 
 export const actions: Actions = {
+  
   //just 2 email types now no more pot and user
   login: async ({ request, locals: { supabase } }) => {
       const formData = await request.formData();
@@ -41,27 +42,12 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
-
-  const { data: tableData, error: tableError } = await supabase
-    .from('Table')
-    .select('*');
-
   
-  const { data: tableAvailabilityData, error: tableAvailabilityError } = await supabase
-    .from('Table Availability')
-    .select('*');
-
-  if (tableError) {
-    console.error('Error fetching room data:', tableError);
-    return { tables: [], tableAvailability: tableAvailabilityData ?? [], error: tableError.message };
-  }
-
-  if (tableAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
-    return { tables: tableData ?? [], tableAvailability: [], error: tableAvailabilityError.message };
-  }
+  depends('supabase:db:Drink');
+  depends('supabase:db:Drink Availability');
+  depends('supabase:db:Drink Order Line');
+  depends('supabase:db:Drink Order Status');
+  depends('supabase:db:Drink Receipt');
 
   const { data: drinkData, error: drinkError } = await supabase
     .from('Drink')
@@ -71,17 +57,36 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Drink Availability')
     .select('*');
 
+  const { data: drinkOrderLineData, error: drinkOrderLineError } = await supabase
+    .from('Drink Order Line')
+    .select('*');
+
+  const { data: drinkOrderStatusData, error: drinkOrderStatusError } = await supabase
+    .from('Drink Order Status')
+    .select('*');
+
+  const { data: drinkReceiptData, error: drinkReceiptError } = await supabase
+    .from('Drink Receipt')
+    .select('*');
+
+  const { data: customerData, error: customerError } = await supabase
+    .from('Customer')
+    .select('*');
+
   if (drinkError) {
     console.error('Error fetching room data:', drinkError);
-    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
+    return { drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
   }
 
   if (drinkAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
-    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
+    console.error('Error fetching availability data:', drinkAvailabilityError);
+    return { drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
   }
 
-  return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData};
+  
+
+
+  return {drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], drinkOrderLine: drinkOrderLineData ?? [], drinkOrderStatus : drinkOrderStatusData ?? [], drinkReceipt: drinkReceiptData ?? [], customer: customerData ?? []};
 
 };
 
