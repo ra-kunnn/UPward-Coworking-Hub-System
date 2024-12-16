@@ -235,7 +235,7 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
+    <div class="w-dvw px-40 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold font-fredoka">Welcome back, Admin Name!</h1>
             <div class="text-right">
