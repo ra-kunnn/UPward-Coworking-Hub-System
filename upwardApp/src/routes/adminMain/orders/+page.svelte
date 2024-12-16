@@ -130,7 +130,7 @@ console.log("test");
             customerRows = data.customer || [];
             const currentDrink = drinkRows[currentIndex];
             nameInput = currentDrink.drink_name;
-            priceInput = currentDrink.price.toString();
+            priceInput = currentDrink.price;
             drinkTypeInput = currentDrink.drink_type;
         } catch (error) {
             console.error(error);

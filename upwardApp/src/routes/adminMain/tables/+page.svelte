@@ -44,6 +44,7 @@
         reservation_no: number;
         is_incoming: boolean;
         is_ongoing: boolean;
+        is_current: boolean;
         is_done: boolean;
     }
 
@@ -91,6 +92,7 @@
                 .update({
                     is_incoming: false,
                     is_ongoing: false,
+                    is_current: false,
                     is_done: false
                 })
                 .eq('reservation_no', reservation_no)
@@ -120,7 +122,69 @@
                 .update({
                     is_incoming: false,
                     is_ongoing: true,
+                    is_current: false,
                     is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+
+    const confirmCurrent = async (reservation_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: true,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmDone = async (reservation_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: true
                 })
                 .eq('reservation_no', reservation_no)
                 .select();;
@@ -325,7 +389,7 @@
                                             <p>{tableReservationRow.price}</p>
                                         </div>
                                         <div class="flex flex-auto mx-auto">
-                                            <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {confirmCurrent(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
                                             <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                         </div>
                                     </div>
