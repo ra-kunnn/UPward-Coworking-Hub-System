@@ -312,7 +312,9 @@
 
         <!-- Logo at the bottom left -->
         <div class="flex justify-between w-full px-8 mt-12">
+            <a href="/">
             <img src="/src/lib/landing/Upward logo1.png" alt="Site Logo" class="h-12 w-auto">
+            </a>
             <span class="text-white text-sm">© 2024 UPWARD. All rights reserved.</span>
         </div>
     </footer>
