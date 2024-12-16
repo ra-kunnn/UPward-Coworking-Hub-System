@@ -3,26 +3,14 @@
     import Aside from '$lib/user/asideCustomer.svelte';
     import Footer from '$lib/footer.svelte';
     import HideOverflow from '$lib/hideOverflowX.svelte';
-    import {
-        onMount
-    } from 'svelte';
-    import {
-        SlideToggle
-    } from '@skeletonlabs/skeleton';
-    import {
-        Modal,
-        getModalStore
-    } from '@skeletonlabs/skeleton';
-    import type {
-        ModalSettings,
-        ModalComponent,
-        ModalStore
-    } from '@skeletonlabs/skeleton';
-    import type {
-        PageData
-    } from './$types';
+    import { onMount } from 'svelte';
+    import { SlideToggle } from '@skeletonlabs/skeleton';
+    import { Modal, getModalStore } from '@skeletonlabs/skeleton';
+    import type { ModalSettings, ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+    import type { PageData} from './$types';
     import HideOverflowX from '$lib/hideOverflowX.svelte';
     import SelectorModal from '$lib/user/selectorModal.svelte';
+
     let showModal = false;
 
     const handleClose = () => {
@@ -55,12 +43,8 @@
     export let data: PageData;
     
     const logout = async () => {
-        const {
-            supabase
-        } = data; // Destructure supabase from data
-        const {
-            error
-        } = await supabase.auth.signOut();
+        const { supabase } = data; // Destructure supabase from data
+        const { error } = await supabase.auth.signOut();
         console.log("LOGGING OUT");
         document.cookie = 'sb-access-token=; Max-Age=0; path=/';
         document.cookie = 'sb-refresh-token=; Max-Age=0; path=/';
@@ -103,9 +87,12 @@
 
         const selectElement = document.getElementById("tableNum");
         const selectedOption = selectElement.selectedOptions[0]; // Get the selected <option> element
+
         chosenTable_id = selectedOption ? selectedOption.getAttribute('data-table-id') : ""; // Get the data-table-id
         chosenTable_type = selectedOption ? selectedOption.getAttribute('value') : "";
+
         //set global table type
+
         console.log(chosenTable_id, chosenTable_type + " should be tableID");
         setTimeout(() => {
             console.log("Calculating total with:", {
@@ -115,16 +102,19 @@
             calculateTotal();
         }, 0);
     };
+
     /** Placeholder and drink options */
     let orderPlaceholder = 'Select a drink...';
     let drinkOptions = []; // Start as an empty array to be populated dynamically
     let totalOrder = [];
+
     /** Increment drink count */
     function increment(drink) {
         drink.count++;
         drinkOptions = [...drinkOptions]; // Trigger reactivity
         updateTotalOrder();
     }
+
     /** Decrement drink count */
     function decrement(drink) {
         if (drink.count > 0) {
@@ -133,19 +123,20 @@
             updateTotalOrder();
         }
     }
+
     /** Update total order */
     function updateTotalOrder() {
         totalOrder = drinkOptions.filter(drink => drink.count > 0);
     }
+
     /** Fetch drinks from Supabase */
     const showDrink = async () => {
         const { supabase } = data; // Assumes `data` contains the Supabase client
         try {
-            const {
-                data: drinks,
-                error: drinkError
-            } = await supabase.from('Drink').select('drink_name, price, drink_id');
+            const { data: drinks, error: drinkError } = await supabase.from('Drink').select('drink_name, price, drink_id');
+            
             if (drinkError) throw new Error(drinkError.message);
+            
             // Map the fetched drinks to the desired format
             drinkOptions = drinks.map(drink => ({
                 label: drink.drink_name,
@@ -158,10 +149,9 @@
             console.error('Error fetching drinks:', err.message);
         }
     };
+
     const changeTable = async () => {
-        const {
-            supabase
-        } = data; // Destructure Supabase client from data
+        const { supabase } = data; // Destructure Supabase client from data
         try {
             // Fetch table data from Supabase
             const {
