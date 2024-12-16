@@ -17,8 +17,7 @@
 <div class="sticky top-0 z-40 h-20 w-full p-5 bg-secondary-800 shadow-xl">
     <div class="flex justify-between mx-5 items-stretch text-tertiary-300">
         <div class="flex items-center gap-3">
-            <button class="btn bg-secondary-800 text-secondary-800 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Log Out
-            </button>
+            <button class="btn bg-secondary-800 text-secondary-800 rounded border-none px-3 py-1 my-1 text-sm font-semibold">Log Out</button>
         </div>
         <!-- Logo Section -->
         <a href="/" class="flex items-center">

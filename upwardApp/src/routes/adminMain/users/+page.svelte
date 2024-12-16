@@ -156,9 +156,9 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
 
-        <div class="mx-40 mt-20">
+        <div class="mt-20">
             <!-- date reservations -->
             <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
@@ -177,11 +177,8 @@
                         <div class="px-12">
                             {#each customerRows as customerRow}
                             <!-- one entry -->
-                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                        
-                                        <div>
-                                            <p>{customerRow.customer_name}</p>
-                                        </div>
+                                    <div class="grid grid-cols-3 items-center gap-3 pb-5">
+                                        <p class="whitespace-normal break-word">{customerRow.customer_name}</p>
                                         <!--{#each tableReservationRows as tableReservationRow}
                                             {#if tableReservationRow.customer_id === customerRow.customer_id}
                                                 {#each tableReservationStatusRows as tableReservationStatusRow}
@@ -194,32 +191,10 @@
                                             {/if}
                                         {/each}
                                         -->
-                                        <div>
-                                            <p>{customerRow.customer_email}</p>
-                                        </div>
-                                        <div>
-                                            <p>{customerRow.customer_phone}</p>
-                                        </div>
+                                        <p class="whitespace-normal break-all">{customerRow.customer_email}</p>
+                                        <p class="whitespace-normal break-all">{customerRow.customer_phone}</p>
                                     </div>
                             {/each}
-                            <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
-                                <div>
-                                    <p>Customer ID</p>
-                                </div>
-                                <div>
-                                    <p>Customer Name</p>
-                                </div>
-                                <div>
-                                    <p>Credits and Reservations</p>
-                                </div>
-                                <div>
-                                    <p>E-mail</p>
-                                </div>
-                                <div>
-                                    <p>Phone Number</p>
-                                </div>
-                            </div>
                         </div>
 
                     </div>

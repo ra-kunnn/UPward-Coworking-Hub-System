@@ -286,13 +286,13 @@ console.log("test");
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold font-fredoka">Food and Drinks</h1>
         </div>
 
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
             <!-- user alerts -->
             <div class="flex-1">
@@ -308,7 +308,7 @@ console.log("test");
                         </button>
                 
                         <!-- images -->
-                        <div class="mx-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
+                        <div class="mx-8 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
                             {#if drinkRows.length > 0}
                                 <img
                                     class="snap-center w-[1024px] rounded-container-token"
@@ -338,7 +338,8 @@ console.log("test");
                                 bind:value={nameInput}
                             />
                             <input
-                                class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                class="bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center
+                                [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 type="number"
                                 placeholder="Price"
                                 bind:value={priceInput}

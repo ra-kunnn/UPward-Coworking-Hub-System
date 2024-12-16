@@ -78,12 +78,12 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
 
-        <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, {customer_name}</h1>
+        <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, {customer_name}!</h1>
          
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- table details -->
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
