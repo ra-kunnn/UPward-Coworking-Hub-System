@@ -26,6 +26,10 @@
         } else {
             currentIndex = drinkRows.length - 1; // Loop to last drink
         }
+        const currentDrink = drinkRows[currentIndex];
+        nameInput = currentDrink.drink_name;
+        priceInput = currentDrink.price;
+        drinkTypeInput = currentDrink.drink_type;
         const x =
             elemCarousel.scrollLeft === 0
                 ? elemCarousel.clientWidth * elemCarousel.childElementCount // loop
@@ -41,6 +45,10 @@
         } else {
             currentIndex = 0; // Loop back to first drink
         }
+        const currentDrink = drinkRows[currentIndex];
+        nameInput = currentDrink.drink_name;
+        priceInput = currentDrink.price;
+        drinkTypeInput = currentDrink.drink_type;
         const x =
             elemCarousel.scrollLeft === elemCarousel.scrollWidth - elemCarousel.clientWidth
                 ? 0 // loop
@@ -108,7 +116,7 @@
 
     let currentIndex = 0; // Track current drink being viewed
     let nameInput = ''; // Input for drink name
-    let priceInput = ''; // Input for drink price
+    let priceInput = 0; // Input for drink price
     let drinkTypeInput = ''; // Input for drink type
 
 console.log("test");
@@ -137,13 +145,6 @@ console.log("test");
     // Update input fields based on the current drink
     
 
-    $: if (drinkRows.length > 0) {
-        const currentDrink = drinkRows[currentIndex];
-        nameInput = currentDrink.drink_name;
-        priceInput = currentDrink.price.toString();
-        drinkTypeInput = currentDrink.drink_type;
-        console.log("itworks")
-    }
     
     const cancelOrder = async (receipt_no: number) => {
         const { supabase } = data;
@@ -183,6 +184,35 @@ console.log("test");
                     is_incoming: false,
                     is_ongoing: true,
                     is_done: false
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmOngoing = async (receipt_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_done: true
                 })
                 .eq('receipt_no', receipt_no)
                 .select();;
@@ -374,7 +404,7 @@ console.log("test");
                                     </div>
                                     <div class="flex flex-auto mx-auto">
                                         <button on:click={() => {confirmOrder(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
-                                            <button on:click={() => {cancelOrder(drinkReceiptRow.receipt_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                        <button on:click={() => {cancelOrder(drinkReceiptRow.receipt_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
                                     </div>
                                 </div>
                                 {/if}
@@ -390,7 +420,42 @@ console.log("test");
                     <h2 class="h2 font-bold font-fredoka">Ongoing Orders</h2>
                 </div>
                 <div class="flex-grow ongoing-orders-container">
-                    <!-- Ongoing order entries will dynamically appear here -->
+                    {#each drinkReceiptRows as drinkReceiptRow}
+                            {#each drinkOrderStatusRows as drinkOrderStatusRow}
+                                {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_ongoing}      
+                                <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                                    <div>
+                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                    </div>
+                                        {#each drinkOrderLineRows as drinkOrderLineRow}
+                                            {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                            <div>
+                                                    {#each drinkRows as drinkRow}
+                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                        <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                        {/if}
+                                                    {/each}
+                                            </div>
+                                                        
+                                            {/if}
+                                        {/each}
+                                        {#each customerRows as customerRow}
+                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                <div>
+                                                    <p>{customerRow.customer_name}</p>
+                                                </div>
+                                                {/if}
+                                        {/each}
+                                    <div>
+                                        <p>{drinkReceiptRow.total_price}</p>
+                                    </div>
+                                    <div class="flex flex-auto mx-auto">
+                                        <button on:click={() => {confirmOngoing(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                    </div>
+                                </div>
+                                {/if}
+                            {/each}
+                        {/each}
                 </div>
                 
             </div>

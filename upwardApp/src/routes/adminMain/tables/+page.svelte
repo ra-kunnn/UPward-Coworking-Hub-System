@@ -82,6 +82,64 @@
             customerRows = [];
         }
     });
+
+    const cancelOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
 </script>
 
 <style>
@@ -117,7 +175,7 @@
         <div class="flex gap-8">
 
             <!-- table display -->
-            <div class="w-4/7 flex-col gap-5">
+            <div class="w-2.25/5 flex-col gap-5">
 
                 <!-- tables -->
                 <div class="mb-6 h-96">
@@ -188,24 +246,45 @@
                     </div>
                     <div class="flex-grow upcoming-reservations-container">
                         <!-- One entry -->
-                        <div class="grid grid-cols-5 items-center gap-3 pb-4">
-                            <div>
-                                <p>Reservation ID</p>
-                            </div>
-                            <div>
-                                <p>Customer ID</p>
-                            </div>
-                            <div>
-                                <p>Table No.</p>
-                            </div>
-                            <div>
-                                <p>Per hour</p>
-                            </div>
-                            <div class="flex flex-auto mx-auto">
-                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                            </div>
-                        </div>
+                        {#each tableReservationRows as tableReservationRow}
+                            {#each tableReservationStatusRows as tableReservationStatusRow}    
+                                {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_incoming}
+                                    <div class="grid grid-cols-7 items-center gap-3 pb-4">
+                                        <div>
+                                            <p>{tableReservationRow.reservation_no}</p>
+                                        </div>
+                                        {#each customerRows as customerRow}
+                                            {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                                <div>
+                                                    <p>{customerRow.customer_name}</p>
+                                                </div>
+                                            {/if}
+                                        {/each}
+                                        {#each tableRows as tableRow}
+                                            {#if tableRow.table_id === tableReservationRow.table_id}
+                                                <div>
+                                                    <p>{tableRow.table_name}</p>
+                                                </div>
+                                            {/if}
+                                        {/each}
+                                        <div>
+                                            <p>{tableReservationRow.date}</p>
+                                        </div>
+                                        <div>
+                                            <p>{tableReservationRow.duration}</p>
+                                        </div>
+                                        <div>
+                                            <p>{tableReservationRow.price}</p>
+                                        </div>
+                                        <div class="flex flex-auto mx-auto">
+                                            <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                        </div>
+                                    </div>
+                                {/if}
+                            {/each}
                         <!-- Add more entries here as needed -->
+                        {/each}
                     </div>
                 </div>
     
@@ -215,6 +294,45 @@
                         <h2 class="h2 font-bold font-fredoka">Ongoing Reservations</h2>
                     </div>
                     <div class="flex-grow ongoing-reservations-container">
+                        {#each tableReservationRows as tableReservationRow}
+                            {#each tableReservationStatusRows as tableReservationStatusRow}    
+                                {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_ongoing}
+                                    <div class="grid grid-cols-7 items-center gap-3 pb-4">
+                                        <div>
+                                            <p>{tableReservationRow.reservation_no}</p>
+                                        </div>
+                                        {#each customerRows as customerRow}
+                                            {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                                <div>
+                                                    <p>{customerRow.customer_name}</p>
+                                                </div>
+                                            {/if}
+                                        {/each}
+                                        {#each tableRows as tableRow}
+                                            {#if tableRow.table_id === tableReservationRow.table_id}
+                                                <div>
+                                                    <p>{tableRow.table_name}</p>
+                                                </div>
+                                            {/if}
+                                        {/each}
+                                        <div>
+                                            <p>{tableReservationRow.date}</p>
+                                        </div>
+                                        <div>
+                                            <p>{tableReservationRow.duration}</p>
+                                        </div>
+                                        <div>
+                                            <p>{tableReservationRow.price}</p>
+                                        </div>
+                                        <div class="flex flex-auto mx-auto">
+                                            <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                        </div>
+                                    </div>
+                                {/if}
+                            {/each}
+                        <!-- Add more entries here as needed -->
+                        {/each}
                         <!-- Ongoing reservation entries will dynamically appear here -->
                     </div>
                 </div>

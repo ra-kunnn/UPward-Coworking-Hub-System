@@ -221,7 +221,7 @@
                 <!-- for padding -->
                 <div class="min-h-full flex flex-col">
                     <div class="px-12 py-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Logbook</h1>
+                        <h1 class="h1 font-bold font-fredoka">Logbook</h1>
                         <button 
                             on:click={() => { 
                                 const selectedView = getSelectedRadioValue(); 
