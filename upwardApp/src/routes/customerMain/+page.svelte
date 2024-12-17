@@ -347,11 +347,13 @@
                 const customer_id = data.user?.customer_id ?? 0;
                 if (!startDate || !chosenTable_type || !chosenTable_id || !reserveSelected) {
                     console.error("All required fields must be filled.");
+                    showError();
                     return; // Stop if any of the essential fields are empty
                 }
                 // For hourly reservation (reserveSelected === "1"), check if endDate is provided
                 if (reserveSelected === "1" && !endDate) {
                     console.error("End date is required for hourly reservations.");
+                    showError();
                     return; // Stop if endDate is missing for hourly reservation
                 }
                 if (toggleOrder) {
@@ -359,6 +361,7 @@
                     const receipt_no = Date.now(); // Current timestamp in milliseconds, e.g., 1700000000000
                     if (totalOrder.length === 0) {
                         console.error("No drinks selected for the order.");
+                        showError();
                         return; // Stop if no drinks are selected
                     }
                 }
@@ -440,6 +443,7 @@
                 const receipt_no = Date.now(); // Current timestamp in milliseconds, e.g., 1700000000000
                 if (totalOrder.length === 0) {
                     console.error("No drinks selected for the order.");
+                    showError();
                     return; // Stop if no drinks are selected
                 }
                 // Process totalOrder for each drink
@@ -495,9 +499,9 @@
             }
         }
     };
-=======
-    }
-};
+
+    
+
 
     const modalStore = getModalStore();
 
@@ -510,7 +514,7 @@
     }
 
 
->>>>>>> frontend
+
 </script>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
@@ -735,7 +739,6 @@
 
         <div class="flex flex-row justify-end items-center">
             <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={() => {handleConfirm(); }}>Confirm</button>
-            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={showError}>Test</button>
         </div>
     </div>
 </div>
