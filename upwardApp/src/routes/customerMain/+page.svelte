@@ -339,6 +339,7 @@
             handleTableSelection();
             console.log(total_price);
             const reserveForm = document.getElementById("reserveForm") as HTMLFormElement;
+            const reservation_no = Date.now() + 5000;
             if (reserveForm) {
                 const formData = new FormData(reserveForm);
                 const startDate = formData.get('startDate') as string;
@@ -373,6 +374,7 @@
                     const {
                         reserveError
                     } = await supabase.from('Table Reservation').insert({
+                        reservation_no:reservation_no,
                         customer_id: customer_id,
                         table_id: chosenTable_id,
                         date: startDate,
@@ -380,6 +382,17 @@
                         end_date: endDate,
                         price: total_price
                     });
+
+                    const {
+                        reserveStatusError
+                    } = await supabase.from('Table Reservation Status').insert({
+                        reservation_no: reservation_no,
+                        is_incoming: true,
+                        is_ongoing: false,
+                        is_done: false,
+                        is_current: false
+                    });
+
                     if (reserveError) {
                         console.log("errorr bruh. also u dont have an error message yet In Website")
                     }
@@ -394,15 +407,26 @@
                     const durationDailyInterval = `${Math.ceil(dailyDuration)} hours`; // Round up to nearest hour
                     console.log(customer_id, chosenTable_id, startDate, durationDailyInterval, dailyEnd);
                     // this should tell the customer the end date n time
-                    const {
+                   const {
                         reserveError
                     } = await supabase.from('Table Reservation').insert({
+                        reservation_no:reservation_no,
                         customer_id: customer_id,
                         table_id: chosenTable_id,
                         date: startDate,
                         duration: durationDailyInterval,
                         end_date: dailyEnd,
                         price: total_price
+                    });
+
+                    const {
+                        reserveStatusError
+                    } = await supabase.from('Table Reservation Status').insert({
+                        reservation_no: reservation_no,
+                        is_incoming: true,
+                        is_ongoing: false,
+                        is_done: false,
+                        is_current: false
                     });
                     if (reserveError) {
                         console.log("errorr bruh. also u dont have an error message yet In Website")
@@ -421,12 +445,23 @@
                     const {
                         reserveError
                     } = await supabase.from('Table Reservation').insert({
+                        reservation_no:reservation_no,
                         customer_id: customer_id,
                         table_id: chosenTable_id,
                         date: startDate,
                         duration: durationWeeklyInterval,
                         end_date: weeklyEnd,
                         price: total_price
+                    });
+
+                    const {
+                        reserveStatusError
+                    } = await supabase.from('Table Reservation Status').insert({
+                        reservation_no: reservation_no,
+                        is_incoming: true,
+                        is_ongoing: false,
+                        is_done: false,
+                        is_current: false
                     });
                     if (reserveError) {
                         console.log("errorr bruh. also u dont have an error message yet In Website")
