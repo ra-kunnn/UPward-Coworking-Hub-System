@@ -508,13 +508,21 @@ const cancelledReserve = async (reservation_no: number, table_id: number) => {
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="h2 font-bold font-fredoka">Upcoming Reservations</h2>
                     </div>
+                    <div class="grid grid-cols-7 gap-5 font-bold">
+                        <p>Receipt</p>
+                        <p>Customer</p>
+                        <p>Table</p>
+                        <p>Start</p>
+                        <p>End</p>
+                        <p>Price</p>
+                    </div>
                     <div class="flex-grow upcoming-reservations-container">
                         <!-- One entry -->
                         {#each tableReservationRows as tableReservationRow}
                             {#each tableReservationStatusRows as tableReservationStatusRow}    
                                 {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_incoming}
                                     <div class="grid grid-cols-7 items-center gap-5 pb-4">
-                                            <p>{tableReservationRow.reservation_no}</p>
+                                            <p class="whitespace-normal break-all">{tableReservationRow.reservation_no}</p>
                                         {#each customerRows as customerRow}
                                             {#if customerRow.customer_id === tableReservationRow.customer_id}
                                                 <p>{customerRow.customer_name}</p>
@@ -545,14 +553,22 @@ const cancelledReserve = async (reservation_no: number, table_id: number) => {
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="h2 font-bold font-fredoka">Ongoing Reservations</h2>
                     </div>
-                    <div class="flex-grow ongoing-reservations-container">
+                    <div class="grid grid-cols-7 gap-5 font-bold">
+                        <p>Receipt</p>
+                        <p>Customer</p>
+                        <p>Table</p>
+                        <p>Start</p>
+                        <p>End</p>
+                        <p>Price</p>
+                    </div>
+                    <div class="flex ongoing-reservations-container">
                         {#each tableReservationRows as tableReservationRow}
                             {#each tableReservationStatusRows as tableReservationStatusRow}    
                                 {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_ongoing}
                                     {#each customerRows as customerRow}     
                                         {#if customerRow.customer_id === tableReservationRow.customer_id}       
                                             <div class="grid grid-cols-7 items-center gap-5 pb-4">
-                                                    <p>{tableReservationRow.reservation_no}</p>
+                                                    <p class="whitespace-normal break-all">{tableReservationRow.reservation_no}</p>
                                                     <p>{customerRow.customer_name}</p>
                                                 {#each tableRows as tableRow}
                                                     {#if tableRow.table_id === tableReservationRow.table_id}

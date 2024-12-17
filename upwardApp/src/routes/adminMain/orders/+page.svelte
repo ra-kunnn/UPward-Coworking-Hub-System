@@ -417,14 +417,20 @@ console.log("test");
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="h2 font-bold font-fredoka">Incoming Orders</h2>
                 </div>
+                <div class="grid grid-cols-5 gap-5 font-bold">
+                    <p>Receipt</p>
+                    <p>Order</p>
+                    <p>Customer</p>
+                    <p>Price</p>
+                </div>
                 <div class="flex-grow">
                     <!-- One entry -->
                         {#each drinkReceiptRows as drinkReceiptRow}
                             {#each drinkOrderStatusRows as drinkOrderStatusRow}
                                 {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_incoming}      
-                                <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                                <div class="grid grid-cols-5 items-center gap-5 pb-4">
                                     <div>
-                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                        <p class="whitespace-normal break-all">{drinkReceiptRow.receipt_no}</p>
                                     </div>
                                         {#each drinkOrderLineRows as drinkOrderLineRow}
                                             {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
@@ -465,13 +471,19 @@ console.log("test");
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="h2 font-bold font-fredoka">Ongoing Orders</h2>
                 </div>
+                <div class="grid grid-cols-5 gap-5 font-bold">
+                    <p>Receipt</p>
+                    <p>Order</p>
+                    <p>Customer</p>
+                    <p>Price</p>
+                </div>
                 <div class="flex-grow ongoing-orders-container">
                     {#each drinkReceiptRows as drinkReceiptRow}
                             {#each drinkOrderStatusRows as drinkOrderStatusRow}
                                 {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_ongoing}      
-                                <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                                <div class="grid grid-cols-5 items-center gap-5 pb-4">
                                     <div>
-                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                        <p class="whitespace-normal break-all">{drinkReceiptRow.receipt_no}</p>
                                     </div>
                                         {#each drinkOrderLineRows as drinkOrderLineRow}
                                             {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}

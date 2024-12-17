@@ -1,4 +1,3 @@
-test
 <script lang="ts">
 	import type { SvelteComponent } from 'svelte';
 	import { supabase } from '$lib/supabaseClient';

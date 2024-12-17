@@ -10,9 +10,11 @@
     import { onMount } from 'svelte';
 
     import Error from '$lib/modals/errorModal.svelte';
+    import Confirm from '$lib/modals/confirmModal.svelte';
 
     const modalRegistry: Record<string, ModalComponent> = {
-        Error: { ref: Error }
+        Error: { ref: Error },
+        Confirm: { ref: Confirm }
     };
    
     export let data;

@@ -234,12 +234,20 @@
                     {#if isOrderView}
                         <div class="py-6 grow bg-surface-100">
                             <div class="px-12">
+                                <div class="grid grid-cols-5 gap-3 font-bold">
+                                    <p>Receipt</p>
+                                    <p>Customer</p>
+                                    <div class="col-span-2">
+                                        <p>Date Inputted</p>
+                                    </div>
+                                    <p>Price</p>
+                                </div>
                                 {#each drinkReceiptRows as drinkReceiptRow}
                                 <!-- one entry -->
                                     {#if isDateInRange(drinkReceiptRow.created_at)}
                                         {#each drinkOrderStatusRows as drinkOrderStatusRow}
                                             {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_done}
-                                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                                    <div class="grid grid-cols-5 justify-between items-center gap-3 pb-5">
                                                         <div>
                                                             <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
                                                         </div>
@@ -262,8 +270,8 @@
                                                                 </div>
                                                                 {/if}
                                                         {/each}
-                                                        <div>
-                                                            <p>{drinkReceiptRow.created_at}</p>
+                                                        <div class="col-span-2">
+                                                            <p class="whitespace-normal break-all">{drinkReceiptRow.created_at}</p>
                                                         </div>
                                                         <div>
                                                             <p>{drinkReceiptRow.total_price}</p>
@@ -280,6 +288,15 @@
                     {:else}
                         <div class="py-6 grow bg-surface-100">
                             <div class="px-12">
+                                <div class="grid grid-cols-6 gap-3 font-bold">
+                                    <p>Reservation No.</p>
+                                    <p>Table</p>
+                                    <p>Customer</p>
+                                    <div class="col-span-2">
+                                        <p>Time Frame</p>
+                                    </div>
+                                    <p>Price</p>
+                                </div>
                                 {#each tableReservationRows as tableReservationRow}
                                 <!-- one entry -->
                                     {#if isDateInRange(tableReservationRow.date)}
@@ -289,9 +306,9 @@
                                             {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_done}
                                                 
                                             
-                                                <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                                <div class="grid grid-cols-6 justify-between items-center gap-3 pb-5">
                                                     <div>
-                                                        <p>Reservation No. {tableReservationRow.reservation_no}</p>
+                                                        <p>{tableReservationRow.reservation_no}</p>
                                                     </div>
                                                     {#each tableRows as tableRow}
                                                         {#if tableReservationRow.table_id === tableRow.table_id}
@@ -308,7 +325,7 @@
                                                             </div>
                                                             {/if}
                                                     {/each}
-                                                    <div>
+                                                    <div class="col-span-2">
                                                         <p>{tableReservationRow.date} to {tableReservationRow.end_date}</p>
                                                     </div>
                                                     <div>
