@@ -308,11 +308,11 @@ console.log("test");
                         </button>
                 
                         <!-- images -->
-                        <div class="mx-8 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
+                        <div class="mx-auto snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
                             {#if drinkRows.length > 0}
                                 <img
-                                    class="snap-center w-[1024px] rounded-container-token"
-                                    src="https://via.placeholder.com/1024x400?text={drinkRows[currentIndex].drink_name}"
+                                    class="snap-center rounded-container-token"
+                                    src="/src/lib/drinkPictures/{drinkRows[currentIndex].drink_id}.png"
                                     alt={drinkRows[currentIndex].drink_name}
                                 />
                             {:else}
