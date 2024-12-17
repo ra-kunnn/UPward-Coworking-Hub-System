@@ -335,6 +335,16 @@
         const {
             supabase
         } = data;
+        const customerDropdown = document.getElementById("customerSelect");
+          
+          if (!customerDropdown) {
+              console.error("Dropdown element not found!");
+              return;
+          }
+
+          // Get selected value from dropdown
+          const selectedCustomerId = customerDropdown.value;
+
         if (toggleReserve) {
             handleTableSelection();
             console.log(total_price);
@@ -344,8 +354,8 @@
                 const startDate = formData.get('startDate') as string;
                 const endDate = formData.get('endDate') as string;
                 const total = total_price;
-                const customer_id = data.user?.customer_id ?? 0;
-                if (!startDate || !chosenTable_type || !chosenTable_id || !reserveSelected) {
+                const customer_id = selectedCustomerId;
+                if (!selectedCustomerId||!startDate || !chosenTable_type || !chosenTable_id || !reserveSelected) {
                     console.error("All required fields must be filled.");
                     showError();
                     return; // Stop if any of the essential fields are empty
@@ -439,7 +449,7 @@
         if (toggleOrder) {
             const orderForm = document.getElementById("orderForm") as HTMLFormElement;
             if (orderForm) {
-                const customer_id = data.user?.customer_id ?? 0;
+                const customer_id = selectedCustomerId;
                 const receipt_no = Date.now(); // Current timestamp in milliseconds, e.g., 1700000000000
                 if (totalOrder.length === 0) {
                     console.error("No drinks selected for the order.");
@@ -513,6 +523,30 @@
         modalStore.trigger(modal);
     }
 
+
+
+    let customers = [];
+    let loading = true;
+
+
+    const loadCustomers = async () => {
+        const {supabase} = data;
+
+            const { data: customer, error } = await supabase.from('Customer').select('*');
+            console.log("HUH CUSTOMER DATA"+ customer);
+
+            if (error) {
+                console.error("Error loading customers:", error.message);
+                loading = false;
+            } else {
+                customers = customer;
+                loading = false;
+            }
+        };
+
+        onMount(() => {
+            loadCustomers();
+        });
 
 
 </script>
@@ -601,12 +635,31 @@
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
                 <!-- for padding -->
                 <div class="px-12 py-6 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-fredoka">Would you like to reserve?</h1>
+                    <h1 class="h2 font-fredoka">Create a reserve?</h1>
                     <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
                 </div> {#if toggleReserve}
                     <div class="flex pt-4 gap-6 px-12">
                         <div class="flex-1">
                             <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
+                                
+                               <label for="customerSelect">Customer</label>
+                               <select
+                                   name="customerSelect"
+                                   id="customerSelect"
+                                   class="select-style rounded-full mt-1 mb-3"
+                                   required>
+                                   {#if loading}
+                                       <option value="" disabled selected>Loading Customers...</option>
+                                   {:else if customers.length > 0}
+                                       <option value="" disabled selected>Select a Customer</option>
+                                       {#each customers as customer}
+                                           <option value={customer.customer_id}>{customer.customer_name || `Customer ${customer.customer_id}`}</option>
+                                       {/each}
+                                   {:else}
+                                       <option value="" disabled selected>Failed to load customers</option>
+                                   {/if}
+                               </select>
+
                                 <label for="tableType">Table Type</label>
                                 <select name="tableType" bind:value={tableSelected} on:change={() => { changeTable(); handleTableSelection(); }} class="select-style rounded-full mt-1 mb-3">
                                     <option value='shared'>Sharing Table</option>
@@ -683,7 +736,7 @@
 
                 <!-- for padding -->
                 <div class="px-12 py-6 pb-10 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-fredoka">Would you like to order?</h1>
+                    <h1 class="h2 font-fredoka">Create order?</h1>
                     <SlideToggle name="slide" bind:checked={toggleOrder} active="bg-primary-500" />
                 </div>
                 

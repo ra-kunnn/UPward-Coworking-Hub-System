@@ -112,7 +112,7 @@
 {#if $modalStore[0]}
 	<div class="{cBase}">
 		<header class={cHeader}>Error</header>
-		<article>There is an error</article>
+		<article>Please fill all information needed ! Check if you accidentally toggled any unnecessary orders.</article>
 		<button class="btn {parent.buttonNeutral}" on:click={parent.onClose()}>Okay</button>
 	</div>
 {/if}
