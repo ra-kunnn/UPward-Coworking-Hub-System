@@ -51,12 +51,12 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
 
   const { data: drinkData, error: drinkError } = await supabase
     .from('Drink')
-    .select('*');
-  
+    .select('*')
+    .order('drink_id', { ascending: true }); // Sort by drink_id in ascending order
   const { data: drinkAvailabilityData, error: drinkAvailabilityError } = await supabase
     .from('Drink Availability')
-    .select('*');
-
+    .select('*')
+    .order('drink_id', { ascending: true });
   const { data: drinkOrderLineData, error: drinkOrderLineError } = await supabase
     .from('Drink Order Line')
     .select('*');

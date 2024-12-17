@@ -30,6 +30,10 @@
         nameInput = currentDrink.drink_name;
         priceInput = currentDrink.price;
         drinkTypeInput = currentDrink.drink_type;
+        const currentDrinkAvailabilty = drinkAvailabilityRows[currentIndex];
+        isAvailable = currentDrinkAvailabilty.availability;
+        stock = currentDrinkAvailabilty.stock;
+        console.log(isAvailable);
         const x =
             elemCarousel.scrollLeft === 0
                 ? elemCarousel.clientWidth * elemCarousel.childElementCount // loop
@@ -49,6 +53,10 @@
         nameInput = currentDrink.drink_name;
         priceInput = currentDrink.price;
         drinkTypeInput = currentDrink.drink_type;
+        const currentDrinkAvailabilty = drinkAvailabilityRows[currentIndex];
+        isAvailable = currentDrinkAvailabilty.availability;
+        stock = currentDrinkAvailabilty.stock;
+        console.log(isAvailable);
         const x =
             elemCarousel.scrollLeft === elemCarousel.scrollWidth - elemCarousel.clientWidth
                 ? 0 // loop
@@ -70,7 +78,6 @@
     }
 
     interface DrinkAvailability{
-        drink_avail_no: number;
         drink_id: number;
         availability: boolean;
         stock: number;
@@ -118,6 +125,8 @@
     let nameInput = ''; // Input for drink name
     let priceInput = 0; // Input for drink price
     let drinkTypeInput = ''; // Input for drink type
+    let isAvailable = false;
+    let stock = 0;
 
 console.log("test");
     onMount(() => {
@@ -132,6 +141,13 @@ console.log("test");
             nameInput = currentDrink.drink_name;
             priceInput = currentDrink.price;
             drinkTypeInput = currentDrink.drink_type;
+
+            const currentDrinkAvailabilty = drinkAvailabilityRows[currentIndex];
+            isAvailable = currentDrinkAvailabilty.availability;
+            stock = currentDrinkAvailabilty.stock;
+            console.log(isAvailable);
+            console.log(drinkRows);
+            console.log(drinkAvailabilityRows);
         } catch (error) {
             console.error(error);
             drinkRows = [];
@@ -246,6 +262,15 @@ console.log("test");
                 .eq('drink_id', drinkRows[currentIndex].drink_id) // Update specific drink based on ID
                 .select();
 
+            const { error:newerror } = await supabase
+                .from('Drink Availability') // Replace 'Drink' with your table name
+                .update({
+                    availability: isAvailable,
+                    stock: stock
+                })
+                .eq('drink_id', drinkRows[currentIndex].drink_id) // Update specific drink based on ID
+                .select();
+
             if (error) {
                 console.error('Error updating drink:', error.message);
                 return { success: false, message: error.message };
@@ -350,6 +375,23 @@ console.log("test");
                                 placeholder="Food Type"
                                 bind:value={drinkTypeInput}
                             />
+                            <label class="flex items-center justify-center mt-2">
+                                <span class="text-surface-700 mr-2">Available:</span>
+                                <input
+                                    class="form-checkbox h-5 w-5 text-blue-600"
+                                    type="checkbox"
+                                    bind:checked={isAvailable}
+                                />
+                            </label>
+                            <label class="flex items-center justify-center mt-2">
+                                <span class="text-surface-700 mr-2">Stock:</span>
+                                <input
+                                    class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                    type="text"
+                                    placeholder="Stock"
+                                    bind:value={stock}
+                                />
+                            </label>
                         </div>
 
                     </div>
