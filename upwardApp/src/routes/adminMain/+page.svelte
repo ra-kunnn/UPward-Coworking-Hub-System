@@ -24,7 +24,6 @@
     }
 
     interface DrinkAvailability{
-        drink_avail_no: number;
         drink_id: number;
         availability: boolean;
         stock: number;

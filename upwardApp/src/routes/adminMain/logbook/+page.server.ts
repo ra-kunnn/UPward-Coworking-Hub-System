@@ -64,7 +64,8 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
 
   const { data: drinkReceiptData, error: drinkReceiptError } = await supabase
     .from('Drink Receipt')
-    .select('*');
+    .select('*')
+    .order('created_at', { ascending: false });
 
   const { data: customerData, error: customerError } = await supabase
     .from('Customer')
@@ -80,8 +81,8 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
 
   const { data: tableReservationData, error: tableReservationError } = await supabase
     .from('Table Reservation')
-    .select('*');  
-
+    .select('*')
+    .order('date', { ascending: false });
   const { data: tableReservationStatusData, error: tableReservationStatusError } = await supabase
     .from('Table Reservation Status')
     .select('*');
