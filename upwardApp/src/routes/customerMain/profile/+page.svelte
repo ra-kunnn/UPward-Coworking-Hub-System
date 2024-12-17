@@ -25,8 +25,7 @@
             }
         };
 
-
-    interface User {
+            interface User {
         customer_name: string;
         customer_id: number;
         customer_phone: number;
@@ -35,8 +34,96 @@
 
     let customer_name: string = '';
     let customer_email: string = '';
-    let customer_id: number = 0;
+    let customer_id: string = '';
 
+interface Drink{
+    drink_id: number;
+    drink_name: string;
+    description: string;
+    price: number;
+    drink_type: string;
+}
+
+interface DrinkAvailability{
+    drink_id: number;
+    availability: boolean;
+    stock: number;
+}
+
+interface DrinkOrderLine{
+    order_id: number;
+    created_at: Date;
+    customer_id: string;
+    drink_id: number;
+    receipt_no: number;
+    qty: number;
+    total_price: number;
+}
+
+interface DrinkOrderStatus{
+    receipt_no: number;
+    is_incoming: boolean;
+    is_ongoing: boolean;
+    is_done: boolean;
+}
+
+interface DrinkReceipt{
+    receipt_no: number;
+    total_price: number;
+    customer_id: string;
+    created_at: Date;
+}
+
+interface Customer {
+    customer_id: string;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+}
+
+interface Table{
+    table_id: number;
+    table_name: string;
+    description: string;
+    pax: number;
+    table_type: string;
+}
+
+interface TableAvailability{
+    table_id: number;
+    availability: boolean;
+    customer_id: string;
+}
+
+interface TableReservation{
+    reservation_no: number;
+    date: Date;
+    customer_id: string;
+    table_id: number;
+    duration: Date;
+    end_date: Date;
+    price: number;
+}
+
+interface TableReservationStatus{
+    reservation_no: number;
+    is_incoming: boolean;
+    is_ongoing: boolean;
+    is_current: boolean;
+    is_done: boolean;
+}
+
+let drinkRows : Drink[] = [];
+let drinkAvailabilityRows: DrinkAvailability[] = [];
+let drinkOrderLineRows: DrinkOrderLine[] = [];
+let drinkOrderStatusRows: DrinkOrderStatus[] = [];
+let drinkReceiptRows: DrinkReceipt[] = [];
+let customerRows : Customer[] = [];
+let tableRows : Table[] = [];
+let tableAvailabilityRows: TableAvailability[] = [];
+let tableReservationRows: TableReservation[] = [];
+let tableReservationStatusRows: TableReservationStatus[] = [];
+let isOrderView = true;
     console.log("TESTING CUST DATA" + customer_name);
 
     onMount(() => {
@@ -46,11 +133,31 @@
             customer_email = data.user?.customer_email ?? '';
             customer_id = data.user?.customer_id ?? 0;
             console.log("testing cookies"+ customer_id, customer_email);
+            drinkRows = data.drinks || [];
+            drinkAvailabilityRows = data.drinkAvailability || [];
+            drinkOrderLineRows = data.drinkOrderLine || [];
+            drinkOrderStatusRows = data.drinkOrderStatus || [];
+            drinkReceiptRows = data.drinkReceipt || [];
+            customerRows = data.customer || [];
+            tableRows = data.tables || [];
+            tableAvailabilityRows = data.tableAvailability || [];
+            tableReservationRows = data.tableReservation || [];
+            tableReservationStatusRows = data.tableReservationStatus || [];
         } catch (error) {
             console.error(error);
         }
     });
+    const setLogbookView = (view) => {
+        console.log("Selected View:", view);
+        // Add your logic here to handle the selected view
+        isOrderView = view === "orderRadio";
+    };
 
+    const getSelectedRadioValue = () => {
+        // Get the selected radio button value
+        const selectedRadio = document.querySelector('input[name="radioGroup"]:checked');
+        return selectedRadio ? selectedRadio.id : null; // Return the `id` of the selected radio, or `null` if none selected
+    };
 </script>
 
 <style>
