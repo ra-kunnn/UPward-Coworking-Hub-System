@@ -628,21 +628,9 @@
     <Aside />
     <!-- main div -->
     <div class="w-dvw px-40 py-10">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
-        <!-- container for the two boxes -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- reserve box -->
-            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
-                <!-- for padding -->
-                <div class="px-12 py-6 flex flex-row justify-between items-center">
-                    <h1 class="h2 font-fredoka">Create a reserve?</h1>
-                    <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
-                </div> {#if toggleReserve}
-                    <div class="flex pt-4 gap-6 px-12">
-                        <div class="flex-1">
-                            <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
-                                
-                               <label for="customerSelect">Customer</label>
+        <h1 class="px-8 pb-12 h2 font-bold">Hello, Admin!</h1>
+
+         <label for="customerSelect">Customer</label>
                                <select
                                    name="customerSelect"
                                    id="customerSelect"
@@ -659,6 +647,21 @@
                                        <option value="" disabled selected>Failed to load customers</option>
                                    {/if}
                                </select>
+        <!-- container for the two boxes -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- reserve box -->
+            <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
+                <!-- for padding -->
+                <div class="px-12 py-6 flex flex-row justify-between items-center">
+
+                    <h1 class="h2 font-fredoka">Create a reserve?</h1>
+                    <SlideToggle name="slide" bind:checked={toggleReserve} active="bg-primary-500" />
+                </div> {#if toggleReserve}
+                    <div class="flex pt-4 gap-6 px-12">
+                        <div class="flex-1">
+                            <form class="form-widget"id="reserveForm" method="POST" action="?/reserve" on:submit|preventDefault>
+                                
+                              
 
                                 <label for="tableType">Table Type</label>
                                 <select name="tableType" bind:value={tableSelected} on:change={() => { changeTable(); handleTableSelection(); }} class="select-style rounded-full mt-1 mb-3">
