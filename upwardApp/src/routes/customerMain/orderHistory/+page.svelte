@@ -64,7 +64,7 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}}!</h1>
+        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
 
         <!-- table details -->
         <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">

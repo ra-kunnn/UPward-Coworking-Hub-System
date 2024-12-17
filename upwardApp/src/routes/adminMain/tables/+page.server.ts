@@ -41,8 +41,9 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
+  depends('supabase:db:Table');
+  depends('supabase:db:Table Availability');
+  depends('supabase:db:Customer');
 
   const { data: tableData, error: tableError } = await supabase
     .from('Table')
@@ -53,35 +54,63 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Table Availability')
     .select('*');
 
-  if (tableError) {
-    console.error('Error fetching room data:', tableError);
-    return { tables: [], tableAvailability: tableAvailabilityData ?? [], error: tableError.message };
-  }
+  const { data: tableReservationData, error: tableReservationError } = await supabase
+    .from('Table Reservation')
+    .select('*');  
 
-  if (tableAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
-    return { tables: tableData ?? [], tableAvailability: [], error: tableAvailabilityError.message };
-  }
+  const { data: tableReservationStatusData, error: tableReservationStatusError } = await supabase
+    .from('Table Reservation Status')
+    .select('*'); 
 
-  const { data: drinkData, error: drinkError } = await supabase
-    .from('Drink')
+  const { data: customerData, error: customerError } = await supabase
+    .from('Customer')
     .select('*');
+
+    if (tableReservationData && tableReservationData.length > 0) {
+      // Iterate over each row to calculate and update the `end_date`
+      for (const row of tableReservationData) {
+          // Ensure `reservation_date` and `duration` are valid
+          if (row.date && row.duration) {
+              const { reservation_no, date, duration } = row; // Use reservation_no as the primary identifier
+              console.log(date);
+              console.log(duration);
+              // Calculate the new end_date
+              const { data: calculationData, error: calculationError } = await supabase.rpc(
+                  'add_interval_to_date', // Custom function to add interval to date
+                  {
+                      date,
+                      duration,
+                  }
+              );
   
-  const { data: drinkAvailabilityData, error: drinkAvailabilityError } = await supabase
-    .from('Drink Availability')
-    .select('*');
-
-  if (drinkError) {
-    console.error('Error fetching room data:', drinkError);
-    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
+              if (calculationError) {
+                  console.error(
+                      `Error calculating end_date for reservation_no ${reservation_no}:`,
+                      calculationError
+                  );
+                  continue; // Skip to the next row if there's an error
+              }
+              console.log(calculationData);
+              const newEndDate = calculationData;
+              
+              // Use Supabase to update `end_date` for this row
+              const { error: updateError } = await supabase
+                  .from('Table Reservation')
+                  .update({
+                      end_date: newEndDate, // The calculated end_date
+                  })
+                  .eq('reservation_no', reservation_no); // Use reservation_no to target the row
+  
+              if (updateError) {
+                  console.error(
+                      `Error updating end_date for reservation_no ${reservation_no}:`,
+                      updateError
+                  );
+              }
+          }
+      }
   }
-
-  if (drinkAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
-    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
-  }
-
-  return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData};
+  return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], tableReservation : tableReservationData ?? [], tableReservationStatus : tableReservationStatusData ?? [], customer: customerData ?? []};
 
 };
 

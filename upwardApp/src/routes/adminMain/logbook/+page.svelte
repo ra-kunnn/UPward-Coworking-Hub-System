@@ -13,205 +13,172 @@
     import type { PageData } from './$types';
     import { supabase } from '$lib/supabaseClient';
 
-    /**
-
-    const modalStore = getModalStore();
-
-    function billPopUp(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'BillingForm',
-        };
-        modalStore.trigger(modal);
-    }
+    
 
     export let data:PageData;
 
-    const logout = async () => {
-        const { supabase } = data; // Destructure supabase from data
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.error(error);
-        }
-    };
-
-    
-
-    interface Tenant{
-        tenantID: number;
-        tenantName: string;
-        tenantSex: string;
-        dormNo: number;
-        tenantEmail: string;
-        tenantPhone: number;
+    interface Drink{
+        drink_id: number;
+        drink_name: string;
+        description: string;
+        price: number;
+        drink_type: string;
     }
 
-    interface Bills{
-        billID: number;
-        dormNo: number;
-        dateIssued: Date;
-        paymentStatus: boolean;
-        datePaid: Date;
-        monthlyRent: number;
-        waterBill: number;
-        electricityBill: number;
-        hutRent: number;
-        visitorOvernightBill: number;
-        maintenanceBill: number;
-        totalBillAmount?: number;
-        
+    interface DrinkAvailability{
+        drink_id: number;
+        availability: boolean;
+        stock: number;
     }
 
-    interface Visitors{
-        visitorID: number;
-        visitorName: string;
-        startDateOfVisit: Date;
-        visitorRelation: string;
-        tenantID: number;
-        endDateOfVisit: Date;
-        isApproved: boolean;
+    interface DrinkOrderLine{
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
+        qty: number;
+        total_price: number;
     }
 
-    interface Maintenance{
-        maintenanceID: number;
-        maintenanceRequest: string;
-        startDateOfMaintenance: Date;
-        dormNo: number;
-        endDateOfMaintenance: Date;
-        isDone: boolean;
+    interface DrinkOrderStatus{
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
     }
 
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-    const maxThings = 4;
-
-
-
-    let managerName: string = '';
-    let managerEmail: string = '';
-    let tenantRows: Tenant[] = [];
-    let billRows: Bills[] = [];
-    let visitorRows: Visitors[] = [];  
-    let maintenanceRows: Maintenance[] = [];
-    let roomRows: Room[] = [];
-    const maxBills = 4;
-
-    function calculateTotalBillAmount(bill: Bills): number {
-        return bill.monthlyRent + bill.waterBill + bill.electricityBill + bill.hutRent + bill.visitorOvernightBill + bill.maintenanceBill;
+    interface DrinkReceipt{
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
     }
+
+    interface Customer {
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
+    }
+
+    interface Table{
+        table_id: number;
+        table_name: string;
+        description: string;
+        pax: number;
+        table_type: string;
+    }
+
+    interface TableAvailability{
+        table_id: number;
+        availability: boolean;
+        customer_id: string;
+    }
+
+    interface TableReservation{
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
+        duration: Date;
+        end_date: Date;
+        price: number;
+    }
+
+    interface TableReservationStatus{
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_current: boolean;
+        is_done: boolean;
+    }
+
+    let drinkRows : Drink[] = [];
+    let drinkAvailabilityRows: DrinkAvailability[] = [];
+    let drinkOrderLineRows: DrinkOrderLine[] = [];
+    let drinkOrderStatusRows: DrinkOrderStatus[] = [];
+    let drinkReceiptRows: DrinkReceipt[] = [];
+    let customerRows : Customer[] = [];
+    let tableRows : Table[] = [];
+    let tableAvailabilityRows: TableAvailability[] = [];
+    let tableReservationRows: TableReservation[] = [];
+    let tableReservationStatusRows: TableReservationStatus[] = [];
+    let isOrderView = true;
+    let selectedDateFrom = null;
+    let selectedDateTo = null;
 
     onMount(() => {
         try {
-            billRows = data.bill || [];
-            tenantRows = data.allTenants || [];
-            visitorRows = data.visitor || [];
-            maintenanceRows = data.maintenance || [];
-            roomRows = data.rooms || [];
-            managerName = data.user[0]?.managerName ?? '';
-            managerEmail = data.user[0]?.managerEmail ?? '';
-            Cookies.set('email', managerEmail);
-            billRows = billRows.map(bill => ({
-                ...bill,
-                totalBillAmount: calculateTotalBillAmount(bill)
-            }));
+            drinkRows = data.drinks || [];
+            drinkAvailabilityRows = data.drinkAvailability || [];
+            drinkOrderLineRows = data.drinkOrderLine || [];
+            drinkOrderStatusRows = data.drinkOrderStatus || [];
+            drinkReceiptRows = data.drinkReceipt || [];
+            customerRows = data.customer || [];
+            tableRows = data.tables || [];
+            tableAvailabilityRows = data.tableAvailability || [];
+            tableReservationRows = data.tableReservation || [];
+            tableReservationStatusRows = data.tableReservationStatus || [];
             
         } catch (error) {
             console.error(error);
-            tenantRows = [];
-            billRows = [];
+            drinkRows = [];
+            drinkAvailabilityRows = [];
+            drinkOrderLineRows = [];
+            drinkOrderStatusRows = [];
+            drinkReceiptRows = [];
+            tableRows = [];
+            tableAvailabilityRows = [];
+            tableReservationRows = [];
+            tableReservationStatusRows = [];
         }
     });
-    
-    Cookies.set('email', managerEmail); 
-    function handleProfile(event) {
-        managerName = event.detail.managerName;
-        managerEmail = event.detail.managerEmail;
-  }
-
-    
-    function getYear(date: Date): number {
-        return date.getFullYear();
-    }
-    function getMonth(date: Date): number {
-        return date.getMonth() + 1; // Months are zero-based, so we add 1
-    }
-    const confirmPayment = async (billID: number) => {
-
-            const { error: billError } = await supabase
-                .from('Tenant Bill') 
-                .update([
-                {
-                    paymentStatus : true,
-                },
-                ])
-                .eq('billID', billID);
-
-                if (billError) {
-                    console.error('Error confirming payment:', billError);
-                    alert('Error confirming payment');
-                } 
-       
-       
-
-        alert('Payment Confirmed');
-        window.location.reload();
-    };
-    const confirmVisitor = async (visitorID: number) => {
-
-            const { error: visitorError } = await supabase
-                .from('Visitor Info') 
-                .update([
-                {
-                    isApproved : true,
-                },
-                ])
-                .eq('visitorID', visitorID);
-
-                if (visitorError) {
-                    console.error('Error confirming visit:', visitorError);
-                    alert('Error confirming visit');
-                } 
-       
-       
-
-        alert('Visit Confirmed');
-        window.location.reload();
-    };
-    const confirmMaintenance = async (maintenanceID: number) => {
-
-            const { error: maintenanceError } = await supabase
-                .from('Maintenance Info') 
-                .update([
-                {
-                    isDone: true,
-                },
-                ])
-                .eq('maintenanceID', maintenanceID);
-
-                if (maintenanceError) {
-                    console.error('Error marking maintenance done:', maintenanceError);
-                    alert('Error marking maintenance done');
-                } 
-       
-       
-
-        alert('Maintenance Done');
-        window.location.reload();
+    const setLogbookView = (view) => {
+        console.log("Selected View:", view);
+        // Add your logic here to handle the selected view
+        isOrderView = view === "orderRadio";
     };
 
-    */
+    const getSelectedRadioValue = () => {
+        // Get the selected radio button value
+        const selectedRadio = document.querySelector('input[name="radioGroup"]:checked');
+        return selectedRadio ? selectedRadio.id : null; // Return the `id` of the selected radio, or `null` if none selected
+    };
+    const captureDateInputs = () => {
+        // Get the date input values
+        const dateFrom = document.querySelector('input[name="dateFrom"]').value;
+        const dateTo = document.querySelector('input[name="dateTo"]').value;
+
+        // Update the global constants
+        selectedDateFrom = dateFrom;
+        selectedDateTo = dateTo;
+
+        console.log("Date From:", selectedDateFrom);
+        console.log("Date To:", selectedDateTo)
+    };
+
+    const isDateInRange = (date) => {
+        if (!selectedDateFrom || !selectedDateTo) return true; // No filtering if dates are not selected
+        const fromDate = new Date(selectedDateFrom);
+        const toDate = new Date(selectedDateTo);
+        const targetDate = new Date(date);
+
+        return targetDate >= fromDate && targetDate <= toDate;
+    };
 </script>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
 
     /* Custom input style */
     .date-input {
@@ -245,87 +212,143 @@
 
     <!-- main div -->
     <div class="w-dvw px-40 py-10 bg-surface-50">
-        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pt-10 pb-8 gap-5">
-            <p>Data from:</p>
-            <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
-            <p>to</p>
-            <input name="dateFrom" type="date" class="input date-input rounded-3xl w-60">
-        </div>
 
-        <div class="grid grid-flow-col mx-96 justify-evenly items-center px-8 pb-6 gap-5">
-            <p>Filters:</p>
+        <div class="mx-40 mt-20">
+            <!-- date reservations -->
+            <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
+                
+                <!-- for padding -->
+                <div class="min-h-full flex flex-col">
+                    <div class="px-12 py-6 flex flex-row justify-between items-center">
+                        <h1 class="h1 font-bold font-fredoka">Logbook</h1>
+                        <button 
+                            on:click={() => { 
+                                const selectedView = getSelectedRadioValue(); 
+                                captureDateInputs(); // Capture the date inputs
+                                setLogbookView(selectedView);
+                            }} 
+                            class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">
+                            Load
+                        </button>
+                    </div>
+                    {#if isOrderView}
+                        <div class="py-6 grow bg-surface-100">
+                            <div class="px-12">
+                                {#each drinkReceiptRows as drinkReceiptRow}
+                                <!-- one entry -->
+                                    {#if isDateInRange(drinkReceiptRow.created_at)}
+                                        {#each drinkOrderStatusRows as drinkOrderStatusRow}
+                                            {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_done}
+                                                    <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                                        <div>
+                                                            <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                                        </div>
+                                                        {#each drinkOrderLineRows as drinkOrderLineRow}
+                                                            {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                                                <div>
+                                                                    {#each drinkRows as drinkRow}
+                                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                                            <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                                        {/if}
+                                                                    {/each}
+                                                                </div>
+                                                                        
+                                                            {/if}
+                                                        {/each}
+                                                        {#each customerRows as customerRow}
+                                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                                <div>
+                                                                    <p>{customerRow.customer_name}</p>
+                                                                </div>
+                                                                {/if}
+                                                        {/each}
+                                                        <div>
+                                                            <p>{drinkReceiptRow.created_at}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p>{drinkReceiptRow.total_price}</p>
+                                                        </div>
+                                                    </div>
+                                            {/if}
+                                        {/each}
+                                    {/if}
+                                {/each}
+                                
+                            </div>
 
-            <div class="flex items-center">
-                <input type="radio" id="reservationRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
+                        </div>
+                    {:else}
+                        <div class="py-6 grow bg-surface-100">
+                            <div class="px-12">
+                                {#each tableReservationRows as tableReservationRow}
+                                <!-- one entry -->
+                                    {#if isDateInRange(tableReservationRow.date)}
+                                        {#each tableReservationStatusRows as tableReservationStatusRow}
+                                            
+                                        
+                                            {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_done}
+                                                
+                                            
+                                                <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
+                                                    <div>
+                                                        <p>Reservation No. {tableReservationRow.reservation_no}</p>
+                                                    </div>
+                                                    {#each tableRows as tableRow}
+                                                        {#if tableReservationRow.table_id === tableRow.table_id}
+                                                            <div>
+                                                                <p>{tableRow.table_name}</p>
+                                                            </div>
+                                                                    
+                                                        {/if}
+                                                    {/each}
+                                                    {#each customerRows as customerRow}
+                                                            {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                                            <div>
+                                                                <p>{customerRow.customer_name}</p>
+                                                            </div>
+                                                            {/if}
+                                                    {/each}
+                                                    <div>
+                                                        <p>{tableReservationRow.date} to {tableReservationRow.end_date}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p>{tableReservationRow.price}</p>
+                                                    </div>
+                                                </div>
+                                            
+                                            {/if}
+                                        {/each}
+                                    {/if}
+                                {/each}
+                                
+                            </div>
+
+                        </div>
+                    {/if}
+                </div>
             </div>
-
-            <div class="flex items-center">
-                <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">Order</label>
-            </div>
         </div>
-
-        <div class="flex items-center justify-center pb-14">
-            <button class="btn bg-tertiary-300 text-surface-50 rounded-full border-none px-5 py-2 my-1 font-semibold">Load</button>
-        </div>
-
         
-        <div class="mx-80 mb-20">
-            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Logs</h1>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                </div>
-
+        <div class="mx-40 block">
+            <div class="flex justify-end items-center pb-1">
+                <p>Data from</p>
+                <input class="appearance-none bg-transparent border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="date" name="dateFrom">
+                <p>to</p>
+                <input class="appearance-none bg-transparent border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center" type="date" name="dateTo">
             </div>
+
+            <div class="flex justify-end items-center pb-1 gap-4 mr-6">
+                <div class="flex items-center">
+                    <input type="radio" id="reservationRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
+                    <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
+                </div>
+    
+                <div class="flex items-center">
+                    <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600" checked>
+                    <label for="default-radio-1" class="ms-2 font-medium">Order</label>
+                </div>
+            </div>
+            
         </div>
 
     </div>

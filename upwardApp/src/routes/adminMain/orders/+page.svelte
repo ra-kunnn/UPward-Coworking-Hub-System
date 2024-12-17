@@ -21,218 +21,284 @@
 
 
     function carouselLeft(): void {
+        if (currentIndex > 0) {
+            currentIndex--;
+        } else {
+            currentIndex = drinkRows.length - 1; // Loop to last drink
+        }
+        const currentDrink = drinkRows[currentIndex];
+        nameInput = currentDrink.drink_name;
+        priceInput = currentDrink.price;
+        drinkTypeInput = currentDrink.drink_type;
+        const currentDrinkAvailabilty = drinkAvailabilityRows[currentIndex];
+        isAvailable = currentDrinkAvailabilty.availability;
+        stock = currentDrinkAvailabilty.stock;
+        console.log(isAvailable);
         const x =
             elemCarousel.scrollLeft === 0
                 ? elemCarousel.clientWidth * elemCarousel.childElementCount // loop
                 : elemCarousel.scrollLeft - elemCarousel.clientWidth; // step left
         elemCarousel.scroll(x, 0);
+
+        
     }
     
     function carouselRight(): void {
+        if (currentIndex < drinkRows.length - 1) {
+            currentIndex++;
+        } else {
+            currentIndex = 0; // Loop back to first drink
+        }
+        const currentDrink = drinkRows[currentIndex];
+        nameInput = currentDrink.drink_name;
+        priceInput = currentDrink.price;
+        drinkTypeInput = currentDrink.drink_type;
+        const currentDrinkAvailabilty = drinkAvailabilityRows[currentIndex];
+        isAvailable = currentDrinkAvailabilty.availability;
+        stock = currentDrinkAvailabilty.stock;
+        console.log(isAvailable);
         const x =
             elemCarousel.scrollLeft === elemCarousel.scrollWidth - elemCarousel.clientWidth
                 ? 0 // loop
                 : elemCarousel.scrollLeft + elemCarousel.clientWidth; // step right
         elemCarousel.scroll(x, 0);
-    }
 
-    /**
-
-    const modalStore = getModalStore();
-
-    function billPopUp(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'BillingForm',
-        };
-        modalStore.trigger(modal);
-    }
-
-    export let data:PageData;
-
-    const logout = async () => {
-        const { supabase } = data; // Destructure supabase from data
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.error(error);
-        }
-    };
-
-    
-
-    interface Tenant{
-        tenantID: number;
-        tenantName: string;
-        tenantSex: string;
-        dormNo: number;
-        tenantEmail: string;
-        tenantPhone: number;
-    }
-
-    interface Bills{
-        billID: number;
-        dormNo: number;
-        dateIssued: Date;
-        paymentStatus: boolean;
-        datePaid: Date;
-        monthlyRent: number;
-        waterBill: number;
-        electricityBill: number;
-        hutRent: number;
-        visitorOvernightBill: number;
-        maintenanceBill: number;
-        totalBillAmount?: number;
         
     }
 
-    interface Visitors{
-        visitorID: number;
-        visitorName: string;
-        startDateOfVisit: Date;
-        visitorRelation: string;
-        tenantID: number;
-        endDateOfVisit: Date;
-        isApproved: boolean;
+    export let data:PageData;
+   
+
+    interface Drink{
+        drink_id: number;
+        drink_name: string;
+        description: string;
+        price: number;
+        drink_type: string;
     }
 
-    interface Maintenance{
-        maintenanceID: number;
-        maintenanceRequest: string;
-        startDateOfMaintenance: Date;
-        dormNo: number;
-        endDateOfMaintenance: Date;
-        isDone: boolean;
+    interface DrinkAvailability{
+        drink_id: number;
+        availability: boolean;
+        stock: number;
     }
 
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-    const maxThings = 4;
-
-
-
-    let managerName: string = '';
-    let managerEmail: string = '';
-    let tenantRows: Tenant[] = [];
-    let billRows: Bills[] = [];
-    let visitorRows: Visitors[] = [];  
-    let maintenanceRows: Maintenance[] = [];
-    let roomRows: Room[] = [];
-    const maxBills = 4;
-
-    function calculateTotalBillAmount(bill: Bills): number {
-        return bill.monthlyRent + bill.waterBill + bill.electricityBill + bill.hutRent + bill.visitorOvernightBill + bill.maintenanceBill;
+    interface DrinkOrderLine{
+        order_id: number;
+        created_at: Date;
+        customer_id: string;
+        drink_id: number;
+        receipt_no: number;
+        qty: number;
+        total_price: number;
     }
 
+    interface DrinkOrderStatus{
+        receipt_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_done: boolean;
+    }
+
+    interface DrinkReceipt{
+        receipt_no: number;
+        total_price: number;
+        customer_id: string;
+        created_at: Date;
+    }
+
+    interface Customer {
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
+    }
+
+    let drinkRows : Drink[] = [];
+    let drinkAvailabilityRows: DrinkAvailability[] = [];
+    let drinkOrderLineRows: DrinkOrderLine[] = [];
+    let drinkOrderStatusRows: DrinkOrderStatus[] = [];
+    let drinkReceiptRows: DrinkReceipt[] = [];
+    let customerRows : Customer[] = [];
+
+    let currentIndex = 0; // Track current drink being viewed
+    let nameInput = ''; // Input for drink name
+    let priceInput = 0; // Input for drink price
+    let drinkTypeInput = ''; // Input for drink type
+    let isAvailable = false;
+    let stock = 0;
+
+console.log("test");
     onMount(() => {
         try {
-            billRows = data.bill || [];
-            tenantRows = data.allTenants || [];
-            visitorRows = data.visitor || [];
-            maintenanceRows = data.maintenance || [];
-            roomRows = data.rooms || [];
-            managerName = data.user[0]?.managerName ?? '';
-            managerEmail = data.user[0]?.managerEmail ?? '';
-            Cookies.set('email', managerEmail);
-            billRows = billRows.map(bill => ({
-                ...bill,
-                totalBillAmount: calculateTotalBillAmount(bill)
-            }));
-            
+            drinkRows = data.drinks || [];
+            drinkAvailabilityRows = data.drinkAvailability || [];
+            drinkOrderLineRows = data.drinkOrderLine || [];
+            drinkOrderStatusRows = data.drinkOrderStatus || [];
+            drinkReceiptRows = data.drinkReceipt || [];
+            customerRows = data.customer || [];
+            const currentDrink = drinkRows[currentIndex];
+            nameInput = currentDrink.drink_name;
+            priceInput = currentDrink.price;
+            drinkTypeInput = currentDrink.drink_type;
+
+            const currentDrinkAvailabilty = drinkAvailabilityRows[currentIndex];
+            isAvailable = currentDrinkAvailabilty.availability;
+            stock = currentDrinkAvailabilty.stock;
+            console.log(isAvailable);
+            console.log(drinkRows);
+            console.log(drinkAvailabilityRows);
         } catch (error) {
             console.error(error);
-            tenantRows = [];
-            billRows = [];
+            drinkRows = [];
+            drinkAvailabilityRows = [];
+            drinkOrderLineRows = [];
+            drinkOrderStatusRows = [];
+            drinkReceiptRows = [];
         }
     });
     
-    Cookies.set('email', managerEmail); 
-    function handleProfile(event) {
-        managerName = event.detail.managerName;
-        managerEmail = event.detail.managerEmail;
-  }
+    // Update input fields based on the current drink
+    
 
     
-    function getYear(date: Date): number {
-        return date.getFullYear();
+    const cancelOrder = async (receipt_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_done: false
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
     }
-    function getMonth(date: Date): number {
-        return date.getMonth() + 1; // Months are zero-based, so we add 1
+    const confirmOrder = async (receipt_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_done: false
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
     }
-    const confirmPayment = async (billID: number) => {
+    const confirmOngoing = async (receipt_no: number) => {
+        const { supabase } = data;
 
-            const { error: billError } = await supabase
-                .from('Tenant Bill') 
-                .update([
-                {
-                    paymentStatus : true,
-                },
-                ])
-                .eq('billID', billID);
+        try {
+            const {error, count} = await supabase
+                .from('Drink Order Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_done: true
+                })
+                .eq('receipt_no', receipt_no)
+                .select();;
 
-                if (billError) {
-                    console.error('Error confirming payment:', billError);
-                    alert('Error confirming payment');
-                } 
-       
-       
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
 
-        alert('Payment Confirmed');
-        window.location.reload();
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const updateDrink = async () => {
+        const { supabase } = data; // Ensure supabase is accessible from your data context
+
+        try {
+            const { error, count } = await supabase
+                .from('Drink') // Replace 'Drink' with your table name
+                .update({
+                    drink_name: nameInput,
+                    price: Number(priceInput),
+                    drink_type: drinkTypeInput
+                })
+                .eq('drink_id', drinkRows[currentIndex].drink_id) // Update specific drink based on ID
+                .select();
+
+            const { error:newerror } = await supabase
+                .from('Drink Availability') // Replace 'Drink' with your table name
+                .update({
+                    availability: isAvailable,
+                    stock: stock
+                })
+                .eq('drink_id', drinkRows[currentIndex].drink_id) // Update specific drink based on ID
+                .select();
+
+            if (error) {
+                console.error('Error updating drink:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload(); // Refresh the page to fetch the updated data
+            return { success: true };
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
     };
-    const confirmVisitor = async (visitorID: number) => {
 
-            const { error: visitorError } = await supabase
-                .from('Visitor Info') 
-                .update([
-                {
-                    isApproved : true,
-                },
-                ])
-                .eq('visitorID', visitorID);
-
-                if (visitorError) {
-                    console.error('Error confirming visit:', visitorError);
-                    alert('Error confirming visit');
-                } 
-       
-       
-
-        alert('Visit Confirmed');
-        window.location.reload();
-    };
-    const confirmMaintenance = async (maintenanceID: number) => {
-
-            const { error: maintenanceError } = await supabase
-                .from('Maintenance Info') 
-                .update([
-                {
-                    isDone: true,
-                },
-                ])
-                .eq('maintenanceID', maintenanceID);
-
-                if (maintenanceError) {
-                    console.error('Error marking maintenance done:', maintenanceError);
-                    alert('Error marking maintenance done');
-                } 
-       
-       
-
-        alert('Maintenance Done');
-        window.location.reload();
-    };
-
-    */
 </script>
+
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
 
 <HideOverflow />
 
@@ -245,110 +311,203 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
-
-        <!-- orders -->
-        <div class="mx-80 mb-20">
-            <div class="card p-4 bg-white border-4 border-primary-600 rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center shadow-lg">
-
-                <!-- button: left -->
-                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselLeft}>
-                ⮜
-                </button>
-
-                <!-- images -->
-                <div bind:this={elemCarousel} class="m-20 snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
-                    {#each unsplashIds as unsplashId}
-                        <img
-                            class="snap-center w-[1024px] rounded-container-token"
-                            src="https://images.unsplash.com/photo-{unsplashId}"
-                            alt={unsplashId}
-                            loading="lazy"
-                        />
-                    {/each}
-                </div>
-
-                <!-- button: right -->
-                <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md" on:click={carouselRight}>
-                ⮞
-                </button>
-                <!-- information -->
-                <div class="col-span-3 text-center mb-4">
-                    <p class="text-surface-800">Food No.</p>
-                    <p class="text-surface-800">Description</p>
-                    <p class="text-surface-800">Price</p>
-                    <p class="text-surface-800">Food Type</p>
-                </div>
-            </div>
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
+        <div class="flex justify-between items-center px-8 pb-6">
+            <h1 class="h2 font-bold font-fredoka">Food and Drinks</h1>
         </div>
 
-        <div class="mx-80 mb-20">
-            <div class="card bg-white border-4 border-primary-600 rounded-3xl shadow-lg pb-6">
+        <!-- container for the two boxes -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold">Orders</h1>
+            <!-- user alerts -->
+            <div class="flex-1">
+                <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 grow h-[600px] overflow-hidden">
+                    <!-- for padding -->
+                    <div class="p-12 min-h-full rounded-3xl grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+                        <!-- Left Button -->
+                        <button
+                            type="button"
+                            class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md"
+                            on:click={carouselLeft}>
+                            ⮜
+                        </button>
+                
+                        <!-- images -->
+                        <div class="mx-auto snap-x snap-mandatory scroll-smooth flex overflow-x-auto">
+                            {#if drinkRows.length > 0}
+                                <img
+                                    class="snap-center rounded-container-token"
+                                    src="/src/lib/drinkPictures/{drinkRows[currentIndex].drink_id}.png"
+                                    alt={drinkRows[currentIndex].drink_name}
+                                />
+                            {:else}
+                                <p>No drinks available</p>
+                            {/if}
+                        </div>
+                
+                        <!-- Right Button -->
+                        <button
+                            type="button"
+                            class="btn bg-primary-600 text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md"
+                            on:click={carouselRight}>
+                            ⮞
+                        </button>
+                
+                        <!-- information, changes when carousel is moved -->
+                        <div class="col-span-3 text-center mb-4">
+                            <p class="text-surface-800">Drink ID: {drinkRows[currentIndex]?.drink_id || 'N/A'}</p>
+                            <input
+                                class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                type="text"
+                                placeholder="Name"
+                                bind:value={nameInput}
+                            />
+                            <input
+                                class="bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center
+                                [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                type="number"
+                                placeholder="Price"
+                                bind:value={priceInput}
+                            />
+                            <input
+                                class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                type="text"
+                                placeholder="Food Type"
+                                bind:value={drinkTypeInput}
+                            />
+                            <label class="flex items-center justify-center mt-2">
+                                <span class="text-surface-700 mr-2">Available:</span>
+                                <input
+                                    class="form-checkbox h-5 w-5 text-blue-600"
+                                    type="checkbox"
+                                    bind:checked={isAvailable}
+                                />
+                            </label>
+                            <label class="flex items-center justify-center mt-2">
+                                <span class="text-surface-700 mr-2">Stock:</span>
+                                <input
+                                    class="appearance-none bg-transparent w-10 border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                    type="text"
+                                    placeholder="Stock"
+                                    bind:value={stock}
+                                />
+                            </label>
+                        </div>
+
+                    </div>
+                            
                 </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
-                </div>
-
-                <!-- one entry -->
-                <div class="px-12 grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                    <div>
-                        <p>Receipt No.</p>
-                    </div>
-                    <div>
-                        <p>Drink No.</p>
-                    </div>
-                    <div>
-                        <p>Customer</p>
-                    </div>
-                    <div>
-                        <p>Total</p>
-                    </div>
-                    <div class="flex flex-auto mx-auto">
-                        <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                    </div>
+                        
+                
+                <!-- Update Button -->
+                <div class="flex flex-row justify-end items-end">
+                    <button
+                        class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold"
+                        on:click={updateDrink}>
+                        Update
+                    </button>
                 </div>
 
             </div>
-        </div>
 
-    </div>
+           <!-- Orders Section -->
+           <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden grid grid-rows-2 h-[600px]">
+            <!-- Incoming Orders -->
+            <div class="px-12 py-6 overflow-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="h2 font-bold font-fredoka">Incoming Orders</h2>
+                </div>
+                <div class="flex-grow">
+                    <!-- One entry -->
+                        {#each drinkReceiptRows as drinkReceiptRow}
+                            {#each drinkOrderStatusRows as drinkOrderStatusRow}
+                                {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_incoming}      
+                                <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                                    <div>
+                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                    </div>
+                                        {#each drinkOrderLineRows as drinkOrderLineRow}
+                                            {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                            <div>
+                                                    {#each drinkRows as drinkRow}
+                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                        <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                        {/if}
+                                                    {/each}
+                                            </div>
+                                                        
+                                            {/if}
+                                        {/each}
+                                        {#each customerRows as customerRow}
+                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                <div>
+                                                    <p>{customerRow.customer_name}</p>
+                                                </div>
+                                                {/if}
+                                        {/each}
+                                    <div>
+                                        <p>{drinkReceiptRow.total_price}</p>
+                                    </div>
+                                    <div class="flex flex-auto mx-auto">
+                                        <button on:click={() => {confirmOrder(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                        <button on:click={() => {cancelOrder(drinkReceiptRow.receipt_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                    </div>
+                                </div>
+                                {/if}
+                            {/each}
+                        {/each}
+                    <!-- Add more entries here as needed -->
+                </div>
+            </div>
+
+            <!-- Ongoing Orders -->
+            <div class="px-12 py-6 overflow-auto border-t">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="h2 font-bold font-fredoka">Ongoing Orders</h2>
+                </div>
+                <div class="flex-grow ongoing-orders-container">
+                    {#each drinkReceiptRows as drinkReceiptRow}
+                            {#each drinkOrderStatusRows as drinkOrderStatusRow}
+                                {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_ongoing}      
+                                <div class="grid grid-cols-5 items-center gap-3 pb-4">
+                                    <div>
+                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                    </div>
+                                        {#each drinkOrderLineRows as drinkOrderLineRow}
+                                            {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
+                                            <div>
+                                                    {#each drinkRows as drinkRow}
+                                                        {#if drinkRow.drink_id === drinkOrderLineRow.drink_id}
+                                                        <p>{drinkOrderLineRow.qty} {drinkRow.drink_name}</p>
+                                                        {/if}
+                                                    {/each}
+                                            </div>
+                                                        
+                                            {/if}
+                                        {/each}
+                                        {#each customerRows as customerRow}
+                                                {#if customerRow.customer_id === drinkReceiptRow.customer_id}
+                                                <div>
+                                                    <p>{customerRow.customer_name}</p>
+                                                </div>
+                                                {/if}
+                                        {/each}
+                                    <div>
+                                        <p>{drinkReceiptRow.total_price}</p>
+                                    </div>
+                                    <div class="flex flex-auto mx-auto">
+                                        <button on:click={() => {confirmOngoing(drinkReceiptRow.receipt_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                    </div>
+                                </div>
+                                {/if}
+                            {/each}
+                        {/each}
+                </div>
+                
+            </div>
+                    </div>
+    </div>    
+
+</div>
 
 </div>

@@ -53,6 +53,19 @@
 
 </script>
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
+
+    .font-fredoka {
+        font-family: "Fredoka", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        font-variation-settings:
+            "wdth" 100;
+    }
+</style>
+
 <HideOverflow />
 
 <!-- global container div -->
@@ -65,18 +78,20 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw px-40 py-10 bg-surface-50">
-        <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}</h1>
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
+
+        <h1 class="px-8 pb-12 h1 font-bold font-fredoka">Hello, {customer_name}!</h1>
          
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- table details -->
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
 
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex flex-row justify-between items-center">
-                        <h1 class="h1 font-bold">Table Details</h1>
+
+                        <h1 class="h1 font-bold font-fredoka">Reservation Details</h1>
                     </div>
                     
                     <div class="pt-10 py-6 flex-grow">
@@ -97,7 +112,7 @@
                 <!-- for padding -->
                 <div class="px-12 min-h-full flex flex-col">
                     <div class="pt-6 flex justify-between items-center">
-                        <h1 class="h1 font-bold">Order Details</h1>
+                        <h1 class="h1 font-bold font-fredoka">Order Details</h1>
                     </div>
 
                     <div class="pt-10 py-6 grow min-h-0">

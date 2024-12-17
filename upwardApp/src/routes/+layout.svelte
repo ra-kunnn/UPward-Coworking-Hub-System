@@ -2,12 +2,18 @@
 
     
     import "../app.css";
-     import { initializeStores } from '@skeletonlabs/skeleton';
+    import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+    import type { ModalComponent } from '@skeletonlabs/skeleton';
     initializeStores();
 
     import { goto, invalidate } from '$app/navigation';
     import { onMount } from 'svelte';
 
+    import Error from '$lib/modals/errorModal.svelte';
+
+    const modalRegistry: Record<string, ModalComponent> = {
+        Error: { ref: Error }
+    };
    
     export let data;
     let { session, supabase } = data;
@@ -36,5 +42,6 @@
     <title>UPward Coworking Hub System</title>
 </svelte:head>
 
+<Modal components={modalRegistry} />
 
 <slot />
