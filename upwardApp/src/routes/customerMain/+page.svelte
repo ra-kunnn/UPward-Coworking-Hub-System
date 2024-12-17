@@ -10,6 +10,9 @@
     import type { PageData} from './$types';
     import HideOverflowX from '$lib/hideOverflowX.svelte';
     import SelectorModal from '$lib/user/selectorModal.svelte';
+    import Error from './modals/errorModal.svelte';
+    import Confirm from './modals/confirmModal.svelte';
+
 
     let showModal = false;
 
@@ -470,6 +473,8 @@
                     total_price = "Invalid selection.";
                 }
             }
+            showConfirm();
+
         }
         if (toggleOrder) {
             const orderForm = document.getElementById("orderForm") as HTMLFormElement;
@@ -532,6 +537,8 @@
                     console.error("Unexpected error:", err.message);
                 }
             }
+        showConfirm();
+
         }
     };
 
@@ -540,14 +547,21 @@
 
     const modalStore = getModalStore();
 
-    function showError(): void {
-        const modal: ModalSettings = {
+   function showError(): void {
+    const modal: ModalSettings = {
         type: 'component',
-        component: 'Error',
-        };
-        modalStore.trigger(modal);
-    }
+        component: Error,  // Reference the component directly
+    };
+    modalStore.trigger(modal);
+}
 
+function showConfirm(): void {
+    const modal: ModalSettings = {
+        type: 'component',
+        component: Confirm, // Reference the component directly
+    };
+    modalStore.trigger(modal);
+}
 
 
 </script>
