@@ -41,27 +41,10 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
 
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
-
-  const { data: tableData, error: tableError } = await supabase
-    .from('Table')
-    .select('*');
-
-  
-  const { data: tableAvailabilityData, error: tableAvailabilityError } = await supabase
-    .from('Table Availability')
-    .select('*');
-
-  if (tableError) {
-    console.error('Error fetching room data:', tableError);
-    return { tables: [], tableAvailability: tableAvailabilityData ?? [], error: tableError.message };
-  }
-
-  if (tableAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
-    return { tables: tableData ?? [], tableAvailability: [], error: tableAvailabilityError.message };
-  }
+  depends('supabase:db:Table');
+  depends('supabase:db:Table Availability');
+  depends('supabase:db:Drink');
+  depends('supabase:db:Drink Availability');
 
   const { data: drinkData, error: drinkError } = await supabase
     .from('Drink')
@@ -71,17 +54,41 @@ export const load: PageServerLoad = async ({ depends, locals: { supabase, sessio
     .from('Drink Availability')
     .select('*');
 
-  if (drinkError) {
-    console.error('Error fetching room data:', drinkError);
-    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: [], drinkAvailability: drinkAvailabilityData ?? [], error: drinkError.message };
-  }
+  const { data: drinkOrderLineData, error: drinkOrderLineError } = await supabase
+    .from('Drink Order Line')
+    .select('*');
 
-  if (drinkAvailabilityError) {
-    console.error('Error fetching availability data:', tableAvailabilityError);
-    return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: [], error: drinkAvailabilityError.message };
-  }
+  const { data: drinkOrderStatusData, error: drinkOrderStatusError } = await supabase
+    .from('Drink Order Status')
+    .select('*');
 
-  return {tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData};
+  const { data: drinkReceiptData, error: drinkReceiptError } = await supabase
+    .from('Drink Receipt')
+    .select('*');
+
+  const { data: customerData, error: customerError } = await supabase
+    .from('Customer')
+    .select('*');
+
+    const { data: tableData, error: tableError } = await supabase
+    .from('Table')
+    .select('*');
+  
+  const { data: tableAvailabilityData, error: tableAvailabilityError } = await supabase
+    .from('Table Availability')
+    .select('*');
+
+  const { data: tableReservationData, error: tableReservationError } = await supabase
+    .from('Table Reservation')
+    .select('*');  
+
+  const { data: tableReservationStatusData, error: tableReservationStatusError } = await supabase
+    .from('Table Reservation Status')
+    .select('*');
+
+  
+
+  return {drinks: drinkData ?? [], drinkAvailability: drinkAvailabilityData ?? [], drinkOrderLine: drinkOrderLineData ?? [], drinkOrderStatus : drinkOrderStatusData ?? [], drinkReceipt: drinkReceiptData ?? [], customer: customerData ?? [],tables: tableData ?? [], tableAvailability: tableAvailabilityData ?? [], tableReservation : tableReservationData ?? [], tableReservationStatus : tableReservationStatusData ?? []};
 
 };
 

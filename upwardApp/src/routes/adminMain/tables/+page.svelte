@@ -13,202 +13,333 @@
     import type { PageData } from './$types';
     import { supabase } from '$lib/supabaseClient';
 
-    /**
-
-    const modalStore = getModalStore();
-
-    function billPopUp(): void {
-        const modal: ModalSettings = {
-        type: 'component',
-        component: 'BillingForm',
-        };
-        modalStore.trigger(modal);
-    }
-
     export let data:PageData;
 
-    const logout = async () => {
-        const { supabase } = data; // Destructure supabase from data
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.error(error);
-        }
-    };
-
-    
-
-    interface Tenant{
-        tenantID: number;
-        tenantName: string;
-        tenantSex: string;
-        dormNo: number;
-        tenantEmail: string;
-        tenantPhone: number;
+    interface Table{
+        table_id: number;
+        table_name: string;
+        description: string;
+        pax: number;
+        table_type: string;
     }
 
-    interface Bills{
-        billID: number;
-        dormNo: number;
-        dateIssued: Date;
-        paymentStatus: boolean;
-        datePaid: Date;
-        monthlyRent: number;
-        waterBill: number;
-        electricityBill: number;
-        hutRent: number;
-        visitorOvernightBill: number;
-        maintenanceBill: number;
-        totalBillAmount?: number;
-        
+    interface TableAvailability{
+        table_id: number;
+        availability: boolean;
+        customer_id: string;
     }
 
-    interface Visitors{
-        visitorID: number;
-        visitorName: string;
-        startDateOfVisit: Date;
-        visitorRelation: string;
-        tenantID: number;
-        endDateOfVisit: Date;
-        isApproved: boolean;
+    interface TableReservation{
+        reservation_no: number;
+        date: Date;
+        customer_id: string;
+        table_id: number;
+        duration: Date;
+        end_date: Date;
+        price: number;
     }
 
-    interface Maintenance{
-        maintenanceID: number;
-        maintenanceRequest: string;
-        startDateOfMaintenance: Date;
-        dormNo: number;
-        endDateOfMaintenance: Date;
-        isDone: boolean;
+    interface TableReservationStatus{
+        reservation_no: number;
+        is_incoming: boolean;
+        is_ongoing: boolean;
+        is_current: boolean;
+        is_done: boolean;
     }
 
-    interface Room {
-        dormNo: number;
-        PAX: number;
-        airconStatus: boolean;
-        personalCrStatus: boolean;
-        personalSinkStatus: boolean;
-        monthlyRent: number;
-        floor: number;
-        roomName: string;
-        // Add other columns as needed
-  }
-    const maxThings = 4;
-
-
-
-    let managerName: string = '';
-    let managerEmail: string = '';
-    let tenantRows: Tenant[] = [];
-    let billRows: Bills[] = [];
-    let visitorRows: Visitors[] = [];  
-    let maintenanceRows: Maintenance[] = [];
-    let roomRows: Room[] = [];
-    const maxBills = 4;
-
-    function calculateTotalBillAmount(bill: Bills): number {
-        return bill.monthlyRent + bill.waterBill + bill.electricityBill + bill.hutRent + bill.visitorOvernightBill + bill.maintenanceBill;
+    interface Customer {
+        customer_id: string;
+        customer_name: string;
+        customer_email: string;
+        customer_phone: string;
     }
+
+    let tableRows : Table[] = [];
+    let tableAvailabilityRows: TableAvailability[] = [];
+    let tableReservationRows: TableReservation[] = [];
+    let tableReservationStatusRows: TableReservationStatus[] = [];
+    let customerRows : Customer[] = [];
+    let tableAvailable = false;
+    let selectedTableId: number = 0;
+    let tableDetails: { reservation_no: number; customer_id: string; end_date: string; date: string }[] = [];
+    let currentTableName: string = "";
 
     onMount(() => {
         try {
-            billRows = data.bill || [];
-            tenantRows = data.allTenants || [];
-            visitorRows = data.visitor || [];
-            maintenanceRows = data.maintenance || [];
-            roomRows = data.rooms || [];
-            managerName = data.user[0]?.managerName ?? '';
-            managerEmail = data.user[0]?.managerEmail ?? '';
-            Cookies.set('email', managerEmail);
-            billRows = billRows.map(bill => ({
-                ...bill,
-                totalBillAmount: calculateTotalBillAmount(bill)
-            }));
+            tableRows = data.tables || [];
+            tableAvailabilityRows = data.tableAvailability || [];
+            tableReservationRows = data.tableReservation || [];
+            tableReservationStatusRows = data.tableReservationStatus || [];
+            customerRows = data.customer || [];
+            /*const displayedReservation = tableReservationRows[currentTableId];
+            currentTableId = displayedReservation.table_id;
+            currentCustomerId = displayedReservation.customer_id;
+            endDate = displayedReservation.end_date*/
+            
+            checkTableAvailability();
+            console.log("tableRows:", tableRows);
+            console.log("tableAvailabilityRows:", tableAvailabilityRows);
+            console.log("tableReservationRows:", tableReservationRows);
+            console.log("tableReservationStatusRows:", tableReservationStatusRows);
             
         } catch (error) {
             console.error(error);
-            tenantRows = [];
-            billRows = [];
+            tableRows = [];
+            tableAvailabilityRows = [];
+            tableReservationRows = [];
+            tableReservationStatusRows = [];
+            customerRows = [];
         }
     });
-    
-    Cookies.set('email', managerEmail); 
-    function handleProfile(event) {
-        managerName = event.detail.managerName;
-        managerEmail = event.detail.managerEmail;
+    function checkTableAvailability() {
+        tableAvailable = tableAvailabilityRows.some(
+            (row) => row.table_id >= 8 && row.table_id <= 15 && row.availability
+        );
+     }
+    const cancelOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmOrder = async (reservation_no: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: true,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+
+    const confirmCurrent = async (reservation_no: number, table_id: number, customer_id: string) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: true,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: false,
+                    customer_id: customer_id
+                })
+                .eq('table_id', table_id)
+                .select();;
+
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    const confirmDone = async (reservation_no: number, table_id: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: true
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+                
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: true
+                })
+                .eq('table_id', table_id)
+                .select();;
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+const cancelledReserve = async (reservation_no: number, table_id: number) => {
+        const { supabase } = data;
+
+        try {
+            const {error, count} = await supabase
+                .from('Table Reservation Status')
+                .update({
+                    is_incoming: false,
+                    is_ongoing: false,
+                    is_current: false,
+                    is_done: false
+                })
+                .eq('reservation_no', reservation_no)
+                .select();;
+                
+            const {availerror, availcount} = await supabase
+                .from('Table Availability')
+                .update({
+                    availability: true,
+                    customer_id: null
+                })
+                .eq('table_id', table_id)
+                .select();;
+            if (error) {
+                console.error('Error updating order status:', error.message);
+                return { success: false, message: error.message };
+            }
+
+            console.log('Update response:', count);
+            window.location.reload();
+            return { success: true };
+            
+        } catch (err) {
+            console.error('Unexpected error:', err);
+            return { success: false, message: 'Unexpected error occurred.' };
+        }
+        
+    }
+    async function fetchTableDetails(tableId: number) {
+        const { supabase } = data;
+        selectedTableId = tableId;
+        currentTableName = `Table ${tableId}`;
+        tableDetails = []; // Reset to trigger reactivity
+
+        try {
+        // Step 1: Fetch reservations for the selected table
+        let reservationQuery = supabase
+        .from('Table Reservation')
+        .select('reservation_no, table_id, date, end_date, customer_id');
+
+
+        // Include multiple table IDs if tableId is 8
+        if (tableId === 8) {
+            reservationQuery = reservationQuery.in('table_id', [8, 9, 10, 11, 12, 13, 14, 15]);
+        } else {
+            reservationQuery = reservationQuery.eq('table_id', tableId);
+      }
+
+        const { data: reservations, error: reservationError } = await reservationQuery;
+        console.log(reservations);
+        if (reservationError) throw reservationError;
+
+        // Step 2: Filter reservations by checking their status
+        const filteredReservations = await Promise.all(
+            reservations.map(async (reservation) => {
+            // Fetch the reservation status for this reservation_no
+            const { data: status, error: statusError } = await supabase
+                .from('Table Reservation Status')
+                .select('is_current, is_incoming, is_ongoing, is_done')
+                .eq('reservation_no', reservation.reservation_no)
+                .single();
+            
+            console.log(status);
+            if (statusError) return null; // Skip if status fetch fails
+
+            // Check if the reservation matches the required status
+            if (status.is_current && !status.is_incoming && !status.is_ongoing && !status.is_done) {
+                // Fetch customer name
+                return {
+                    reservation_no: reservation.reservation_no,
+                    customer_id: reservation.customer_id,
+                    date: reservation.date,
+                    end_date: reservation.end_date,
+                };
+            }
+            return null; // Skip reservations that don't match the status
+            })
+        );
+
+        // Step 3: Remove nulls and set tableDetails
+        tableDetails = filteredReservations.filter((res) => res !== null);
+        console.log(tableDetails);
+        } catch (error) {
+        console.error('Error fetching table details:', error.message);
+        }
+        console.log(tableDetails);
+    }
+
+    async function getCustomerName(customer_id: string): Promise<string> {
+        const { supabase } = data;
+        const { data: namedata, error } = await supabase
+            .from('Customer')
+            .select('name')
+            .eq('customer_id', customer_id)
+            .single();
+        console.log(namedata);
+        return error ? 'Unknown' : namedata.name;
   }
-
-    
-    function getYear(date: Date): number {
-        return date.getFullYear();
-    }
-    function getMonth(date: Date): number {
-        return date.getMonth() + 1; // Months are zero-based, so we add 1
-    }
-    const confirmPayment = async (billID: number) => {
-
-            const { error: billError } = await supabase
-                .from('Tenant Bill') 
-                .update([
-                {
-                    paymentStatus : true,
-                },
-                ])
-                .eq('billID', billID);
-
-                if (billError) {
-                    console.error('Error confirming payment:', billError);
-                    alert('Error confirming payment');
-                } 
-       
-       
-
-        alert('Payment Confirmed');
-        window.location.reload();
-    };
-    const confirmVisitor = async (visitorID: number) => {
-
-            const { error: visitorError } = await supabase
-                .from('Visitor Info') 
-                .update([
-                {
-                    isApproved : true,
-                },
-                ])
-                .eq('visitorID', visitorID);
-
-                if (visitorError) {
-                    console.error('Error confirming visit:', visitorError);
-                    alert('Error confirming visit');
-                } 
-       
-       
-
-        alert('Visit Confirmed');
-        window.location.reload();
-    };
-    const confirmMaintenance = async (maintenanceID: number) => {
-
-            const { error: maintenanceError } = await supabase
-                .from('Maintenance Info') 
-                .update([
-                {
-                    isDone: true,
-                },
-                ])
-                .eq('maintenanceID', maintenanceID);
-
-                if (maintenanceError) {
-                    console.error('Error marking maintenance done:', maintenanceError);
-                    alert('Error marking maintenance done');
-                } 
-       
-       
-
-        alert('Maintenance Done');
-        window.location.reload();
-    };
-
-    */
 </script>
 
 <style>
@@ -235,28 +366,95 @@
     <Aside />
 
     <!-- main div -->
-    <div class="w-dvw pl-40 pr-20 py-10 bg-surface-50">
+    <div class="w-dvw px-8 lg:px-20 2xl:px-32 py-10 bg-surface-50">
         <div class="flex justify-between items-center px-8 pb-6">
             <h1 class="h2 font-bold font-fredoka">Tables</h1>
         </div>
         
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 xl:flex gap-8">
 
             <!-- table display -->
-            <div class="w-4/7 flex-col gap-5">
+            <div class="w-2.25/5 flex-col gap-5">
 
                 <!-- tables -->
-                <div class="mb-6 h-96">
+                <div class="mb-6 h-80">
                     <div class="grid grid-cols-5 grid-rows-3 gap-2 min-h-full min-w-full">
-                        <div class="col-start-5 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50">Table 1</div>
-                        <div class="col-start-5 row-start-2 rounded-2xl flex justify-center items-center bg-surface-200">Table 2</div>
-                        <div class="col-start-5 row-start-3 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50">Table 3</div>
-                        <div class="col-start-4 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50">Table 4</div>
-                        <div class="col-start-3 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200">Table 5</div>
-                        <div class="col-start-2 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200">Table 6</div>
-                        <div class="col-start-1 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200">Table 7</div>
-                        <div class="col-span-4 row-span-2 col-start-1 row-start-2 rounded-2xl flex justify-center items-center bg-surface-200">Table 8</div>
+                        {#each tableAvailabilityRows as tableAvailabilityRow}
+                            {#if tableAvailabilityRow.table_id === 1 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-5 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(1)}>Table 1</div>
+                            {:else if tableAvailabilityRow.table_id === 1 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-5 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(1)}>Table 1</div>
+                            {/if}
+                            {#if tableAvailabilityRow.table_id === 2 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-5 row-start-2 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(2)}>Table 2</div>
+                            {:else if tableAvailabilityRow.table_id === 2 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-5 row-start-2 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(2)}>Table 2</div>
+                            {/if}
+                            {#if tableAvailabilityRow.table_id === 3 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-5 row-start-3 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(3)}>Table 3</div>
+                            {:else if tableAvailabilityRow.table_id === 3 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-5 row-start-3 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(3)}>Table 3</div>
+                            {/if}
+                            {#if tableAvailabilityRow.table_id === 4 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-4 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(4)}>Table 4</div>
+                            {:else if tableAvailabilityRow.table_id === 4 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-4 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(4)}>Table 4</div>
+                            {/if}
+                            {#if tableAvailabilityRow.table_id === 5 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-3 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(5)}>Table 5</div>
+                            {:else if tableAvailabilityRow.table_id === 5 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-3 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(5)}>Table 5</div>
+                            {/if}
+                            {#if tableAvailabilityRow.table_id === 6 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-2 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(6)}>Table 6</div>
+                            {:else if tableAvailabilityRow.table_id === 6 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-2 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(6)}>Table 6</div>
+                            {/if}
+                            {#if tableAvailabilityRow.table_id === 7 && tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-1 row-start-1 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(7)}>Table 7</div>
+                            {:else if tableAvailabilityRow.table_id === 7 && !tableAvailabilityRow.availability}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-start-1 row-start-1 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(7)}>Table 7</div>
+                            {/if}
+                            
+                            {#if tableAvailable}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-span-4 row-span-2 col-start-1 row-start-2 rounded-2xl flex justify-center items-center bg-surface-200 cursor-pointer" on:click={() => fetchTableDetails(8)}>Table 8</div>
+                            {:else}
+                                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                                <div class="col-span-4 row-span-2 col-start-1 row-start-2 rounded-2xl flex justify-center items-center bg-surface-400 text-surface-50 cursor-pointer" on:click={() => fetchTableDetails(8)}>Table 8</div>
+                            {/if}
+                        {/each}
                     </div>
                 </div>
 
@@ -267,39 +465,36 @@
                     <div class="px-12 min-h-full flex flex-col">
 
                         <div class="pt-6">
-                            <h1 class="h2 font-bold font-fredoka">Table 1</h1>
-                            <!-- remove this p when done implementing -->
+                            <h1 class="h2 font-bold font-fredoka">{currentTableName || "Select a Table"}</h1>
+                            <!--{#each tableRows as tableRow}
+                                    
+                                
+                            {/each}-->
                             <p class="mt-1 blockquote">display changes depending on clicked box, grayed out tables mean someone is currently occupying</p>
                         </div>
 
 
                         <div class="py-6 flex-grow">
-
-                            <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                                <div>
-                                    <p>Customer Name</p>
-                                </div>
-                                <div>
-                                    <p>Hours Remaining</p>
-                                </div>
-                                <div>
-                                    <p>Date Reserved</p>
-                                </div>
-                            </div>
-
-                            <!-- one entry -->
-                            <div class="grid grid-flow-col justify-between items-center gap-3 pb-4">
-                                <div>
-                                    <p>Customer Name</p>
-                                </div>
-                                <div>
-                                    <p>Hours Remaining</p>
-                                </div>
-                                <div>
-                                    <p>Date Reserved</p>
-                                </div>
-                            </div>
+                            {#if tableDetails.length > 0}
+                                {#each tableDetails as detail}
+                                        <!-- one entry -->
+                                        <div class="grid grid-flow-col justify-between items-center gap-5 pb-4">
+                                                {#each customerRows as customerRow}
+                                                    {#if customerRow.customer_id === detail.customer_id}
+                                                        <p class="whitespace-normal break-all">{customerRow.customer_name}</p>
+                                                    {/if}
+                                                {/each}
+                                                <p class="whitespace-normal break-all">{detail.date}</p>
+                                                <p class="whitespace-normal break-all">{detail.end_date}</p>
+                                            <div class="flex flex-auto mx-auto">
+                                                <button on:click={() => {confirmDone(detail.reservation_no, selectedTableId);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                                <button on:click={() => {cancelledReserve(detail.reservation_no, selectedTableId);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                            </div>
+                                        </div>
+                                {/each}
+                            {:else}
+                                <p>No reservations for this table.</p>
+                            {/if}
                         </div>
 
                     </div>
@@ -307,7 +502,7 @@
             </div>
 
             <!-- date reservations -->
-            <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden grid grid-rows-2 h-[600px]">
+            <div class="bg-surface-50 border shadow-xl rounded-3xl mb-5 flex-auto overflow-hidden grid grid-rows-2 h-auto">
                 <!-- Upcoming Reservations -->
                 <div class="px-12 py-6 overflow-auto">
                     <div class="flex justify-between items-center mb-4">
@@ -315,24 +510,33 @@
                     </div>
                     <div class="flex-grow upcoming-reservations-container">
                         <!-- One entry -->
-                        <div class="grid grid-cols-5 items-center gap-3 pb-4">
-                            <div>
-                                <p>Reservation ID</p>
-                            </div>
-                            <div>
-                                <p>Customer ID</p>
-                            </div>
-                            <div>
-                                <p>Table No.</p>
-                            </div>
-                            <div>
-                                <p>Per hour</p>
-                            </div>
-                            <div class="flex flex-auto mx-auto">
-                                <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                            </div>
-                        </div>
+                        {#each tableReservationRows as tableReservationRow}
+                            {#each tableReservationStatusRows as tableReservationStatusRow}    
+                                {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_incoming}
+                                    <div class="grid grid-cols-7 items-center gap-5 pb-4">
+                                            <p>{tableReservationRow.reservation_no}</p>
+                                        {#each customerRows as customerRow}
+                                            {#if customerRow.customer_id === tableReservationRow.customer_id}
+                                                <p>{customerRow.customer_name}</p>
+                                            {/if}
+                                        {/each}
+                                        {#each tableRows as tableRow}
+                                            {#if tableRow.table_id === tableReservationRow.table_id}
+                                                <p>{tableRow.table_name}</p>
+                                            {/if}
+                                        {/each}
+                                        <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                        <p>{tableReservationRow.duration}</p>
+                                        <p>{tableReservationRow.price}</p>
+                                        <div class="flex flex-auto mx-auto gap-2">
+                                            <button on:click={() => {confirmOrder(tableReservationRow.reservation_no);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                            <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                        </div>
+                                    </div>
+                                {/if}
+                            {/each}
                         <!-- Add more entries here as needed -->
+                        {/each}
                     </div>
                 </div>
     
@@ -342,130 +546,39 @@
                         <h2 class="h2 font-bold font-fredoka">Ongoing Reservations</h2>
                     </div>
                     <div class="flex-grow ongoing-reservations-container">
+                        {#each tableReservationRows as tableReservationRow}
+                            {#each tableReservationStatusRows as tableReservationStatusRow}    
+                                {#if tableReservationStatusRow.reservation_no === tableReservationRow.reservation_no && tableReservationStatusRow.is_ongoing}
+                                    {#each customerRows as customerRow}     
+                                        {#if customerRow.customer_id === tableReservationRow.customer_id}       
+                                            <div class="grid grid-cols-7 items-center gap-5 pb-4">
+                                                    <p>{tableReservationRow.reservation_no}</p>
+                                                    <p>{customerRow.customer_name}</p>
+                                                {#each tableRows as tableRow}
+                                                    {#if tableRow.table_id === tableReservationRow.table_id}
+                                                        <p>{tableRow.table_name}</p>
+                                                    {/if}
+                                                {/each}
+                                                <p class="whitespace-normal break-all">{tableReservationRow.date}</p>
+                                                <p class="whitespace-normal break-all">{tableReservationRow.duration}</p>
+                                                <p class="whitespace-normal break-all">{tableReservationRow.price}</p>
+                                                <div class="flex flex-auto mx-auto">
+                                                    <button on:click={() => {confirmCurrent(tableReservationRow.reservation_no, tableReservationRow.table_id, customerRow.customer_id);}} class="btn bg-primary-600 text-tertiary-300">✓</button>
+                                                    <button on:click={() => {cancelOrder(tableReservationRow.reservation_no);}} class="btn bg-red-600 text-tertiary-300">X</button>
+                                                </div>
+                                            </div>
+                                        {/if}
+                                    {/each}
+                                {/if}
+                            {/each}
+                        <!-- Add more entries here as needed -->
+                        {/each}
                         <!-- Ongoing reservation entries will dynamically appear here -->
                     </div>
                 </div>
             </div>
 
         </div>
-
-            <!-- 
-            
-
-            <div class="card col-span-1">
-
-                <div class="px-12 py-6">
-                    <h1 class="h3 font-bold mb-5">Reservations</h1>
-
-                    <div class="grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-flow-col justify-stretch items-center gap-3 pb-4">
-                        <div>
-                            <p>Reservation ID</p>
-                        </div>
-                        <div>
-                            <p>Customer ID</p>
-                        </div>
-                        <div>
-                            <p>Table No.</p>
-                        </div>
-                        <div>
-                            <p>Per hour</p>
-                        </div>
-                        <div class="flex flex-auto mx-auto">
-                            <button class="btn bg-primary-600 text-tertiary-300">✓</button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="border-4 shadow-lg border-primary-600 rounded-3xl mb-20">
-
-            <div class="px-12 py-6">
-                <h1 class="h3 font-bold">Table No. 1</h1>
-            </div>
-            
-            <div class="px-12 pt-2 pb-6">
-
-                <div class="flex flex-auto justify-normal items-center gap-16 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Hours Remaining</p>
-                    </div>
-                    <div>
-                        <p>Date Reserved</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-auto justify-normal items-center gap-16 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Hours Remaining</p>
-                    </div>
-                    <div>
-                        <p>Date Reserved</p>
-                    </div>
-                </div>
-
-                <div class="flex flex-auto justify-normal items-center gap-16 pb-4">
-                    <div>
-                        <p>Customer ID</p>
-                    </div>
-                    <div>
-                        <p>Hours Remaining</p>
-                    </div>
-                    <div>
-                        <p>Date Reserved</p>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        -->
 
     </div>
 

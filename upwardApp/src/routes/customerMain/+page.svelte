@@ -495,6 +495,22 @@
             }
         }
     };
+=======
+    }
+};
+
+    const modalStore = getModalStore();
+
+    function showError(): void {
+        const modal: ModalSettings = {
+        type: 'component',
+        component: 'Error',
+        };
+        modalStore.trigger(modal);
+    }
+
+
+>>>>>>> frontend
 </script>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap');
@@ -576,7 +592,7 @@
     <div class="w-dvw px-40 py-10">
         <h1 class="px-8 pb-12 h2 font-bold">Hello, {customer_name}!</h1>
         <!-- container for the two boxes -->
-        <div class="flex gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- reserve box -->
             <div class="bg-surface-50 min-h-[600px] border shadow-xl rounded-3xl mb-5 flex-1 overflow-hidden">
                 <!-- for padding -->
@@ -719,7 +735,7 @@
 
         <div class="flex flex-row justify-end items-center">
             <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={() => {handleConfirm(); }}>Confirm</button>
-            <!-- HANDLE TABLE SELECTION SHOULD ONLY RUN IF RESERVE IS TOGGLED!-->
+            <button type="button" class="btn bg-primary-600 text-tertiary-300 rounded-full border-none px-5 py-2 my-1 font-semibold" on:click={showError}>Test</button>
         </div>
     </div>
 </div>

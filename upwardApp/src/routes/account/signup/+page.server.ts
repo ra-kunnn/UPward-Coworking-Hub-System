@@ -54,33 +54,4 @@ export const actions: Actions = {
   }
 };
 //this part is for data getting when the page loads
-import type { PageServerLoad } from './$types';
-
-export const load: PageServerLoad = async ({ depends, locals: { supabase, session } }) => {
-
-  depends('supabase:db:Dorm Room');
-  depends('supabase:db:Availability');
-
-  const { data: roomData, error: roomError } = await supabase
-    .from('Dorm Room')
-    .select('*');
-
-  
-  const { data: availabilityData, error: availabilityError } = await supabase
-    .from('Availability')
-    .select('*');
-
-  if (roomError) {
-    console.error('Error fetching room data:', roomError);
-    return { rooms: [], availability: availabilityData ?? [], error: roomError.message };
-  }
-
-  if (availabilityError) {
-    console.error('Error fetching availability data:', availabilityError);
-    return { rooms: roomData ?? [], availability: [], error: availabilityError.message };
-  }
-
-  return { rooms: roomData ?? [], availability: availabilityData ?? [] };
-
-};
 

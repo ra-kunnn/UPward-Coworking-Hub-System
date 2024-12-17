@@ -69,6 +69,31 @@
          currentIndex = index; // Set the current image based on the dot clicked
     }
 
+        // Initial state for the squares
+    let squares = [
+        {
+        title: "About Us",
+        content: "UPWARD is a co-working hub empowering students with collaborative spaces.",
+        },
+        {
+        title: "Contact Us",
+        content: "📞 0912-345-6789<br>📧 upwardcoworkinghub@gmail.com",
+        },
+        {
+        title: "Visit Us",
+        content: "UP Mindanao, Davao City<br>Open: 9 AM - 8 PM",
+        },
+    ];
+
+    // Function to rotate squares to the right
+    function rotateRight() {
+    if (squares.length > 0) {
+        squares = [squares[squares.length - 1], ...squares.slice(0, -1)];
+    }
+    }
+
+
+
 </script>
 
 <style>
@@ -120,6 +145,8 @@
         gap: 15px;
     }
 
+
+
 </style>
 
 <HideOverflow />
@@ -147,23 +174,24 @@
                 <a href="account/signup" class="btn bg-tertiary-500 text-surface-50 hover:text-secondary-800 hover:bg-tertiary-600 rounded border-none px-4 py-2 text-sm font-semibold">Register Now</a>
             </div>
             <!-- Image Section -->
-            <div class="w-1/3 h-full">
+            <div class="w-1/3 h-full max-lg:w-full max-lg:h-auto max-lg:mt-6">
                 <!-- svelte-ignore a11y-img-redundant-alt -->
-                <img src="/src/lib/landing/image.png" alt="Study hub image" class="w-full h-auto" />
+                <img src="/src/lib/landing/image.png" alt="Study hub image" class="w-full h-auto max-lg:max-w-[300px] max-lg:mx-auto" />
             </div>
         </div>
     </div>
     
     
-    <div id="what-makes-us-different" class="w-full px-0 flex justify-between items-center gap-0">
-        <!-- Left Square -->
-        <div class="w-1/2 h-[700px] bg-tertiary-500 rounded-tr-[400px] rounded-bl-none rounded-tl-none rounded-br-none"></div>
     
-        <!-- Right Square with Text -->
-        <div class="w-1/2 h-[700px] bg-[#38728A] rounded-tl-[400px] rounded-tr-none rounded-br-none rounded-bl-none flex items-center justify-center p-8 text-surface-50">
-            <div class="text-center mt-12 ml-20">
-                <strong class="h1 font-fredoka font-bold mb-6">What makes UPWARD different?</strong><br /><br />
-                <p class="font-normal text-lg">
+    <div id="what-makes-us-different" class="w-full px-0 flex flex-wrap justify-between items-stretch gap-0">
+        <!-- Left Square (Now Right Square in smaller screens) -->
+        <div class="w-1/2 h-[700px] bg-tertiary-500 rounded-tr-[400px] rounded-bl-none rounded-tl-none rounded-br-none max-lg:w-full max-lg:h-[300px] max-lg:order-2"></div>
+    
+        <!-- Right Square (Now Left Square in smaller screens, with longer height for text) -->
+        <div class="w-1/2 h-[700px] bg-[#38728A] rounded-tl-[400px] rounded-tr-none rounded-br-none rounded-bl-none flex items-center justify-center p-8 text-surface-50 max-lg:w-full max-lg:h-auto max-lg:py-16 max-lg:px-8 max-lg:order-1">
+            <div class="pl-40 pt-10 text-center max-lg:ml-0">
+                <strong class="h1 font-fredoka font-bold mb-6 block">What makes UPWARD different?</strong>
+                <p class="font-normal text-lg mb-4">
                     UPWARD offers:
                 </p>
                 <ul class="list-disc list-inside mt-2 font-normal text-lg">
@@ -185,9 +213,10 @@
     </div>
     
     
+    
     <!-- Outer Margin Div -->
     <div id="access-section" class="w-full bg-surface-50 py-24 mx-auto max-w-screen-xl">
-        <div class="flex justify-between items-center gap-0">
+        <div class="flex flex-wrap justify-between items-stretch gap-0">
             <!-- Content with Margin -->
             <div class="p-10">
                 <h1 class="h1 font-fredoka font-semibold mb-6">Access UPWARD</h1>
@@ -201,32 +230,33 @@
             </div>
             
             <!-- Right Side Image -->
-            <div class="w-1/3 h-full">
+            <div class="w-full md:w-1/3 h-auto">
                 <img src="/src/lib/landing/image2.png" alt="Log In to UPward" class="w-full h-auto" />
             </div>
         </div>
     </div>
+
     
     
     <!-- Carousel Section -->
-    <div id="gallery-section" class="w-full px-0 flex justify-between items-center gap-0">
+    <div id="gallery-section" class="w-full px-0 flex justify-center items-center gap-0 relative">
         <!-- Left Side Image -->
         <img src={images[(currentIndex - 1 + images.length) % images.length]} 
             alt="Image on the left side" 
-            class={`w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer mr-4 carousel-image ${fadeClass}`} 
+            class="carousel-image w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer mr-4" 
             on:click={() => changeImage('left')} />
-        
+
         <!-- Center Image -->
-        <img id="main-image" src={images[currentIndex]} alt="Main displayed image" class={`w-1/2 rounded-lg carousel-image ${fadeClass}`} />
-        
+        <img id="main-image" src={images[currentIndex]} alt="Main displayed image" 
+            class={`carousel-image transition-all duration-500 ease-in-out w-[600px] h-[400px] rounded-lg ${fadeClass}`} />
+
         <!-- Right Side Image -->
         <img src={images[(currentIndex + 1) % images.length]} 
             alt="Image on the right side" 
-            class={`w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer ml-4 carousel-image ${fadeClass}`} 
-            on:click={() => changeImage('right')} 
-        />
+            class="carousel-image w-1/4 opacity-75 transition-opacity duration-300 hover:opacity-100 cursor-pointer ml-4"
+            on:click={() => changeImage('right')} />
     </div>
-    
+
     <!-- Dots for Image Indicators -->
     <div class="flex justify-center mt-4">
         {#each images as _, index}
@@ -239,30 +269,25 @@
 
 <!-- Footer Section -->
 <footer class="footer w-full mt-24 pt-24 pb-8 flex flex-col items-center">
-        <!-- Squares in the middle of the page -->
-        <div class="flex items-center gap-3 mb-8">
-            <!-- First Square: About Us -->
-            <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
-                <h3 class="h3 font-bold font-fredoka">About Us</h3>
-                <p class="text-xs">UPWARD is a co-working hub empowering students with collaborative spaces.</p>
-            </div>
-            <div class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md">
-                ⮞
-            </div>
-            <!-- Second Square: Contact Us -->
-            <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
-                <h3 class="h3 font-bold font-fredoka">Contact Us</h3>
-                <p class="text-xs">📞 0912-345-6789<br>📧 upwardcoworkinghub@gmail.com</p>
-            </div>
-            <div class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md">
-                ⮞
-            </div>
-            <!-- Third Square: Visit Us -->
-            <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
-                <h3 class="h3 font-bold font-fredoka">Visit Us</h3>
-                <p class="text-xs">UP Mindanao, Davao City<br>Open: 9 AM - 8 PM</p>
-            </div>
-        </div>
+    <div id="square" class="flex items-center gap-3 mb-8">
+        {#each squares as square, index}
+          <div class="footer-square bg-[#EAB940] flex flex-col justify-center items-center text-center text-white p-2">
+            <h3 class="h3 font-bold font-fredoka">{square.title}</h3>
+            <p class="text-xs">{@html square.content}</p>
+
+          </div>
+          {#if index < squares.length - 1}
+            <button
+              class="btn bg-[#224C4D] text-tertiary-300 rounded-full w-12 h-12 flex justify-center items-center shadow-md"
+              on:click={rotateRight}
+            >
+              ⮞
+            </button>
+          {/if}
+        {/each}
+      </div>
+
+
         
         <!-- Clickable Section Labels -->
         <div class="flex gap-12 mt-8 mb-10 footer-section">
@@ -287,7 +312,9 @@
 
         <!-- Logo at the bottom left -->
         <div class="flex justify-between w-full px-8 mt-12">
+            <a href="/">
             <img src="/src/lib/landing/Upward logo1.png" alt="Site Logo" class="h-12 w-auto">
+            </a>
             <span class="text-white text-sm">© 2024 UPWARD. All rights reserved.</span>
         </div>
     </footer>
