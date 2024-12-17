@@ -76,7 +76,7 @@
         // Categorizing orders based on their statuses
         incomingOrders = drinkOrderLineRows.filter(orderLine =>
             drinkOrderStatusRows.some(status =>
-                status.order_id === orderLine.order_id &&
+                status.receipt_no === orderLine.receipt_no &&
                 status.is_incoming &&
                 orderLine.customer_id === customer_id
             )
@@ -84,7 +84,7 @@
 
         ongoingOrders = drinkOrderLineRows.filter(orderLine =>
             drinkOrderStatusRows.some(status =>
-                status.order_id === orderLine.order_id &&
+                status.receipt_no === orderLine.receipt_no &&
                 status.is_ongoing &&
                 orderLine.customer_id === customer_id
             )
@@ -92,7 +92,7 @@
 
         completedOrders = drinkOrderLineRows.filter(orderLine =>
             drinkOrderStatusRows.some(status =>
-                status.order_id === orderLine.order_id &&
+                status.receipt_no === orderLine.receipt_no &&
                 status.is_done &&
                 orderLine.customer_id === customer_id
             )
