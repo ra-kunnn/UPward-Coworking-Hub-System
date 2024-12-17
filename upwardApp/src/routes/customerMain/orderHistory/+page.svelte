@@ -198,7 +198,7 @@ let isOrderView = true;
                                         {#if drinkReceiptRow.receipt_no === drinkOrderStatusRow.receipt_no && drinkOrderStatusRow.is_done && customer_id === drinkReceiptRow.customer_id}
                                                 <div class="grid grid-flow-col justify-between items-center gap-3 pb-5">
                                                     <div>
-                                                        <p>Receipt No. {drinkReceiptRow.receipt_no}</p>
+                                                        <p>Drink Receipt No. {drinkReceiptRow.receipt_no}</p>
                                                     </div>
                                                     {#each drinkOrderLineRows as drinkOrderLineRow}
                                                         {#if drinkOrderLineRow.receipt_no === drinkReceiptRow.receipt_no}
@@ -281,20 +281,5 @@ let isOrderView = true;
                 {/if}
             </div>
         </div>
-    </div>
-    <div class="mx-40 block">
-
-        <div class="flex justify-end items-center pb-1 gap-4 mr-6">
-            <div class="flex items-center">
-                <input type="radio" id="reservationRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600">
-                <label for="default-radio-1" class="ms-2 font-medium">Reservation</label>
-            </div>
-
-            <div class="flex items-center">
-                <input type="radio" id="orderRadio" name="radioGroup" class="w-4 h-4 text-primary-600 border-1 border-primary-600 focus:ring-primary-600" checked>
-                <label for="default-radio-1" class="ms-2 font-medium">Order</label>
-            </div>
-        </div>
-        
     </div>
 </div>
