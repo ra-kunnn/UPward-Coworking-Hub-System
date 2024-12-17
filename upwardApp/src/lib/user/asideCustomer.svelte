@@ -120,7 +120,7 @@
                 </a>
             </li>
             <li>
-                <a href="/customerMain" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/orderHistory' ? 'active' : ''}">
+                <a href="/customerMain/orderHistory" class="sidebar-item hover:bg-primary-600 hover:text-surface-50 rounded-lg {currentPath === '/customerMain/orderHistory' ? 'active' : ''}">
                     <span class="icon">📂</span>
                     <span class="text">History</span>
                 </a>
