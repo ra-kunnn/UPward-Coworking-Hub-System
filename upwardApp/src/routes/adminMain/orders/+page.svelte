@@ -386,7 +386,7 @@ console.log("test");
                             <label class="flex items-center justify-center mt-2">
                                 <span class="text-surface-700 mr-2">Stock:</span>
                                 <input
-                                    class="appearance-none bg-transparent border-none w-full text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
+                                    class="appearance-none bg-transparent w-10 border-none text-surface-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-center"
                                     type="text"
                                     placeholder="Stock"
                                     bind:value={stock}
